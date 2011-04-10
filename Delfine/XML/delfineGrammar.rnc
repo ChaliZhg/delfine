@@ -1,0 +1,237 @@
+# Begin Delfine grammar for Delfine *.xml input file
+start = delfine-element
+    
+# 1st-level elements
+delfine-element = element delfine {
+                                   geometry-element&
+                                   physical-element&
+                                   numerical-element  
+                                  }
+# End - 1st-level elements
+# 2nd-level elements
+geometry-element = element geometry {
+                                     mesh-element&
+                                     boundary-conditions-element
+                                    }
+physical-element = element physical {
+                                     fluid-properties-element&
+                                     rock-properties-element&
+                                     rock-fluid-properties-element
+                                    }
+numerical-element = element numerical {
+                                       pressure-solver-element&
+                                       saturation-solver-element? # Optional for  pure elliptic cases
+                                      } 
+# End - 2nd-level elements
+# 3rd-level elements
+mesh-element = element mesh {
+                             attribute dimension {"1" | "2" | "3"}&
+                             ((attribute type {"gmsh" | "xml"}&
+                             filename-element) |
+                             (attribute type{"dolfin-generated"}&
+                             dolfin-generated-element))&
+                             subdomains-element*
+                            }
+boundary-conditions-element = element boundary-conditions {
+                                                           well-element*        
+                                                          }
+fluid-properties-element = element fluid-properties {
+                                                     water-element&
+                                                     oil-element?&
+                                                     gas-element?
+                                                    }
+rock-properties-element = element rock-properties {
+                                                   rock-type-element+
+                                                  }
+rock-fluid-properties-element = element rock-fluid-properties {
+                                                               relative-permeability-element          
+                                                              }
+pressure-solver-element = element pressure-solver {
+                                                   attribute type {"direct-ilu" | "iterative-gmres" | "iterative-cg"}&
+                                                   tolerance-element&
+                                                   max-number-steps-element&
+                                                   pre-conditioning-element
+                                                  }
+saturation-solver-element = element saturation-solver {
+                                                       total-time-analysis-element&
+                                                       courant-element&
+                                                       limiter-element
+                                                      }
+# End - 3rd-level elements
+# 4th-level elements 
+filename-element = element filename {
+                                     text
+                                    }
+dolfin-generated-element = element dolfin-generated {
+                                                     ((attribute type {"UnitInterval"},
+                                                     attribute nx {text}) |
+                                                     (attribute type {"UnitSquare"},
+                                                     attribute nx {text},
+                                                     attribute ny {text}) |
+                                                     (attribute type {"UnitCube"},
+                                                     attribute nx {text},
+                                                     attribute ny {text},
+                                                     attribute nz {text}) |
+                                                     (attribute type {"UnitCircle"},
+                                                     attribute nr {text}) |
+                                                     (attribute type {"Rectangle"},
+                                                     attribute x0 {text},
+                                                     attribute y0 {text},
+                                                     attribute x1 {text},
+                                                     attribute y1 {text},
+                                                     attribute nx {text},
+                                                     attribute ny {text}))
+                                                    }
+subdomains-element = element subdomains {
+                                         attribute quantity {text}
+                                        } 
+well-element = element well {
+                             attribute bctype {"water-saturation" | "pressure" | "flux-rate(m^3/d)"},
+                             attribute function {"injection" | "production"},
+                             attribute id {text},
+                             xsd:float                             
+                            }
+water-element = element water {
+                               attribute use {"yes" | "no"}&
+                               viscosity-element&
+                               density-element&
+                               capillary-pressure-element?                              
+                              }
+oil-element = element oil {
+                           attribute use {"yes" | "no"}&
+                           viscosity-element&
+                           density-element&
+                           capillary-pressure-element?
+                          }
+gas-element = element gas {
+                           attribute use {"yes" | "no"}&
+                           viscosity-element&
+                           density-element&
+                           capillary-pressure-element?
+                          }
+rock-type-element = element rock-type {
+                                       attribute id {text}&
+                                       porosity-element&
+                                       rock-heat-coefficient-element?&
+                                       permeability-element
+                                      }
+relative-permeability-element = element relative-permeability {
+                                                               attribute model {"corey" | "stone1" | "stone2"}&
+                                                               krw-element&
+                                                               kro-element?&
+                                                               krg-element?                                                                                              }
+tolerance-element = element tolerance {
+                                       xsd:float {minInclusive = "0.0"}
+                                      }
+max-number-steps-element = element max-number-steps {
+                                                     xsd:nonNegativeInteger
+                                                    }
+pre-conditioning-element = element pre-conditioning {
+                                                     attribute type {"amg" | "LU" | "none"}&
+                                                     number-coarse-levels-element?&
+                                                     number-relax-iterations-element?
+                                                    }
+total-time-analysis-element = element total-time-analysis {
+                                                           xsd:float {minInclusive = "0.0"}
+                                                          }
+courant-element = element courant {
+                                   xsd:decimal {minExclusive = "0.0"}
+                                  }
+limiter-element = element limiter {
+                                   attribute type {"SUPG" | "none"}
+                                  }
+# End - 4th-level elements
+# 5th-level elements
+viscosity-element = element viscosity {
+                                       attribute model {"t-dep" | "p-dep" | "none"}&
+                                       xsd:float {minInclusive = "0.0"}
+                                      }
+density-element = element density {
+                                   attribute model {"t-dep" | "p-dep" | "none"}&
+                                   xsd:float {minInclusive = "0.0"}
+                                  }
+capillary-pressure-element = element capillary-pressure {
+                                                         attribute model {"BC" | "vG" | "none"}&
+                                                         xsd:float
+                                                        }
+porosity-element = element porosity {
+                                     attribute compressible {"yes" | "no"}&
+                                     xsd:float {minInclusive = "0.0"}
+                                    }
+rock-heat-coefficient-element = element rock-heat-coefficient {
+                                                               xsd:float {minInclusive = "0.0"}
+                                                              }
+permeability-element = element permeability {
+                                             ((attribute type {"per-domain"}&
+                                             Kxx-element&
+                                             Kxy-element?&
+                                             Kyy-element?&
+                                             Kyz-element?&
+                                             Kzz-element?) |
+                                             (attribute type {"per-element-list"}&
+                                             (filename-element)))
+                                            }
+krw-element = element krw {
+                           krw_end-element&
+                           Swc-element&
+                           nw-element
+                          }
+kro-element = element kro {
+                           Sor-element&
+                           no-element
+                          }
+krg-element = element krg {
+                           krg_end-element&
+                           Sgc-element&
+                           ng-element
+                          }
+number-coarse-levels-element = element number-coarse-levels {
+                                                             xsd:nonNegativeInteger
+                                                            }
+number-relax-iterations-element = element number-relax-iterations {
+                                                                   xsd:nonNegativeInteger
+                                                                  }
+# End - 5th-level elements
+# 6th-level elements
+Kxx-element = element Kxx {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+Kxy-element = element Kxy {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+Kyy-element = element Kyy {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+Kyz-element = element Kyz {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+Kzz-element = element Kzz {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+krw_end-element = element krw_end {
+                                   xsd:float {minInclusive = "0.0"}
+                                  }
+Swc-element = element Swc {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+nw-element = element nw {
+                         xsd:float {minInclusive = "0.0"}
+                        }
+Sor-element = element Sor {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+no-element = element no {
+                         xsd:float {minInclusive = "0.0"}
+                        }
+krg_end-element = element krg_end {
+                                   xsd:float {minInclusive = "0.0"}
+                                  }
+Sgc-element = element Sgc {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+ng-element = element ng {
+                         xsd:float {minInclusive = "0.0"}
+                        }
+# End - 6th-level elements
+# End - Delfine grammar
+
