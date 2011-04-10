@@ -1,0 +1,28 @@
+\chapter{Formulação Numérica}
+\label{ch:form_num}
+
+Neste capítulo será apresentada a formulação numérica utilizada para discretizar o modelo matemático apresentado no capítulo anterior. Existem diversas alternativas para resolver numericamente sistemas de equações diferencias parciais diferenciais como os encontrados para o problema em questão. Dentre outros, poderíamos citar o Método dos Volumes Finitos, Método das Diferenças Finitas e o Método dos Elementos de Contornos.
+
+\section{Método dos Elementos Finitos}
+\label{sc:mef}
+Mesmo dentro do Método dos Elementos Finitos, existem várias metodologias para abordar este tipo de problema. A adotada neste trabalho foi a de considerar uma formulação fraca pelo método de Galerkin para a equação de pressão, e uma formulação do tipo Streamline Upwing Petrov-Galerkin para a equação de saturação de modo a melhor tratar os termos hiperbólicos.
+
+\subsection{Discretização da Equação de Pressão}
+Considerando a lei da conservação de massa, podemos considerar
+
+\subsection{Discretização da Equação de Saturação}
+Calculando a velocidade a partir do grandiente de pressão obtido no passo anterior, podemos então definir de modo explícito uma equação para a saturação.
+\begin{equation} \label{eq:sat}
+\phi \frac{\partial S}{\partial t} + f_{,S} \mathbf{u} \cdot \nabla S + \nabla \cdot 
+(\mathbf{\kappa}\lambda_{o}f(\rho_{w} - \rho_{o})\mathbf{g})=0
+\end{equation}
+a partir de (\ref{eq:sat}) podemos derivar...
+
+\section{Multigrid}
+\label{sc:multigrid}
+Tendo sindo montado o sistema de equações lineares a partir de alguma método de discretização como o mencionado na seção anterior, é necessário resolver o mesmo através de algum método iterativo adequado.
+
+\subsection{Multigrid Geométrico}
+
+\subsection{Multigrid Algébrico}
+
