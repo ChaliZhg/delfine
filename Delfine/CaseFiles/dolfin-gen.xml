@@ -1,0 +1,73 @@
+<delfine>
+    <geometry>
+        <mesh dimension="3" type="dolfin-generated">
+            <dolfin-generated type="UnitSquare" nx="128" ny="128"/>
+	    <subdomains quantity="1"/>
+        </mesh>
+        <boundary-conditions>
+            <well bctype="water-saturation" function="injection" id="57">1.0</well>
+            <well bctype="flux-rate(m^3/d)" function="production" id="89">1000</well>
+            <well bctype="flux-rate(m^3/d)" function="production" id="2">100</well>
+        </boundary-conditions>  
+    </geometry>
+    <physical>
+        <fluid-properties>
+            <water use="no">
+                <viscosity model="none">1.7</viscosity>
+                <density model="none">0.01</density>
+            </water>
+            <oil use="yes">
+                <viscosity model="p-dep">1.0</viscosity>
+                <density model="t-dep">0.04</density>
+                <capillary-pressure model="BC">0.0</capillary-pressure>
+            </oil>
+        </fluid-properties>
+        <rock-properties>
+            <rock-type id="0">
+                <porosity compressible="no">1.0</porosity>
+                <rock-heat-coefficient>1.0</rock-heat-coefficient>
+                <permeability type="per-domain">
+                    <Kxx>2.0</Kxx>
+                    <Kxy>1.0</Kxy>
+                    <Kyy>2.0</Kyy>
+                    <Kyz>1.0</Kyz>
+                    <Kzz>0.5</Kzz>
+                </permeability>
+            </rock-type>
+            <rock-type id="5">
+                <porosity compressible="yes">0.8</porosity>
+                <permeability type="per-element-list">
+                    <filename>permeability.dat</filename> 
+                </permeability>
+            </rock-type>
+        </rock-properties>
+        <rock-fluid-properties>
+            <relative-permeability model="corey">
+                <krw>
+                    <krw_end>0.5</krw_end>
+                    <Swc>0.15</Swc>
+                    <nw>3.5</nw>
+                </krw>
+                <kro>
+                    <Sor>0.25</Sor>
+                    <no>1.5</no>
+                </kro>
+            </relative-permeability>
+        </rock-fluid-properties>
+    </physical>
+    <numerical>
+        <pressure-solver type="iterative-gmres">
+            <tolerance>1e-10</tolerance>
+            <max-number-steps>1000</max-number-steps>
+            <pre-conditioning type="amg">
+                <number-coarse-levels>5</number-coarse-levels>
+                <number-relax-iterations>3</number-relax-iterations>
+            </pre-conditioning>
+        </pressure-solver>
+        <saturation-solver>
+            <total-time-analysis>200</total-time-analysis>            
+            <courant>0.9</courant>
+            <limiter type="none"/>
+        </saturation-solver>
+    </numerical>
+</delfine>
