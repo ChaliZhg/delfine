@@ -1,0 +1,13 @@
+#----------------------------------------------------------------------
+# Script para "compilar" os arquivos usados na dissertacao de mestrado
+# Autor: Bruno Luna
+# Data: 29/11/2010
+#---------------------------------------------------------------------
+clear
+pdflatex tese.tex
+pdflatex tese.tex
+bibtex tese.aux
+pdflatex tese.tex
+
+exit 0 
+
