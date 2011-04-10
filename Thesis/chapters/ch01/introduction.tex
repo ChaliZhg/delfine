@@ -1,0 +1,109 @@
+\chapter{Introdução}
+\label{ch:introduction}
+
+
+
+\section{Motivação}
+\label{sc:motivation}
+
+Dentro do contexto atual de busca constante por um diferencial
+competitivo, tem havido uma procura, tanto a nível acadêmico como
+empresarial, de encontrar modos para maximizar a produtividade nas
+mais diversas atividades. Na área de pesquisa e desenvolvimento em
+simulação computacional não é diferente, existindo atualmente vários
+meios para aperfeiçoar o processo de análise dos fenômenos estudados,
+dentre eles podemos citar: o desenvolvimento de métodos numéricos
+mais precisos e eficientes computacionalmente (CARVALHO, 2005), a
+utilização de técnicas de programação para computação paralela em
+máquinas de memória distribuída, o uso de procedimentos automáticos
+de adaptação de malhas (ARAÚJO, 2004), entre outros. Como pôde ser
+observado, apesar de cada técnica ter o seu próprio enfoque e
+características diferentes, o objetivo de obter a melhor solução com o
+menor custo computacional possível é comum a todas. Em meio a este
+vasto campo de possibilidades de estudo, o foco deste projeto de iniciação
+científica foi o estudo de técnicas de aceleração de convergência via
+Multigrid. \citep{Trottenberg2001} \citep{Hughes2000} \citep{Fortuna2000}
+\citep{Briggs2000} \citep{Savitch2004} \citep{Sorensen2001} \cite{Sorensen2001}
+\citep{Carvalho2005} \citep{Silva2008} \citep{Mavriplis1998} \citep{Venkatakrishnan1994}
+\citep{Bell2008} \citep{Chen2006} \citep{Wells2008} \citep{Li2004}
+\citep{Langtangen2010} \citep{Martelli2006} \citep{Peaceman1977} \citep{Aziz1979}
+
+A idéia central do Multigrid consiste na escolha de um método de
+solução (suavizador) adequado para amortecer os erros associados às
+altas frequências, enquanto que os erros associados às baixas frequências
+são amortecidos através de malhas grosseiras, onde estes se manifestam
+como frequências altas (BRIGGS, 1987).
+
+A solução de problemas de escoamento são usualmente
+caracterizados pela presença de um grande número de diferentes escalas
+de comprimento. Para geometrias complexas, o número de escalas do
+problema irá aumentar ainda mais à medida que os diversos componentes
+interagem. Algumas regiões do domínio são dominadas pela influência
+local, enquanto outras regiões são criticamente dependentes das
+características da solução localizadas à uma distância maior. Em sistemas
+numéricos, isto quer dizer que existe um forte acoplamento entre
+variáveis que estão fracamente acopladas na discretização (SORENSEN,
+2001). Esquemas explícitos irão normalmente requerer um grande
+número de iterações para transferir a informação entre tais pontos do
+domínio de solução. Devido ao forte acoplamento, a quantidade de
+informação a ser trocada entre os pontos é grande. Logo, ao passo que os
+esquemas explícitos são capazes de eliminar rapidamente os erros locais
+de alta frequência, as baixas frequências, refletindo erros de uma
+natureza mais global, são muito mais lentos para dissipar através das
+iterações da solução (LIN, 1995).
+
+Métodos de Multigrid foram desenvolvidos para efetivamente
+amortecer os erros de todas as frequências simultaneamente, enquanto
+se mantém um pequeno número de operações por iteração e um baixo
+uso de memória em esquemas explícitos. Existem dois tipos de
+abordagens para o Multigrid: a geométrica, a qual atua no nível de
+discretização das equações e a algébrica, a qual considera apenas o
+sistema linear de equações. O Multigrid Geométrico consiste
+essencialmente em resolver as equações discretas em várias malhas com
+diferentes níveis de refinamento. Cada malha é responsável por remover
+um determinado intervalo de frequências de erros, com as malhas
+grosseiras responsáveis pelo amortecimento das baixas frequências. A
+medida em que a complexidade da malha diminui e o espaçamento é
+aumentado, o domínio de influência de cada nó vai aumentar em
+tamanho. Um esquema explícito de suavização em uma malha grosseira
+pode então eficientemente amortecer tais erros de baixa frequência, que
+diminuem a velocidade de convergência do método. Isto acontece,
+principalmente, devido ao tamanho reduzido do sistema e maior tamanho
+de passo de tempo permitido para a malha grosseira. Além disso, o custo
+computacional por nó é consideravelmente menor na malha grossa em
+comparação com a malha fina (SORENSEN, 2001).
+
+Tradicionalmente, a geração da sequência de malhas não-
+estruturadas para serem utilizadas no método Multigrid tem sido feita
+gerando-se malhas com diferentes níveis de refinamento no programa de
+geração de malhas, onde isto é feito normalmente dobrando o
+espaçamento em cada direção da malha durante o processo de geração.
+Obtém-se então uma sequência de malhas dissociadas entre si (non-
+nested). Acontece que este estratégia demanda sucessivas buscas para
+realização de interpolação entre malhas e introduz erros nos diferentes
+níveis de refinamentos. Este problema se agrave no caso de geometrias
+complexas onde tal interpolação pode ser bastante imprecisa. Uma
+possível alternativa seria usar uma geração automática de malhas
+hierárquicas (nested), pois assim reduz-se os erros por interpolação
+(BARROS, 2002).
+
+A técnica estudada durante este projeto é chamada de
+Agglomeration Multigrid, e consiste basicamente em aglomerarmos
+gradativamente os volumes de controle referentes à cada nó da malha,
+logo, desta forma, geramos uma nova malha contida na malha anterior,
+cada vez mais grosseira, sem necessidade de intervenção manual. Este
+tipo de sequência de malhas é adequado para uso com o método dos
+volumes finitos(MVF) implementado para lidar com malhas não-
+estruturadas.
+
+Logo, no presente trabalho buscou-se estudar, compreender e
+aplicar técnicas computacionais em problemas da engenharia atual,
+sendo o nosso enfoque principal a geração de um sequência de malhas
+através de técnica de aglomeração de malhas e a aceleração de
+convergência através de Multigrid.
+
+
+\section{Histórico do Multigrid}
+
+
+
