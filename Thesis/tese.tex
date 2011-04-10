@@ -1,0 +1,95 @@
+%%--------------------------------------------------
+%%
+%% Dissertação de Mestrado
+%% Autor: Bruno Luna - Data(Início): 29/11/2010 
+%%
+%%---------------------------------------------------
+\documentclass[pt,oneside,onehalfspacing]{risethesis}
+
+\usepackage{natbib}
+\usepackage{babel}
+\usepackage{supertabular}
+\usepackage{fancybox}
+\usepackage{acronym}
+%% Change the following pdf author attribute name to your name.
+\usepackage[linkcolor=black,citecolor=black,urlcolor=black,colorlinks,pdfpagelabels,pdftitle={brunoluna-msc},pdfauthor={Bruno Gustavo Borges Luna}]{hyperref}
+
+\address{RECIFE}
+
+\universitypt{Universidade Federal de Pernambuco}
+\universityen{Federal University of Pernambuco}
+
+\departmentpt{Centro de Tecnologia e Geociências}
+\departmenten{Centre for Technology and Geosciences}
+
+\programpt{Pós-graduação em Engenharia Mecânica}
+\programen{Graduate in Mechanical Engineering}
+
+\majorfieldpt{Engenharia Mecânica}
+\majorfielden{Mechanical Engineering}
+
+\title{Aceleração de Convergência via Multigrid de Simulador de Escoamentos em Meios Porosos}
+\date{JULHO/2011}
+
+\author{Bruno Gustavo Borges Luna}
+\adviser{Paulo Roberto Maciel Lyra}
+\coadviser{Ramiro Brito Willmersdorf}
+
+\begin{document}
+
+\frontmatter
+\frontpage
+\presentationpage
+
+\begin{dedicatory}
+Dedico esta dissertação à \ldots
+\end{dedicatory}
+
+\acknowledgements
+Gostaria de agradecer \ldots
+
+\resumo
+\input{chapters/extras/resumo}
+
+\abstract
+\input{chapters/extras/abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+% Acronyms
+%\input{chapters/extras/acronyms}
+\mainmatter
+
+%% Here you include your chapters
+% \include{chapters/introduction/main}
+
+% CHAPTER 01 - INTRODUCTION
+\include{chapters/ch01/introduction}
+
+% CHAPTER 02 - MATHEMATICAL FORMULATION
+\include{chapters/ch02/formulacaoMatematica}
+
+% CHAPTER 03 - NUMERICAL FORMULATION
+\include{chapters/ch03/formulacaoNumerica}
+
+% CHAPTER 04 - IMPLEMENTATION
+\include{chapters/ch04/implementacao}
+
+% CHAPTER 05 - RESULTS
+\include{chapters/ch05/resultados}
+
+\bibliographystyle{natbib}
+\addcontentsline{toc}{chapter}{Referências Bibliográficas}
+%% REFERENCES
+\bibliography{chapters/extras/references}
+
+% Appendix (Uncomment for using)
+%\clearpage
+%\addappheadtotoc
+%\appendix
+%\appendixpage
+%% Here you include your appendix files
+%\include{chapters/appendix/a01}
+
+\end{document}
