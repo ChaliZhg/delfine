@@ -4,6 +4,7 @@
 # Data: 29/11/2010
 #---------------------------------------------------------------------
 clear
+
 pdflatex tese.tex
 pdflatex tese.tex
 bibtex tese.aux
