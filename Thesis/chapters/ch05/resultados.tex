@@ -5,23 +5,49 @@ Neste capítulo serão apresentados exemplos e resultados obtidos utilizando a met
 
 \section{Problemas Elípticos}
 \label{sc:elipticos}
-Este seção tem por objetivo principal avaliar a resolução da equação de pressão, a qual para o caso de estado estacionário, pode ser considerada uma típica equação elíptica.
+Esta seção tem por objetivo avaliar os métodos utilizados para a resolução da equação de pressão em meios porosos, a qual para o estado estacionário pode ser considerada uma típica equação elíptica. Devido a essa característica, a metodologia utilizada pode ser analisada utilizando-se de problemas modelos que compartilham das mesmas propriedades matemáticas. Uma particularidade comum aos problemas regidos por equações elípticas é que todo o domínio de interesse $\Omega$ é afetado por qualquer mudança no valor da variável em um ponto qualquer no interior de $\Omega$, ou em sua fronteira $\delta\Omega$ \citep{Fortuna2000}. Isto significa que uma perturbação em um ponto irá ter influência sobre todo o domínio, sendo que a mesma diminui com o aumento da distância em relação ao ponto originador de tal perturbação. Sendo assim, tais problemas tendem a apresentar soluções suaves ao longo do domínio. Além da equação de pressão, outros exemplos de aplicação deste tipo de equação são o cálculo do potencial elétrico, da difusão de calor em uma chapa metálica e de escoamentos incompressíveis, invíscidos e irrotacionais (também conhecidos como escoamentos potenciais).
 
-\subsection{Permeabilidade Homogênea}
-\label{sc:homogenea}
-Para casos no qual o campo de permeabilidade não varia ao longo do domínio, podemos dizer que o mesmo é homogêneo.
+A equação de Poisson é normalmente utilizada como modelo para testar metodologias de resolução de equações elípticas. A mesma pode ser descrita como:
+\begin{equation} \label{eq:poi}
+\nabla^{2} u = f
+\end{equation}
+
+Em coordenadas cartesianas e considerando um coeficiente variável $K(x,y,z)$, esta equação pode ser representada por:
+\begin{equation} \label{eq:poicart}
+\frac{\partial }{\partial x}\left(K\frac{\partial u}{\partial x}\right) + \frac{\partial }{\partial y}\left(K\frac{\partial u}{\partial y}\right) + \frac{\partial }{\partial z}\left(K\frac{\partial u}{\partial z}\right) = f(x,y,z)
+\end{equation}
+
+Nas seções seguintes, iremos resolver equações do tipo \ref{eq:poicart} considerando diversas possibilidades para o coeficiente $K$ de modo a demonstrar a flexibilidade da metodologia utilizada para lidar com meios homogêneos, heterogêneos, iso- e anisotrópicos. Vários parâmetros de interesse serão avaliados a partir dos resultados obtidos, entre eles:
+\begin{itemize}
+\item Erro da solução numérica quando comparada com a solução analítica, a qual para problemas simples é facilmente encontrada.
+\item Taxas de convergências para uma sequência de malhas sucessivamente refinadas.
+\item Evolução do resíduo para diferentes estratégias de resolução do sistema de equações lineares
+\end{itemize}
+
+\subsection{Meio Homogêneo e Isotrópico}
+\label{sc:homogeneoiso}
+Este primeiro exemplo foi originalmente proposto em \cite{Chen2006}, sendo resolvido utilizando dois métodos diferentes, o CVFA (\emph{Control Volume Function Approximation}) e o CVFE (\emph{Control Volume Finite Element}). Este problema também foi explorado em \cite{Silva2008} utilizando duas variações do Método dos Volumes Finitos baseado em Arestas (EBFV1 e EBFV2). Este exemplo é um problema de valor de contorno que pode ser representado do modo a seguir:
+
+\begin{equation} \label{eq:homogeneoiso}
+\nabla(K\nabla u) = 2 \pi^{2} \cos (\pi x) cos(\pi y) \quad \textrm{em  } \quad \Omega = \{(x,y) \vert 0 < x < 1 \textrm{ e } 0 < y < 1\}
+\end{equation}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{chapters/ch05/residuals_ex02.pdf}
-\caption[Resíduo para problema homogênio com tensor cheio]{Resíduo obtido para o problema homogêneo com o tensor cheio.}
-\label{fig:residuals_ex02}
+\includegraphics[width=0.5\textwidth]{chapters/ch05/HomogeneoIsotropico_N=64}
+\caption[Campo escalar para malha 64x64]{Campo escalar obtido utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
+\label{fig:HomogeneoIsotropico_N=64}
 \end{figure}
 
 Para o exemplo 02 retirado de \citep{Silva2008}, a evolução do resíduo pode ser vista na figura~\ref{fig:residuals_ex02}
 
-\subsection{Permeabilidade Heterogênea}
-\label{sc:heterogenea}
+\subsection{Meio Homogêneo e Anisotrópico}
+\label{sc:homogeneoaniso}
 Em um caso real, as propriedades da rocha irão variar ao longo do domínio, resultando em um caso heterogêneo.
 
+\subsection{Meio Heterogêneo e Anisotrópico}
+\label{sc:heterogeneoaniso}
 
+\section{Problemas Hiperbólicos}
+\label{sc:hiperbolicos}
+Ao se considerar também a equação de saturação, o problema do deslocamento de fluidos em meios porosos passa a ter também um componente altamente hiperbólico.

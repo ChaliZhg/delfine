@@ -14,6 +14,9 @@
 from scipy.sparse import csr_matrix
 from pyamg import smoothed_aggregation_solver
 
+# For tests only###############
+from pyamg.krylov._cg import cg
+#########################
 
 class SolveEqSystem:
     """Solves the equation system with pyAMG.""" 
@@ -48,14 +51,20 @@ class SolveEqSystem:
         # OBS: The max_coarse parameters tells the maximum number of Degrees of
         # freedom in the coarsest mesh, and not the number of coarse levels as would
         # be expected (at least by me!).
-        ml = smoothed_aggregation_solver(Asp,max_coarse=10)
-        residuals = []
-        x = ml.solve(b,tol=1e-10,accel="gmres",residuals=residuals)
         
+        # Using AMG Solver
+        ml = smoothed_aggregation_solver(Asp,max_coarse=1)
+        residuals = []
+        x = ml.solve(b,tol=1e-10,accel="cg",residuals=residuals)
+        
+        # Using conventional Conjugate Gradients Solver (use parameter.num to define it
+        # automatically on initialization)
+        #(x, flag) = cg(Asp,b, maxiter=200, tol=1e-10,  residuals=residuals)
+   
         # Print residuals history
         residuals = residuals/residuals[0]
         print ml
-        #print residuals
+        ##print residuals
         
         # Define return parameters
         delfineVar.x = x
