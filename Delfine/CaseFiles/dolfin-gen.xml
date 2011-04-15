@@ -1,7 +1,7 @@
 <delfine>
     <geometry>
         <mesh dimension="2" type="dolfin-generated">
-            <dolfin-generated type="UnitSquare" nx="64" ny="64"/>
+            <dolfin-generated type="UnitSquare" nx="256" ny="256"/>
 	    <subdomains quantity="1"/>
         </mesh>
         <boundary-conditions>
@@ -56,11 +56,11 @@
         </rock-fluid-properties>
     </physical>
     <numerical>
-        <pressure-solver type="iterative-gmres">
+        <pressure-solver type="cg">
             <tolerance>1e-10</tolerance>
-            <max-number-steps>1000</max-number-steps>
+            <max-number-steps>200</max-number-steps>
             <pre-conditioning type="amg">
-                <number-coarse-levels>5</number-coarse-levels>
+                <number-coarse-levels>4</number-coarse-levels>
                 <number-relax-iterations>3</number-relax-iterations>
             </pre-conditioning>
         </pressure-solver>

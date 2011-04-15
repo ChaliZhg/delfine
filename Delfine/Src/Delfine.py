@@ -63,7 +63,7 @@ class Delfine:
         self.elliptic.assemble_withDolfin(self.transferData, self.parameter,  self.mesh)
         
         # Solve equations system provenient from the variational form of the problem
-        self.solver.solve_withPyAMG(self.transferData)
+        self.solver.solve_withPyAMG(self.transferData, self.parameter)
         
         # Plot solution, residual and compare numerical to analytical solution
         self.outPlot.plotResults(self.transferData)

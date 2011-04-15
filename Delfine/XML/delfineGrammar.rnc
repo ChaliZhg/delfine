@@ -47,7 +47,7 @@ rock-fluid-properties-element = element rock-fluid-properties {
                                                                relative-permeability-element          
                                                               }
 pressure-solver-element = element pressure-solver {
-                                                   attribute type {"direct-ilu" | "iterative-gmres" | "iterative-cg"}&
+                                                   attribute type {"lu" | "gmres" | "cg"}&
                                                    tolerance-element&
                                                    max-number-steps-element&
                                                    pre-conditioning-element
@@ -127,7 +127,7 @@ max-number-steps-element = element max-number-steps {
                                                      xsd:nonNegativeInteger
                                                     }
 pre-conditioning-element = element pre-conditioning {
-                                                     attribute type {"amg" | "LU" | "none"}&
+                                                     attribute type {"amg" | "ilu" | "none"}&
                                                      number-coarse-levels-element?&
                                                      number-relax-iterations-element?
                                                     }

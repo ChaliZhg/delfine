@@ -281,7 +281,7 @@ class DelfineInput:
         # ## Pressure Solver parameters - num.pressSolv
         parameter.num.pressSolv.type = pressSolv.attrib["type"]
         parameter.num.pressSolv.tolerance = float(pressSolv.findtext('tolerance'))
-        parameter.num.pressSolv.maxNumSteps = float(pressSolv.findtext('max-number-steps'))
+        parameter.num.pressSolv.maxNumSteps = int(pressSolv.findtext('max-number-steps'))
         parameter.num.pressSolv.preConditioning.type = pressSolv.find('pre-conditioning').attrib["type"]
         # Writing in .log file for check purposes
         log.write("Pressure Solver Type: " + str(parameter.num.pressSolv.type) +"\n")
