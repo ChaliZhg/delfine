@@ -12,25 +12,43 @@ A equação de Poisson é normalmente utilizada como modelo para testar metodologia
 \nabla^{2} u = f
 \end{equation}
 
-Em coordenadas cartesianas e considerando um coeficiente variável $K(x,y,z)$, esta equação pode ser representada por:
+Em coordenadas cartesianas e considerando um coeficiente anisotrópico e variável no espaço $\mathbf{K}(x,y,z)$, esta equação pode ser representada por:
 \begin{equation} \label{eq:poicart}
-\frac{\partial }{\partial x}\left(K\frac{\partial u}{\partial x}\right) + \frac{\partial }{\partial y}\left(K\frac{\partial u}{\partial y}\right) + \frac{\partial }{\partial z}\left(K\frac{\partial u}{\partial z}\right) = f(x,y,z)
+\frac{\partial }{\partial x}\left(\mathbf{K}\frac{\partial u}{\partial x}\right) + \frac{\partial }{\partial y}\left(\mathbf{K}\frac{\partial u}{\partial y}\right) + \frac{\partial }{\partial z}\left(\mathbf{K}\frac{\partial u}{\partial z}\right) = f(x,y,z)
 \end{equation}
 
-Nas seções seguintes, iremos resolver equações do tipo \ref{eq:poicart} considerando diversas possibilidades para o coeficiente $K$ de modo a demonstrar a flexibilidade da metodologia utilizada para lidar com meios homogêneos, heterogêneos, iso- e anisotrópicos. Vários parâmetros de interesse serão avaliados a partir dos resultados obtidos, entre eles:
+Nas seções seguintes, iremos resolver equações do tipo \ref{eq:poicart} considerando diversas possibilidades para o coeficiente $\mathbf{K}$ de modo a demonstrar a flexibilidade da metodologia utilizada para lidar com meios homogêneos, heterogêneos, iso- e anisotrópicos. Vários parâmetros de interesse serão avaliados a partir dos resultados obtidos, entre eles:
 \begin{itemize}
 \item Erro da solução numérica quando comparada com a solução analítica, a qual para problemas simples é facilmente encontrada.
 \item Taxas de convergências para uma sequência de malhas sucessivamente refinadas.
-\item Evolução do resíduo para diferentes estratégias de resolução do sistema de equações lineares
+\item Evolução do resíduo para diferentes estratégias de resolução do sistema de equações lineares.
 \end{itemize}
 
 \subsection{Meio Homogêneo e Isotrópico}
 \label{sc:homogeneoiso}
-Este primeiro exemplo foi originalmente proposto em \cite{Chen2006}, sendo resolvido utilizando dois métodos diferentes, o CVFA (\emph{Control Volume Function Approximation}) e o CVFE (\emph{Control Volume Finite Element}). Este problema também foi explorado em \cite{Silva2008} utilizando duas variações do Método dos Volumes Finitos baseado em Arestas (EBFV1 e EBFV2). Este exemplo é um problema de valor de contorno que pode ser representado do modo a seguir:
-
+Este primeiro exemplo foi originalmente proposto em \citep{Chen2006}, sendo resolvido utilizando dois métodos diferentes, o CVFA (\emph{Control Volume Function Approximation}) e o CVFE (\emph{Control Volume Finite Element}). Este problema também foi explorado em \citep{Silva2008} utilizando duas variações do Método dos Volumes Finitos baseado em Arestas (EBFV1 e EBFV2). Este exemplo é um problema de valor de contorno que pode ser representado do modo a seguir:
 \begin{equation} \label{eq:homogeneoiso}
-\nabla(K\nabla u) = 2 \pi^{2} \cos (\pi x) cos(\pi y) \quad \textrm{em  } \quad \Omega = \{(x,y) \vert 0 < x < 1 \textrm{ e } 0 < y < 1\}
+\nabla(\mathbf{K} \nabla u) = 2 \pi^{2} \cos (\pi x) cos(\pi y) \quad \textrm{em  } \quad \Omega = \{(x,y) \ \vert \ 0 < x < 1 \textrm{ e } 0 < y < 1\}
 \end{equation}
+
+Onde $\mathbf{K}$ é uma matriz simétrica e diagonal representado por:
+\begin{equation} \label{eq:coeffhomoiso}
+\mathbf{K} = \left( \begin{array}{cc}
+1 & 0 \\
+0 & 1
+\end{array} \right)
+\end{equation}
+
+Este problema apresenta condições de contorno periódicas nas fronteiras inferior e superior, já as fronteiras laterais estão sujeitas a uma condição de fluxo zero. Matematicamente tais condições de contorno podem ser definidas do seguinte modo:
+\begin{equation} \label{bchomoiso}
+\left. \begin{array}{lll}
+u = \cos(\pi x)  & \textrm{para } 0<x<1  \textrm{ e } y=0} \\
+u = -\cos(\pi x) & \textrm{para } 0<x<1 \textrm{ e } y=1}  \\
+\nabla u \cdot \vec{n} = 0 & \textrm{para } 0<y<1 \textrm{ e } x=0,1}
+\end{array} \right.
+\end{equation}
+
+Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema,a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A figura \ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de 64x64 elementos, a qual já permite obter uma excelente concordância com a solução analítica.
 
 \begin{figure}
 \centering
@@ -39,11 +57,95 @@ Este primeiro exemplo foi originalmente proposto em \cite{Chen2006}, sendo resol
 \label{fig:HomogeneoIsotropico_N=64}
 \end{figure}
 
-Para o exemplo 02 retirado de \citep{Silva2008}, a evolução do resíduo pode ser vista na figura~\ref{fig:residuals_ex02}
+Para uma sequência de malhas formadas por triângulos lineares, se espera uma taxa de convergência de segunda ordem, enquanto para uma sequência formada por triângulos quadráticos espera-se uma convergência de terceira ordem \citep{Hughes2000}. De modo a verificar o comportamento do método utilizado, resolvemos o problema proposto utilizando elementos de 1ª(tabela \ref{tab:homoisolinear}) e 2º ordem(tabela \ref{tab:homoisoquad}), comparando entre si os resultados obtidos e também com outros disponíveis na literatura para elementos lineares (tabelas \ref{tab:homoisoCVFA} e \ref{tab:homoisoEBFV1}) \citep{Chen2006}\citep{Silva2008}. De um modo geral, as taxas de convergências obtidas se aproximaram bastante das taxas teóricas tanto para o caso de elementos triangulares quanto quadráticos. A comparação com os resultados da literatura ficam um pouco prejudicadas por terem os erros sido calculados através de normas diferentes (norma do máximo neste trabalho, e RMS na literatura citada). Porém, é possível observar um comportamento coerente do erro obtido, pois com elementos quadráticos foram obtidos erros consideravelmente menores do que com os métodos de segunda ordem CVFA e EBFV1. Por outro lado, ao utilizar-se elementos lineares foram obtidos erros maiores porém na mesma ordem de grandeza daqueles obtidos na literatura.
+
+\begin{table}
+\caption[Erro e taxa de convergência para problema homogêneo e isotrópico]{Erro e taxa de convergência obtidos neste trabalho para a solução da equação elíptica em meio homogêneo e isotrópico.} 
+\centering
+\subtable[Triângulo Linear]{
+	\begin{tabular}{|c|c|c|}
+	\hline N & \vert\vert E_{max}\vert\vert & q_{max} \\
+	\hline
+	\hline 8 & 2.5e-02 & --- \\ 
+	\hline 16 & 6.4e-03 & 1.97 \\ 
+	\hline 32 & 1.6e-03 & 1.99 \\ 
+	\hline 64 & 4.0e-04 & 1.99 \\ 
+	\hline 128 & 1.0e-04 & 2.00 \\ 
+	\hline 256 & 2.5e-05 & 1.99 \\ 
+	\hline 
+	\end{tabular}
+	\label {tab:homoisolinear}
+}
+\qquad\qquad
+\subtable[Triângulo Quadrático]{
+	\begin{tabular}{|c|c|c|}
+	\hline N & \vert\vert E_{max}\vert\vert & q_{max} \\
+	\hline
+	\hline 8 & 6.4e-04 & --- \\ 
+	\hline 16 & 8.7e-05 & 2.87 \\ 
+	\hline 32 & 1.1e-05 & 2.94 \\ 
+	\hline 64 & 1.4e-06 & 2.98 \\ 
+	\hline 128 & 1.8e-07 & 2.98 \\ 
+	\hline 256 & 2.2e-08 & 3.00 \\ 
+	\hline 
+	\end{tabular}
+	\label {tab:homoisoquad}
+}
+\end{table}
+
+\begin{table}
+\caption[Erro e taxa de convergência para problema homogêneo e isotrópico - literatura]{Erro e taxa de convergência obtidos em \cite{Chen2006} e \cite{Silva2008} para a solução da equação elíptica em meio homogêneo e isotrópico.} 
+\centering
+\subtable[CVFA\citep{Chen2006}]{
+	\begin{tabular}{|c|c|c|}
+	\hline N & \vert\vert E_{rms}\vert\vert & q_{rms} \\
+	\hline
+	\hline 8 & 1.2e-02 & --- \\ 
+	\hline 16 & 3.0e-03 & 2.02 \\ 
+	\hline 32 & 7.4e-03 & 2.01 \\ 
+	\hline 64 & 1.8e-04 & 2.00 \\ 
+	\hline 
+	\end{tabular}
+	\label {tab:homoisoCVFA}
+}
+\qquad\qquad
+\subtable[EBFV1\citep{Silva2008}]{
+	\begin{tabular}{|c|c|c|}
+	\hline N & \vert\vert E_{rms}\vert\vert & q_{rms} \\
+	\hline
+	\hline 8 & 6.9-03 & --- \\ 
+	\hline 16 & 1.4e-03 & 2.29 \\ 
+	\hline 32 & 3.2e-04 & 2.13 \\ 
+	\hline 64 & 7.7e-05 & 2.06 \\ 
+	\hline 
+	\end{tabular}
+	\label {tab:homoisoEBFV1}
+}
+\end{table}
+
+Para a resolução do sistema de equações lineares provenientes da discretização do problema foram testadas três diferentes alternativas:
+\begin{itemize}
+\item Métodos dos Gradientes Conjugados(CG) aplicado isoladamente.
+\item Método do Multigrid Algébrico(AMG) aplicado isoladamente.
+\item Multigrid Algébrico aplicado como pré-condicionador para o método dos Gradientes Conjugados (AMG+CG).
+\end{itemize}
+
+Para a realização dos testes, foi utilizada uma malha de 32x32 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 "malhas" sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
+
+Como pode ser observado na figura \ref{fig:residualHomogeneoIsotropico_N=32}, os esquemas utilizando o método multigrid (AMG e AMG+CG) apresentaram resultados bastante superiores em relação ao método puramente iterativo CG. Enquanto o método AMG+CG reduz o resíduo em aproximadamente uma ordem de grandeza por iteração, o método CG necessita de aproximadamente 10 vezes mais iterações para reduzir o resíduo na mesma proporção. É interessante comparar também os resultados obtidos ao utilizar-se o AMG isoladamente e ao usá-lo como um pré-condicionador para o método dos Gradientes Conjugados. Percebe-se que nas primeiras iterações os dois métodos apresentam fatores de convergência para o resíduo praticamente idênticos, porém a medida que se prossegue com as iterações, o AMG usado isoladamente tende a apresentar uma piora na taxa de convergência, enquanto o método que utiliza a combinação AMG+CG mantém o excelente fator de convergência obtido inicialmente.
+
+Isto se deve a um aspecto bastante observado na literatura \citep{Mavriplis2001}\citep{Trottenberg2001}\citep{Oosterlee1998} no qual um único ou poucos autovalores da matriz representante do operador de iteração Multigrid estão com um valor muito acima daquele obtido para os demais autovalores. Sendo que o autovalor máximo (também chamados de raio espectral) do operador de iteração indicam em última análise o fator de convergência assimptótica para o problema \citep{Briggs2000}, limitando portanto a taxa de convergência possível de ser obtida. Um modo de contornar tal problema é justamento utilizar algum método de subespaço de Krylov, como é o caso do método CG, os quais tem a característica de em poucas iterações obter os autovetores relacionados aos poucos autovalores isolados \citep{Trottenberg2001}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{chapters/ch05/residualHomogeneoIsotropico_N=32}
+\caption[Comparação da evolução dos resíduos para malha 32x32]{Comparação da evolução dos resíduos para malha 32x32 discretizada por triângulos lineares.}
+\label{fig:residualHomogeneoIsotropico_N=32}
+\end{figure}
 
 \subsection{Meio Homogêneo e Anisotrópico}
 \label{sc:homogeneoaniso}
-Em um caso real, as propriedades da rocha irão variar ao longo do domínio, resultando em um caso heterogêneo.
+Neste segundo exemplo, foi considerado um problema no qual 
 
 \subsection{Meio Heterogêneo e Anisotrópico}
 \label{sc:heterogeneoaniso}

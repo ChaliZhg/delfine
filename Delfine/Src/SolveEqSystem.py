@@ -5,7 +5,7 @@
 # Author: Bruno Luna
 # Date: 07/02/11
 # Modifications Date:
-# 
+# 14/04/11: Added functionality to use solver parameter read from data file
 #
 #
 #
