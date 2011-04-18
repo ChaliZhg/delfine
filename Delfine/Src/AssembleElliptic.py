@@ -38,15 +38,16 @@ class AssembleElliptic:
             return x[0] < DOLFIN_EPS or x[0] > 1.0 - DOLFIN_EPS or \
                   x[1] < DOLFIN_EPS or x[1] > 1.0 - DOLFIN_EPS
     
-        # Define boundary (0<x<1 and y=0)
+        ############### Begin - Homogeneous Isotropic Ex.###############
+        # Define boundary (0<x<1 and y=0) - Homo Iso example
         def dirichlet_boundary1(x):
             return any_boundary(x) and abs(x[1]) < DOLFIN_EPS
             
-        # Define boundary (0<x<1 and y=1)
+        # Define boundary (0<x<1 and y=1) - Homo Iso example
         def dirichlet_boundary2(x):
             return any_boundary(x) and abs(x[1] - 1) < DOLFIN_EPS
             
-        # Define boundary condition
+        # Define boundary condition -  Homo Iso example
         u0= Expression('cos(pi*x[0])*cos(pi*x[1])') # Analytical solution
         u01= Expression('cos(pi*x[0])')
         u02= Expression('- cos(pi*x[0])')
@@ -55,13 +56,22 @@ class AssembleElliptic:
         bc2 = DirichletBC(V, u02, dirichlet_boundary2)
         bc = [bc1,  bc2]
         
-        # Define permeability matrix
+        # Define permeability matrix -  Homo Iso example
         C = as_matrix(((1.0, 0.0), (0.0, 1.0)))
+        ############### End - Homogeneous Isotropic Ex.#################
+        
+        # Define boundary condition -  Homo Aniso example
+       #u0= Expression('exp(x[0]*x[1])') # Analytical solution and bc
+       #bc = DirichletBC(V, u0, any_boundary)
+        
+        # Define permeability matrix -  Homo Aniso example
+        #C = as_matrix(((2.0, 1.0), (1.0, 2.0)))
         
         # Define variational problem
         v = TestFunction(V)
         u = TrialFunction(V)
-        f = Expression("2*pow(pi,2)*cos(pi*x[0])*cos(pi*x[1])")
+        f = Expression("2*pow(pi,2)*cos(pi*x[0])*cos(pi*x[1])") # Homo Iso example
+        #f = Expression("-2*(1 + pow(x[0],2) + x[0]*x[1] + pow(x[1],2))*exp(x[0]*x[1])") # -  Homo Aniso example
         g = Expression("0.0")
         a = inner(grad(v), C*grad(u))*dx
         L = v*f*dx - g*v*ds

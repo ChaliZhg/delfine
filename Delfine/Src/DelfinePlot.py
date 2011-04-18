@@ -18,7 +18,7 @@ class DelfinePlot:
     def __init__(self):
         pass
     
-    def plotResults(self, delfineVar):
+    def plotResults(self, delfineVar ,  parameter):
         """Plots the results as contour plots and the residuals history as x-y plot
             Input:
             elliptic = AssembleElliptic() [AssembleElliptic.py]
@@ -34,6 +34,8 @@ class DelfinePlot:
         # Getting data from eq. system solver
         x = delfineVar.x
         residuals = delfineVar.residuals
+        solverType = parameter.num.pressSolv.type
+        preCondType = parameter.num.pressSolv.preConditioning.type
         
         # Function to convert NumPy array to Dolfin vector
         def as_vector(x):
@@ -50,7 +52,17 @@ class DelfinePlot:
         
         # Save solution in raw text format
         resList = list(residuals)
-        fileTxt = open("Results/residuals.txt","w")
+
+        # File name definition
+        # PS: Name definitions just valid while
+        if (preCondType == "none"):
+            name = solverType.swapcase() 
+        elif (solverType == "none"):
+            name = preCondType.swapcase() 
+        else:
+            name = preCondType.swapcase() + '+' + solverType.swapcase() 
+        
+        fileTxt = open('Results/residuals_' + name + '.txt',"w")
         
         for res in resList:
             fileTxt.write(str(res) + "\n")

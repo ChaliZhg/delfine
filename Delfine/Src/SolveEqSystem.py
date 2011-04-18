@@ -67,13 +67,21 @@ class SolveEqSystem:
             # accelaration.
             nCoarse = parameter.num.pressSolv.preConditioning.numCoarseLevel
             ml = smoothed_aggregation_solver(Asp, max_levels=nCoarse, max_coarse=1)
-            if (solverType != "lu"):
+            if ((solverType == "cg") | (solverType == "gmres")):
                 # Use CG or GMRES acceleration
                 x = ml.solve(b,tol=tolerance, maxiter=maxStep, cycle='V', accel=solverType,residuals=residuals)
-            else:
+            elif(solverType == "none"):
                 # No accelaration (stand-alone AMG)
                 x = ml.solve(b,tol=tolerance, maxiter=maxStep, cycle='V', residuals=residuals)
-            
+            elif (solverType == "lu"):
+                # Trying to use a direct LU solver with amg, but it is not coherent
+                print "Error(7):"
+                print "Direct solver not compatible with amg"
+                print "You can try: amg+cg,amg+gmres,amg+none,"
+                print "             none+cg,none+gmres,none+lu,"
+                print "             ilu+cg,ilu+gmres"
+                print " "
+                sys.exit(1)
             print ml
         
         elif (preCondType == "none") :
@@ -87,15 +95,25 @@ class SolveEqSystem:
             elif (solverType == "lu"):
                 # Using a direct LU solver
                 # (still pending, to be done with dolfin solver schema, not pyamg)
-                print "Error(7):"
+                print "Error(8):"
                 print "Direct solver still not available, use cg or gmres instead"
+                print " "
+                sys.exit(1)
+            elif (solverType == "none"):
+                # Using a direct LU solver
+                # (still pending, to be done with dolfin solver schema, not pyamg)
+                print "Error(9):"
+                print "Invalid solver + preconditioner option!"
+                print "You can try: amg+cg,amg+gmres,amg+none,"
+                print "             none+cg,none+gmres,none+lu,"
+                print "             ilu+cg,ilu+gmres"
                 print " "
                 sys.exit(1)
                 
         elif (preCondType == "ilu"):
                 # Using a ILU preconditioner
                 # (still pending, to be done with dolfin solver schema, not pyamg)
-                print "Error(8):"
+                print "Error(10):"
                 print "ILU Preconditioner still not available, use amg or none instead"
                 print " "
                 sys.exit(1)

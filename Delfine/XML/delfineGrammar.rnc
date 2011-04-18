@@ -47,7 +47,7 @@ rock-fluid-properties-element = element rock-fluid-properties {
                                                                relative-permeability-element          
                                                               }
 pressure-solver-element = element pressure-solver {
-                                                   attribute type {"lu" | "gmres" | "cg"}&
+                                                   attribute type {"lu" | "gmres" | "cg" | "none"}&
                                                    tolerance-element&
                                                    max-number-steps-element&
                                                    pre-conditioning-element

@@ -31,7 +31,7 @@ Este primeiro exemplo foi originalmente proposto em \citep{Chen2006}, sendo reso
 \nabla(\mathbf{K} \nabla u) = 2 \pi^{2} \cos (\pi x) cos(\pi y) \quad \textrm{em  } \quad \Omega = \{(x,y) \ \vert \ 0 < x < 1 \textrm{ e } 0 < y < 1\}
 \end{equation}
 
-Onde $\mathbf{K}$ é uma matriz simétrica e diagonal representado por:
+Onde $\mathbf{K}$ é uma matriz simétrica e diagonal representada por:
 \begin{equation} \label{eq:coeffhomoiso}
 \mathbf{K} = \left( \begin{array}{cc}
 1 & 0 \\
@@ -53,7 +53,7 @@ Resolvemos o problema elíptico descrito utilizando a formulação detalhada no cap
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{chapters/ch05/HomogeneoIsotropico_N=64}
-\caption[Campo escalar para malha 64x64]{Campo escalar obtido utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
+\caption[Caso homogêneo e isotrópico. Campo escalar para malha 64x64]{Campo escalar obtido utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
 \label{fig:HomogeneoIsotropico_N=64}
 \end{figure}
 
@@ -139,17 +139,118 @@ Isto se deve a um aspecto bastante observado na literatura \citep{Mavriplis2001}
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch05/residualHomogeneoIsotropico_N=32}
-\caption[Comparação da evolução dos resíduos para malha 32x32]{Comparação da evolução dos resíduos para malha 32x32 discretizada por triângulos lineares.}
+\caption[Caso homogêneo e isotrópico. Comparação da evolução dos resíduos para malha 32x32]{Caso homogêneo e isotrópico. Comparação da evolução dos resíduos para malha 32x32 discretizada por triângulos lineares.}
 \label{fig:residualHomogeneoIsotropico_N=32}
 \end{figure}
 
 \subsection{Meio Homogêneo e Anisotrópico}
 \label{sc:homogeneoaniso}
-Neste segundo exemplo, foi considerado um problema no qual 
+Este problema foi originalmente proposto em \cite{Crumpton1995}, onde foi resolvido utilizando um método de volumes finitos centrado na célula (FCFV), tendo também sido estudado em \cite{Carvalho2005} e \cite{Silva2008} utilizando o já mencionado método dos volumes finitos baseado em arestas (EBFV)
+
+Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores diagonais ou cheios para representar o coeficiente $\mathbf{K}$. O problema proposto pode ser descrito através da equação \ref{eq:homogeneoaniso} aplicada em um domínio $\Omega = (0,1)x(0,1)$.
+\begin{equation} \label{eq:homogeneoaniso}
+\nabla(\mathbf{K} \nabla u) = -2(1 + x^2 + xy + y^2)e^{xy}
+\end{equation}
+
+Onde $\mathbf{K}$ é uma matriz simétrica e não-diagonal representada por:
+\begin{equation} \label{eq:coeffhomoaniso}
+\mathbf{K} = \left( \begin{array}{cc}
+2 & 1 \\
+1 & 2
+\end{array} \right)
+\end{equation}
+
+A definição deste problema está completa ao definir-se a condição de fronteira em todo o contorno $\delta\Omega$ como $u(x,y)=e^{xy}$.
+
+Na figura \ref{fig:HomogeneoAnisotropico_N=64} pode ser observado o campo escalar para a variável $u$, considerando uma discretização do domínio $\Omega$ com uma malha de 64x64 elementos triangulares de 1ª ordem.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{chapters/ch05/HomogeneoAnisotropico_N=64}
+\caption[Caso homogêneo e anisotrópico. Campo escalar para malha 64x64]{Caso homogêneo e anisotrópico. Campo escalar obtido utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
+\label{fig:HomogeneoAnisotropico_N=64}
+\end{figure}
+
+De modo a comparar os resultados obtidos com aqueles da literatura, calculamos o erro segundo a norma do máximo e as taxas de convergências para o mesmo considerando uma sequência de malhas sucessivamente refinadas (ver tabela \ref{tab:homoanisolinear}). Tais resultados foram comparados com aqueles obtidos tanto pelo FCFV quanto pelo EBFV (ver tabelas \ref{tab:homoanisocrump} e \ref{tab:homoanisocarvalho}).
+
+\begin{table}
+\caption[Erro e taxa de convergência para problema homogêneo e anisotrópico]{Erro e taxa de convergência obtidos neste trabalho para a solução da equação elíptica em meio homogêneo e anisotrópico.} 
+\centering
+\subtable[Triângulo Linear]{
+	\begin{tabular}{|c|c|c|}
+	\hline N & \vert\vert E_{max}\vert\vert & q_{max} \\
+	\hline
+	\hline 8 & 2.1e-03 & --- \\ 
+	\hline 16 & 5.3e-04 & 2.01 \\ 
+	\hline 32 & 1.3e-04 & 2.00 \\ 
+	\hline 64 & 3.3e-05 & 1.99 \\ 
+	\hline 128 & 8.3e-06 & 2.00 \\ 
+	\hline 256 & 2.1e-06 & 2.00 \\ 
+	\hline 
+	\end{tabular}
+	\label {tab:homoanisolinear}
+}
+\end{table}
+
+\begin{table}
+\caption[Erro e taxa de convergência obtidos na literatura para problema homogêneo e anisotrópico]{Erro e taxa de convergência obtidos em \cite{Crumpton1995} e \cite{Carvalho2005} para a solução da equação elíptica em meio homogêneo e anisotrópico.} 
+\centering
+\subtable[FCFV\citep{Crumpton1995}]{
+	\begin{tabular}{|c|c|c|}
+	\hline N & \vert\vert E_{rms}\vert\vert & q_{rms} \\
+	\hline
+	\hline 8 & 1.2e-03 & --- \\ 
+	\hline 16 & 2.9e-04 & 2.00 \\ 
+	\hline 32 & 7.3-05 & 1.99 \\ 
+	\hline 64 & 1.8e-05 & 1.99 \\ 
+	\hline 
+	\end{tabular}
+	\label {tab:homoanisocrump}
+}
+\qquad\qquad
+\subtable[EBFV\citep{Carvalho2005}]{
+	\begin{tabular}{|c|c|c|}
+	\hline N & \vert\vert E_{max}\vert\vert & q_{max} \\
+	\hline
+	\hline 8 & 3.0e-03 & --- \\ 
+	\hline 16 & 1.0e-03 & 1.58 \\ 
+	\hline 32 & 3.4-04 & 1.80 \\ 
+	\hline 64 & 8.9-05 & 1.94 \\
+	\hline 
+	\end{tabular}
+	\label {tab:homoanisocarvalho}
+}
+\end{table}
+
+Pode-se observar pelo resultados obtidos que novamente o MEF se comportou como esperado, apresentado uma taxa de convergência de ordem 2 para os elementos lineares. Os valores absolutos do erro na norma do máximo se comparam de maneira ligeiramente favorável aqueles apresentado em \cite{Carvalho2005}.
+
+Assim como para o primeiro exemplo, também neste fizemos um estudo a respeito da performance de diferentes métodos iterativos para a resolução do sistema de equações lineares provenientes da discretização do problema. Cinco diferentes alternativas foram testadas:
+\begin{itemize}
+\item Métodos dos Gradientes Conjugados (CG) aplicado isoladamente.
+\item Métodos do Resíduo Mínimo Generalizado (GMRES) aplicado isoladamente.
+\item Método do Multigrid Algébrico (AMG) aplicado isoladamente.
+\item Multigrid Algébrico aplicado como pré-condicionador para o método dos Gradientes Conjugados (AMG+CG).
+\item Multigrid Algébrico aplicado como pré-condicionador para o método do Resíduo Mínimo Generalizado (AMG+GMRES).
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{chapters/ch05/residualHomoAniso_N=64}
+\caption[Caso homogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64]{Caso homogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64 discretizada por triângulos lineares.}
+\label{fig:residualHomogeneoAnisotropico_N=64}
+\end{figure}
+
+Para a realização dos testes, foi utilizada uma malha de 64x64 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Um gráfico mostrando a evolução do resíduo normalizado para todos os métodos testados pode ser observado na figura \ref{fig:residualHomogeneoAnisotropico_N=64}, onde fica claro novamente a grande superioridade dos métodos que utilizam aceleração de convergência via multigrid em comparação com procedimentos puramente iterativos. É interessante notar também que para este exemplo os métodos CG e GMRES tiveram desempenhos bastante próximos, tanto isoladamente quanto em conjunto com o AMG enquanto pre-condicionador.
+
+
 
 \subsection{Meio Heterogêneo e Anisotrópico}
 \label{sc:heterogeneoaniso}
 
-\section{Problemas Hiperbólicos}
-\label{sc:hiperbolicos}
+\section{Problemas de Escoamentos Bifásicos em Meios Porosos}
+\label{sc:escoabifasico}
 Ao se considerar também a equação de saturação, o problema do deslocamento de fluidos em meios porosos passa a ter também um componente altamente hiperbólico.
+\subsection{1/4 de Cinco Poços Homogêneo}
+\label{sc:quarterfivespothomo}
+\subsection{1/4 de Cinco Poços Heterogêneo}
+\label{sc:quarterfivespothetero}

@@ -1,7 +1,7 @@
 <delfine>
     <geometry>
         <mesh dimension="2" type="dolfin-generated">
-            <dolfin-generated type="UnitSquare" nx="256" ny="256"/>
+            <dolfin-generated type="UnitSquare" nx="64" ny="64"/>
 	    <subdomains quantity="1"/>
         </mesh>
         <boundary-conditions>

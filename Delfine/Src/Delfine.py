@@ -66,7 +66,7 @@ class Delfine:
         self.solver.solve_withPyAMG(self.transferData, self.parameter)
         
         # Plot solution, residual and compare numerical to analytical solution
-        self.outPlot.plotResults(self.transferData)
+        self.outPlot.plotResults(self.transferData,  self.parameter)
         
 
 #############################################################

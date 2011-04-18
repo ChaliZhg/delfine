@@ -32,14 +32,14 @@ def main(argv):
                 usage()
                 sys.exit()
 
-    # Check that we at least one filename
+    # Check that we have at least one filename
     if (len(args) == 0):
         usage()
         sys.exit(2)
     
     # Define auxiliary variables
     filelist= args
-    format = ['bo-', 'rs-', 'k^-', 'gd-']
+    format = ['bo-', 'rs-', 'k^-', 'gd-', 'mx-']
     i = 0 # format index
     
     for name in filelist:
@@ -52,7 +52,7 @@ def main(argv):
         for line in file:
             t.append(float(line))
         
-        # Blue circles
+        # Plot residual
         plt.plot(t, format[i], label=name.split('.')[0].split('_')[1])
         plt.xlabel(u"Iteração")
         plt.ylabel(u"Resíduo Normalizado")
