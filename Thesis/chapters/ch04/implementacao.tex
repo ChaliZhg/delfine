@@ -1,17 +1,19 @@
 \chapter{Implementação Computacional}
 \label{ch:implementacao}
 
-Neste capítulo será apresentado os pacotes Dolfin e PyAMG, o primeiro foi extensivamente utilizado ao longo deste trabalho para a montagem das matrizes de elementos finitos e o segundo foi utilizado para resolver o sistema de equações provenientes das matrizes obtidas.
+Neste capítulo serão os apresentado os pacotes FEniCS/Dolfin e PyAMG, o primeiro foi extensivamente utilizado ao longo deste trabalho para a montagem das matrizes de elementos finitos e o segundo foi utilizado para resolver o sistema de equações provenientes das matrizes obtidas.
+
+Além disso, será apresentada a estrutura geral do programa gerado neste trabalho e as principais características do mesmo.
 
 \section{Estrutura Geral do Program}
 \label{sc:est_prog}
 O programa foi escrito na linguagem python, a qual apresenta várias vantagens sobre as outras, dentre as quais podemos citar:
 
-\section{Dolfin}
+\section{FEniCS/Dolfin}
 \label{sc:dolfin}
-Considerando a lei da conservação de massa, podemos considerar
+De modo a automatizar a geração de código de baixo-nível do problema variacional necessário para a implementação dos métodos descritos no capítulo \ref{ch:form_num}, foi utilizada a ferramenta FEniCS/Dolfin, a qual consiste em uma série de chamadas (\emph{wrappers}) para rotinas otimizadas escritas em C++. Essa interface pode ser acessada tanto através da própria linguagem C++ quanto através do Python, tendo esta última alternativa sido escolhida devido a facilidade e rapidez para desenvolvimento de código com a mesma.
 
 \section{PyAMG}
 \label{sc:pyamg}
-Calculando a velocidade a partir do grandiente de pressão obtido no passo anterior, podemos então definir de modo explícito uma equação para a saturação.
+O PyAMG é uma biblioteca de funções escritas em fundamentalmente em Python e com algorítimos chave do ponto de vista de performance escritos em C++
 

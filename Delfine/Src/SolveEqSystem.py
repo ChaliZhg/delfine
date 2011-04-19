@@ -83,7 +83,16 @@ class SolveEqSystem:
                 print " "
                 sys.exit(1)
             print ml
-        
+            
+            ####################################
+            # Print customized spectrum of multigrid operator
+            # This function is efficient just for a small n (max=32)
+            
+            #from pyamg.util.utils import hierarchy_spectrum
+            #hierarchy_spectrum(ml, filter=True, plot=True)
+   
+            ####################################
+            
         elif (preCondType == "none") :
             # Iterate without preconditioner
             if (solverType == "cg"):
