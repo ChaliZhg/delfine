@@ -28,6 +28,7 @@
                 <permeability type="per-domain">
                     <Kxx>2.0</Kxx>
                     <Kxy>1.0</Kxy>
+                    <Kxz>0.5</Kxz>
                     <Kyy>2.0</Kyy>
                     <Kyz>1.0</Kyz>
                     <Kzz>0.5</Kzz>

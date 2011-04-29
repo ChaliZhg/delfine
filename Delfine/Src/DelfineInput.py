@@ -11,7 +11,8 @@
 # 31/03/11 : Created a check (if condition) to test for the not compulsory data. If they are not
 # present in the input file the program associates None to them and continues the workflow.
 # These not compulsory data type are marked with '?' in the XML/delfineGrammar.rnc file.
-#
+# 27/04/11 : Read the Kxz permeability data that was missing. Also test to check if all the
+# permeability tensor data are present for the given problem dimension
 #
 ############################################################
 import sys, os
@@ -218,16 +219,42 @@ class DelfineInput:
             if (r[i].permeability.type == "per-domain"):
                 Kxx = etRockTypes[i].find('permeability').find('Kxx')
                 Kxy = etRockTypes[i].find('permeability').find('Kxy')
+                Kxz = etRockTypes[i].find('permeability').find('Kxz')
                 Kyy = etRockTypes[i].find('permeability').find('Kyy')
                 Kyz = etRockTypes[i].find('permeability').find('Kyz')
                 Kzz = etRockTypes[i].find('permeability').find('Kzz')
                 
                 r[i].permeability.K.append(float(Kxx.text))
                 # Checking if not compulsory data is given in input file (as only Kxx is alway mandatory)
-                if (Kxy != None): r[i].permeability.K.append(float(Kxy.text)) 
-                if (Kyy != None): r[i].permeability.K.append(float(Kyy.text))  
-                if (Kyz != None): r[i].permeability.K.append(float(Kyz.text))  
-                if (Kzz != None): r[i].permeability.K.append(float(Kzz.text))  
+                # For 2-D:
+                # K = | Kxx Kxy |   Kxy = Kyx
+                #        | Kyx Kyy |
+                if (parameter.geom.mesh.dim == 2): 
+                    if (Kxy != None): r[i].permeability.K.append(float(Kxy.text)) 
+                    if (Kyy != None): r[i].permeability.K.append(float(Kyy.text))
+                    if ((Kxy == None) | (Kyy == None)):
+                        print "Error(4.1):"
+                        print "Missing permeability information for 2-D problem"
+                        print "This may indicate that you forgot the Kxy or Kyy data in the .xml file"
+                        print " "
+                        sys.exit(1)
+                # For 3-D:
+                # K = | Kxx Kxy Kxz | Kxy = Kyx e Kyz = Kzy
+                #        | Kyx Kyy Kyz | 
+                #        | Kzx Kzy Kzz |
+                elif(parameter.geom.mesh.dim == 3): # 3-D
+                    if (Kxy != None): r[i].permeability.K.append(float(Kxy.text)) 
+                    if (Kxz != None): r[i].permeability.K.append(float(Kxz.text))   
+                    if (Kyy != None): r[i].permeability.K.append(float(Kyy.text)) 
+                    if (Kyz != None): r[i].permeability.K.append(float(Kyz.text))  
+                    if (Kzz != None): r[i].permeability.K.append(float(Kzz.text))
+                    if ((Kxy == None) | (Kxz == None) | (Kyy == None) | (Kyz == None) | (Kzz ==None)):
+                        print "Error(4.2):"
+                        print "Missing permeability information for 3-D problem"
+                        print "This may indicate that you forgot the Kxy or Kxz or Kyy \
+                    or Kyz or Kzz data in the .xml file "
+                        print " "
+                        sys.exit(1)
             elif(r[i].permeability.type == "per-element-list"):
                 r[i].permeability.filename = etRockTypes[i].find('permeability').findtext('filename')
             

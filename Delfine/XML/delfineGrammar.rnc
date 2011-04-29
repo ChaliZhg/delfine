@@ -163,11 +163,18 @@ rock-heat-coefficient-element = element rock-heat-coefficient {
                                                               }
 permeability-element = element permeability {
                                              ((attribute type {"per-domain"}&
+                                             Kxx-element) |
+                                             (attribute type {"per-domain"}&
                                              Kxx-element&
-                                             Kxy-element?&
-                                             Kyy-element?&
-                                             Kyz-element?&
-                                             Kzz-element?) |
+                                             Kxy-element&
+                                             Kyy-element) |
+                                             (attribute type {"per-domain"}&
+                                             Kxx-element&
+                                             Kxy-element&
+                                             Kxz-element&
+                                             Kyy-element&
+                                             Kyz-element&
+                                             Kzz-element) |
                                              (attribute type {"per-element-list"}&
                                              (filename-element)))
                                             }
@@ -197,6 +204,9 @@ Kxx-element = element Kxx {
                            xsd:float {minInclusive = "0.0"}
                           }
 Kxy-element = element Kxy {
+                           xsd:float {minInclusive = "0.0"}
+                          }
+Kxz-element = element Kxz {
                            xsd:float {minInclusive = "0.0"}
                           }
 Kyy-element = element Kyy {

@@ -63,7 +63,7 @@ def main(argv):
         plt.grid(True)
         plt.legend()
         # Format list advance
-        i = i+1
+        i += 1
         
     plt.show()
     
