@@ -11,6 +11,7 @@
 #
 #############################################################
 from dolfin import *
+import numpy
 
 class DelfinePlot:
     """Plots the results as contour plots and the residuals history as x-y plot"""
@@ -50,11 +51,13 @@ class DelfinePlot:
         fileVtk = File("Results/poisson.pvd")
         fileVtk << fx
         
-        # Save solution in raw text format
+        # Plot numerical solution
+        plot(fx, interactive=True,  title="Numerical Solution")
+        
+        # Create array with residuals of the solution
         resList = list(residuals)
 
-        # File name definition
-        # PS: Name definitions just valid while
+        # Name definition for the residuals file
         if (preCondType == "none"):
             name = solverType.swapcase() 
         elif (solverType == "none"):
@@ -64,21 +67,34 @@ class DelfinePlot:
         
         fileTxt = open('Results/residuals_' + name + '.txt',"w")
         
+        # Save residuals of solution in raw text format
         for res in resList:
             fileTxt.write(str(res) + "\n")
         
         fileTxt.close()
         
-        # Calculate max error norm
+        # Calculate error norms
         u_numerical = fx.vector().array()
         u0_interp = interpolate(u0, V)
         u_exact = u0_interp.vector().array()
         
-        diff = abs(u_numerical - u_exact)
-        print 'Max Error: %1.2E' % diff.max()
+        diff = u_numerical - u_exact
+        diffMax = abs(diff)
+        print 'Error for Max Norm: %1.2E' % diffMax.max()
+        E = errornorm(u0, fx, norm_type='l2', degree=3)
+        print 'Error norm L2: %1.2E' % E
         
-        # Plot solution
-        plot(fx, interactive=True)
+        # Plot analytic solution
+        plot(u0_interp, interactive=True, title="Analytical Solution")
+        fileVtk = File("Results/poissonanalytic.pvd")
+        fileVtk << u0_interp
+        
+        # Plot difference between numerical and analytical solution
+        e = as_vector(diff)
+        fe = Function(V, e)
+        plot(fe, interactive=True,  title="Error")
+        fileVtk = File("Results/poissonerror.pvd")
+        fileVtk << fe
         
         import pylab
         pylab.figure(2)

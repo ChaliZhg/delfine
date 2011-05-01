@@ -50,15 +50,17 @@ class PermeabilityTensor3D(Expression):
             else: 
                 # For dolfin-generated meshes or meshes without "material_indicator"
                 # This option consider just homogeneous cases
-                values[0] = 1.0
-                values[1] = 0.0
-                values[2] = 0.0
-                values[3] = 0.0
-                values[4] = 1.0
-                values[5] = 0.0
-                values[6] = 0.0
-                values[7] = 0.0
-                values[8] = 1.0
+                values[0] = self.K[0][0] # Kxx
+                values[1] = self.K[0][1] # Kxy
+                values[2] = self.K[0][2] # Kxz            | Kxx  Kxy  Kxz |       | values[0] values[1] values[2] |
+                values[3] = values[1]    # Kyx     K = | Kyx  Kyy  Kyz  | => | values[3] values[4] values[5] |
+                values[4] = self.K[0][3] # Kyy            | Kzx  Kzy  Kzz  |       | values[6] values[7] values[8] |
+                values[5] = self.K[0][4] # Kyz
+                values[6] = values[2]    # Kzx
+                values[7] = values[5]    # Kzy
+                values[8] = self.K[0][5] # Kzz
+        else:
+            pass
     def value_shape(self):
         return (3, 3)
         
@@ -87,15 +89,17 @@ class PermeabilityTensor2D(Expression):
                         values[0] = self.K[j][0] # Kxx
                         values[1] = self.K[j][1] # Kxy     K = | Kxx  Kxy | => | values[0] values[1] |
                         values[2] = values[1]   # Kyx            | Kyx  Kyy  |       | values[2] values[3] |      
-                        values[3] = self.K[j][2]  # Kyx
+                        values[3] = self.K[j][2] # Kyy
                     j += 1
             else: 
                 # For dolfin-generated meshes or meshes without "material_indicator"
                 # This option consider just homogeneous cases
-                values[0] = 1.0
-                values[1] = 0.0
-                values[2] = 0.0
-                values[3] = 1.0
+                values[0] = self.K[0][0] # Kxx
+                values[1] = self.K[0][1] # Kxy
+                values[2] = values[1]    # Kyx
+                values[3] = self.K[0][2] # Kyy
+        else:
+            pass
     def value_shape(self):
         return (2, 2)
 
@@ -122,7 +126,6 @@ class AssembleElliptic:
             K = PermeabilityTensor2D(mesh, parameter)
         elif (dim == 3):
             K = PermeabilityTensor3D(mesh, parameter)
-        
         
         # Create function space
         V = FunctionSpace(mesh, "CG", 1)
@@ -153,12 +156,12 @@ class AssembleElliptic:
 #        f = Expression("2*pow(pi,2)*cos(pi*x[0])*cos(pi*x[1])") # Homo Iso example
         ############### End - Homogeneous Isotropic Ex.#################
         ############### Begin - Homogeneous Anisotropic Ex.###############
-#        Define general boundary (x=0 or x=1 or y=0 or y=1)
+#        #Define general boundary (x=0 or x=1 or y=0 or y=1)
 #        def any_boundary(x):
 #            return x[0] < DOLFIN_EPS or x[0] > 1.0 - DOLFIN_EPS or \
 #                x[1] < DOLFIN_EPS or x[1] > 1.0 - DOLFIN_EPS
 #
-#        Define boundary condition -  Homo Aniso example
+#        #Define boundary condition -  Homo Aniso example
 #        u0= Expression('exp(x[0]*x[1])') # Analytical solution and bc
 #        bc = DirichletBC(V, u0, any_boundary)      
 #       
@@ -174,9 +177,9 @@ class AssembleElliptic:
         
         class BCCond(Expression):
             def eval(self, values, x):
-                alpha = 1
+                alpha = 10
                 if (x[0] > 0):
-                    values[0] = exp(x[0])*cos(x[1])
+                    values[0] = exp(x[0])*sin(x[1])
                 else:
                     values[0] = (2*sin(x[1]) + cos(x[1]))*alpha*x[0] + sin(x[1])
                     
@@ -187,11 +190,11 @@ class AssembleElliptic:
         
         class Source(Expression):
             def eval(self, values, x):
-                alpha = 1
+                alpha = 10
                 if (x[0] > 0):
-                    values[0] = 2*alpha*exp(x[0])*cos(x[1])
+                    values[0] = -2*alpha*exp(x[0])*cos(x[1])
                 else:
-                    values[0] = (-2*sin(x[1]) - cos(x[1]))*alpha*x[0] - sin(x[1])
+                    values[0] = (2*sin(x[1]) + cos(x[1]))*alpha*x[0] + sin(x[1])
 
         f = Source()
         ############### End - Heterogeneous Anisotropic Ex.#################
