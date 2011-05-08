@@ -128,6 +128,7 @@ class AssembleElliptic:
             K = PermeabilityTensor3D(mesh, parameter)
         
         # Create function space
+        # FIXME: Define element order as input variable
         V = FunctionSpace(mesh, "CG", 1)
 
         ############### Begin - Homogeneous Isotropic Ex.###############
@@ -177,7 +178,7 @@ class AssembleElliptic:
         
         class BCCond(Expression):
             def eval(self, values, x):
-                alpha = 10
+                alpha = 1000
                 if (x[0] > 0):
                     values[0] = exp(x[0])*sin(x[1])
                 else:
@@ -190,7 +191,7 @@ class AssembleElliptic:
         
         class Source(Expression):
             def eval(self, values, x):
-                alpha = 10
+                alpha = 1000
                 if (x[0] > 0):
                     values[0] = -2*alpha*exp(x[0])*cos(x[1])
                 else:

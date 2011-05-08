@@ -1,7 +1,7 @@
 <delfine>
     <geometry>
         <mesh dimension="2" type="gmsh">
-            <filename>HeterAniso128.msh</filename>
+            <filename>HeterAniso1024.msh</filename>
         </mesh>
         <boundary-conditions>
             <well bctype="water-saturation" function="injection" id="57">1.0</well>
@@ -35,9 +35,9 @@
                 <porosity compressible="no">1.0</porosity>
                 <rock-heat-coefficient>1.0</rock-heat-coefficient>
                 <permeability type="per-domain">
-                    <Kxx>20.0</Kxx>
-                    <Kxy>10.0</Kxy>
-                    <Kyy>20.0</Kyy>
+                    <Kxx>2000.0</Kxx>
+                    <Kxy>1000.0</Kxy>
+                    <Kyy>2000.0</Kyy>
                 </permeability>
             </rock-type>
         </rock-properties>
@@ -59,7 +59,7 @@
         <pressure-solver type="gmres">
             <tolerance>1e-10</tolerance>
             <max-number-steps>1000</max-number-steps>
-            <pre-conditioning type="amg">
+            <pre-conditioning type="none">
                 <number-coarse-levels>5</number-coarse-levels>
                 <number-relax-iterations>3</number-relax-iterations>
             </pre-conditioning>

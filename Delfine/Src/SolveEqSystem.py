@@ -12,6 +12,7 @@
 #
 #############################################################
 from scipy.sparse import csr_matrix
+from pyamg import solve
 from pyamg import smoothed_aggregation_solver
 from pyamg.krylov._cg import cg
 from pyamg.krylov._gmres import gmres
@@ -60,75 +61,81 @@ class SolveEqSystem:
         b = rhs.data()
         residuals = []
         
-        # Solves equation system
-        if (preCondType == "amg"):
-            # Using AMG Solver as preconditioner with 'solverType' (cg,gmres) as 
-            # accelerator. If ilu is defined as solver, it will use pure AMG without
-            # accelaration.
-            nCoarse = parameter.num.pressSolv.preConditioning.numCoarseLevel
-            ml = smoothed_aggregation_solver(Asp, max_levels=nCoarse, max_coarse=1)
-            if ((solverType == "cg") | (solverType == "gmres")):
-                # Use CG or GMRES acceleration
-                x = ml.solve(b,tol=tolerance, maxiter=maxStep, cycle='V', accel=solverType,residuals=residuals)
-            elif(solverType == "none"):
-                # No accelaration (stand-alone AMG)
-                x = ml.solve(b,tol=tolerance, maxiter=maxStep, cycle='V', residuals=residuals)
-            elif (solverType == "lu"):
-                # Trying to use a direct LU solver with amg, but it is not coherent
-                print "Error(7):"
-                print "Direct solver not compatible with amg"
-                print "You can try: amg+cg,amg+gmres,amg+none,"
-                print "             none+cg,none+gmres,none+lu,"
-                print "             ilu+cg,ilu+gmres"
-                print " "
-                sys.exit(1)
-            print ml
-            
-            ####################################
-            # Print customized spectrum of multigrid operator
-            # This function is efficient just for a small n (max=32)
-            
-            #from pyamg.util.utils import hierarchy_spectrum
-            #hierarchy_spectrum(ml, filter=True, plot=True)
-   
-            ####################################
-            
-        elif (preCondType == "none") :
-            # Iterate without preconditioner
-            if (solverType == "cg"):
-                # Using conventional Conjugate Gradients Solver
-                (x, flag) = cg(Asp,b, maxiter=maxStep, tol=tolerance,  residuals=residuals)
-            elif (solverType == "gmres"):
-                # Using conventional Generalized Minimum Residual Method Solver
-                (x, flag) = gmres(Asp,b, maxiter=maxStep, tol=tolerance,  residuals=residuals)
-            elif (solverType == "lu"):
-                # Using a direct LU solver
-                # (still pending, to be done with dolfin solver schema, not pyamg)
-                print "Error(8):"
-                print "Direct solver still not available, use cg or gmres instead"
-                print " "
-                sys.exit(1)
-            elif (solverType == "none"):
-                # Using a direct LU solver
-                # (still pending, to be done with dolfin solver schema, not pyamg)
-                print "Error(9):"
-                print "Invalid solver + preconditioner option!"
-                print "You can try: amg+cg,amg+gmres,amg+none,"
-                print "             none+cg,none+gmres,none+lu,"
-                print "             ilu+cg,ilu+gmres"
-                print " "
-                sys.exit(1)
+        #FIXME: Add blackbox option to input file
+        blackbox = 'yes'
+        if (blackbox == 'yes'):
+            x = solve(Asp, b, verb=True,tol=1e-8)
+        else:
+            # Solves equation system
+            if (preCondType == "amg"):
+                # Using AMG Solver as preconditioner with 'solverType' (cg,gmres) as 
+                # accelerator. If ilu is defined as solver, it will use pure AMG without
+                # accelaration.
+                nCoarse = parameter.num.pressSolv.preConditioning.numCoarseLevel
+                ml = smoothed_aggregation_solver(Asp, max_levels=nCoarse, max_coarse=1)
+                if ((solverType == "cg") | (solverType == "gmres")):
+                    # Use CG or GMRES acceleration
+                    x = ml.solve(b,tol=tolerance, maxiter=maxStep, cycle='V', accel=solverType,residuals=residuals)
+                elif(solverType == "none"):
+                    # No accelaration (stand-alone AMG)
+                    x = ml.solve(b,tol=tolerance, maxiter=maxStep, cycle='V', residuals=residuals)
+                elif (solverType == "lu"):
+                    # Trying to use a direct LU solver with amg, but it is not coherent
+                    print "Error(7):"
+                    print "Direct solver not compatible with amg"
+                    print "You can try: amg+cg,amg+gmres,amg+none,"
+                    print "             none+cg,none+gmres,none+lu,"
+                    print "             ilu+cg,ilu+gmres"
+                    print " "
+                    sys.exit(1)
+                print ml
                 
-        elif (preCondType == "ilu"):
-                # Using a ILU preconditioner
-                # (still pending, to be done with dolfin solver schema, not pyamg)
-                print "Error(10):"
-                print "ILU Preconditioner still not available, use amg or none instead"
-                print " "
-                sys.exit(1)
+                ####################################
+                # Print customized spectrum of multigrid operator
+                # This function is efficient just for a small n (max=32)
+                
+                #from pyamg.util.utils import hierarchy_spectrum
+                #hierarchy_spectrum(ml, filter=True, plot=True)
+       
+                ####################################
+                
+            elif (preCondType == "none") :
+                # Iterate without preconditioner
+                if (solverType == "cg"):
+                    # Using conventional Conjugate Gradients Solver
+                    (x, flag) = cg(Asp,b, maxiter=maxStep, tol=tolerance,  residuals=residuals)
+                elif (solverType == "gmres"):
+                    # Using conventional Generalized Minimum Residual Method Solver
+                    (x, flag) = gmres(Asp,b, maxiter=maxStep, tol=tolerance,  residuals=residuals)
+                elif (solverType == "lu"):
+                    # Using a direct LU solver
+                    # (still pending, to be done with dolfin solver schema, not pyamg)
+                    print "Error(8):"
+                    print "Direct solver still not available, use cg or gmres instead"
+                    print " "
+                    sys.exit(1)
+                elif (solverType == "none"):
+                    # Using a direct LU solver
+                    # (still pending, to be done with dolfin solver schema, not pyamg)
+                    print "Error(9):"
+                    print "Invalid solver + preconditioner option!"
+                    print "You can try: amg+cg,amg+gmres,amg+none,"
+                    print "             none+cg,none+gmres,none+lu,"
+                    print "             ilu+cg,ilu+gmres"
+                    print " "
+                    sys.exit(1)
+                    
+            elif (preCondType == "ilu"):
+                    # Using a ILU preconditioner
+                    # (still pending, to be done with dolfin solver schema, not pyamg)
+                    print "Error(10):"
+                    print "ILU Preconditioner still not available, use amg or none instead"
+                    print " "
+                    sys.exit(1)
         
         # Print residuals history
-        residuals = residuals/residuals[0]
+        #FIXME: See how to deal with residuals and blackbox solver
+        #residuals = residuals/residuals[0]
   
         # Define return parameters
         delfineVar.x = x
