@@ -5,11 +5,11 @@ Neste capítulo serão apresentados exemplos e resultados obtidos utilizando a met
 
 \section{Problemas Elípticos}
 \label{sc:elipticos}
-Esta seção tem por objetivo avaliar os métodos utilizados para a resolução da equação de pressão em meios porosos, a qual para o estado estacionário pode ser considerada uma típica equação elíptica. Devido a essa característica, a metodologia utilizada pode ser analisada utilizando-se de problemas modelos que compartilham das mesmas propriedades matemáticas. Uma particularidade comum aos problemas regidos por equações elípticas é que todo o domínio de interesse $\Omega$ é afetado por qualquer mudança no valor da variável em um ponto qualquer no interior de $\Omega$, ou em sua fronteira $\delta\Omega$ \citep{Fortuna2000}. Isto significa que uma perturbação em um ponto irá ter influência sobre todo o domínio, sendo que a mesma diminui com o aumento da distância em relação ao ponto originador de tal perturbação. Sendo assim, tais problemas tendem a apresentar soluções suaves ao longo do domínio. Além da equação de pressão, outros exemplos de aplicação deste tipo de equação são o cálculo do potencial elétrico, da difusão de calor em uma chapa metálica e de escoamentos incompressíveis, invíscidos e irrotacionais (também conhecidos como escoamentos potenciais).
+Esta seção tem por objetivo avaliar os métodos utilizados para a resolução da equação de pressão em meios porosos, a qual para o estado estacionário pode ser considerada uma típica equação elíptica. Devido a essa característica, a metodologia utilizada pode ser analisada utilizando-se de problemas modelos que compartilham das mesmas propriedades matemáticas. Uma particularidade comum aos problemas regidos por equações elípticas é que todo o domínio de interesse $\Omega$ é afetado por qualquer mudança no valor da variável em um ponto qualquer no interior de $\Omega$, ou em sua fronteira $\delta\Omega$ \citep{Fortuna2000}. Isto significa que uma perturbação em um ponto irá ter influência sobre todo o domínio, sendo que a mesma diminui com o aumento da distância em relação ao ponto originador de tal perturbação. Sendo assim, tais problemas tendem em geral a apresentar soluções suaves ao longo do domínio (como contra-exemplo poderíamos citar casos com alta anisotropia). Além da equação de pressão, outros exemplos de aplicação deste tipo de equação são o cálculo do potencial elétrico, da difusão de calor em uma chapa metálica e de escoamentos incompressíveis, invíscidos e irrotacionais (também conhecidos como escoamentos potenciais).
 
-A equação de Poisson é normalmente utilizada como modelo para testar metodologias de resolução de equações elípticas. A mesma pode ser descrita como:
+A equação normalmente utilizada como modelo para testar metodologias de resolução de equações elípticas pode ser descrita como:
 \begin{equation} \label{eq:poi}
-\nabla^{2} u = f
+\nabla(\mathbf{K} \nabla u) = f
 \end{equation}
 
 Em coordenadas cartesianas e considerando um coeficiente anisotrópico e variável no espaço $\mathbf{K}(x,y,z)$, esta equação pode ser representada por:
@@ -17,7 +17,7 @@ Em coordenadas cartesianas e considerando um coeficiente anisotrópico e variável
 \frac{\partial }{\partial x}\left(\mathbf{K}\frac{\partial u}{\partial x}\right) + \frac{\partial }{\partial y}\left(\mathbf{K}\frac{\partial u}{\partial y}\right) + \frac{\partial }{\partial z}\left(\mathbf{K}\frac{\partial u}{\partial z}\right) = f(x,y,z)
 \end{equation}
 
-Nas seções seguintes, iremos resolver equações do tipo \ref{eq:poicart} considerando diversas possibilidades para o coeficiente $\mathbf{K}$ de modo a demonstrar a flexibilidade da metodologia utilizada para lidar com meios homogêneos, heterogêneos, iso- e anisotrópicos. Vários parâmetros de interesse serão avaliados a partir dos resultados obtidos, entre eles:
+Nas seções seguintes, iremos resolver equações do tipo (\ref{eq:poicart}) considerando diversas possibilidades para o coeficiente $\mathbf{K}$ de modo a demonstrar a flexibilidade da metodologia utilizada para lidar com meios homogêneos, heterogêneos, iso- e anisotrópicos. Vários parâmetros de interesse serão avaliados a partir dos resultados obtidos, entre eles:
 \begin{itemize}
 \item Erro da solução numérica quando comparada com a solução analítica, a qual para problemas simples é facilmente encontrada.
 \item Taxas de convergências para uma sequência de malhas sucessivamente refinadas.
@@ -48,7 +48,7 @@ u = -\cos(\pi x) & \textrm{para } 0<x<1 \textrm{ e } y=1}  \\
 \end{array} \right.
 \end{equation}
 
-Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema,a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A figura \ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de 64x64 elementos, a qual já permite obter uma excelente concordância com a solução analítica.
+Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas estruturadas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. O uso de malhas estruturadas se deu apenas para fins de comparação de erros e obtenção de ordens de convergência, já que a metodologia utilizada é perfeitamente capaz de lidar com malhas não-estruturadas bi- e tridimensionais. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema,a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A figura \ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de 64x64 elementos triangulares lineares, a qual já permite obter uma excelente concordância com a solução analítica.
 
 \begin{figure}
 \centering
@@ -57,7 +57,7 @@ Resolvemos o problema elíptico descrito utilizando a formulação detalhada no cap
 \label{fig:HomogeneoIsotropico_N=64}
 \end{figure}
 
-Para uma sequência de malhas formadas por triângulos lineares, se espera uma taxa de convergência de segunda ordem, enquanto para uma sequência formada por triângulos quadráticos espera-se uma convergência de terceira ordem \citep{Hughes2000}. De modo a verificar o comportamento do método utilizado, resolvemos o problema proposto utilizando elementos de 1ª(tabela \ref{tab:homoisolinear}) e 2º ordem(tabela \ref{tab:homoisoquad}), comparando entre si os resultados obtidos e também com outros disponíveis na literatura para elementos lineares (tabelas \ref{tab:homoisoCVFA} e \ref{tab:homoisoEBFV1}) \citep{Chen2006,Silva2008}. De um modo geral, as taxas de convergências obtidas se aproximaram bastante das taxas teóricas tanto para o caso de elementos triangulares quanto quadráticos. A comparação com os resultados da literatura ficam um pouco prejudicadas por terem os erros sido calculados através de normas diferentes (norma do máximo neste trabalho, e RMS na literatura citada). Porém, é possível observar um comportamento coerente do erro obtido, pois com elementos quadráticos foram obtidos erros consideravelmente menores do que com os métodos de segunda ordem CVFA e EBFV1. Por outro lado, ao utilizar-se elementos lineares foram obtidos erros maiores porém na mesma ordem de grandeza daqueles obtidos na literatura.
+Para uma sequência de malhas formadas por triângulos lineares, se espera uma taxa de convergência de segunda ordem, enquanto para uma sequência formada por triângulos quadráticos espera-se uma convergência de terceira ordem \citep{Hughes2000}. De modo a verificar o comportamento do método utilizado, resolvemos o problema proposto utilizando elementos de 1ª (tabela \ref{tab:homoisolinear}) e 2º ordem (tabela \ref{tab:homoisoquad}), comparando entre si os resultados obtidos e também com outros disponíveis na literatura para elementos lineares utilizando outros tipos de formulação (tabelas \ref{tab:homoisoCVFA} e \ref{tab:homoisoEBFV1}) \citep{Chen2006,Silva2008}. De um modo geral, as taxas de convergências obtidas se aproximaram bastante das taxas teóricas tanto para o caso de elementos triangulares quanto quadráticos. A comparação com os resultados da literatura ficam um pouco prejudicadas por terem os erros sido calculados através de normas diferentes (norma do máximo neste trabalho, e RMS na literatura citada). Porém, é possível observar um comportamento coerente do erro obtido, pois com elementos quadráticos foram obtidos erros consideravelmente menores do que com os métodos de segunda ordem CVFA e EBFV1. Por outro lado, ao utilizar-se elementos lineares foram obtidos erros maiores porém na mesma ordem de grandeza daqueles obtidos na literatura.
 
 \begin{table}
 \caption[Erro e taxa de convergência para problema homogêneo e isotrópico]{Erro e taxa de convergência obtidos neste trabalho para a solução da equação elíptica em meio homogêneo e isotrópico.} 
@@ -374,8 +374,12 @@ Pode ser observado na figura \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da 
 \label{tab:heteroiso}
 \end{table}
 
-Um fato interessante que pode ser constatado a partir dos valores obtidos para os erros da solução numérica obtida, é que os mesmos apresentam, uma taxa de convergência em torno de 1 para $\alpha = 1$ e $10$, sendo que esta taxa se aproxima de 2 quando aumentamos o fator de descontinuidade ($\alpha = 100$ e $1000$).
-Ao compararmos tais resultados com a literatura \citep{Crumpton1995,Hyman1997,Carvalho2005,Silva2008} percebemos que os métodos apresentados nos referidos trabalhos que fazem uma avaliação local dos fluxos tendem a obter uma convergência de ordem 2, CONTINUAR DAQUI
+Um fato interessante que pode ser constatado a partir dos valores obtidos para os erros da solução numérica obtida é que os mesmos apresentam uma taxa de convergência em torno de 1 para $\alpha = 1$ e $10$, sendo que esta taxa se aproxima de 2 quando aumentamos o fator de descontinuidade ($\alpha = 100$ e $1000$).
+Ao compararmos tais resultados com a literatura \citep{Crumpton1995,Hyman1997,Carvalho2005,Silva2008} percebemos que os métodos apresentados nos referidos trabalhos que fazem uma avaliação local dos fluxos tendem a obter uma convergência de ordem 2, enquanto métodos que trabalham apenas com a variável nodal (neste caso, $u(x,y)$) apresentam ordem 1 para o erro, tanto na norma do máximo quanto para a $L2$.
+
+Um aspecto a ser notado que pode contribuir para a compreensão deste comportamento é a distribuição do erro ao longo do domínio para diferentes valores de $\alpha$. Na figura \ref{fig:HeterogeneoAnisoError_N=64} pode ser visto que o erro varia suavemente para $\alpha = 1$ e $\alpha = 10$, sendo que o mesmo está concentrado na região de descontinuidade em $x=0$. Já para $\alpha = 100$ e $\alpha = 1000$, o erro para a malha de $N \simeq 64$ apresenta modos de frequência muito mais alta, estando também concentrado em um dos lados do domínio.
+
+Este comportamento pode ser explicado pelo fato de que para maiores valores de $\alpha$ temos uma intensidade maior de descontinuidade para o mesmo tamanho de malha, o que pode ser visto como equivalente a manter o valor do coeficiente de descontinuidade e engrossar a malha, levando portanto os componentes do erro a se apresentarem como de mais alta frequência, independente da magnitude dos mesmos \citep{Trottenberg2001}.
 
 \begin{figure}
 \centering
@@ -397,6 +401,8 @@ Ao compararmos tais resultados com a literatura \citep{Crumpton1995,Hyman1997,Ca
 \caption[Caso heterogêneo e anisotrópico. Erro obtido para malha 64x64.]{Caso heterogêneo e anisotrópico. Distribuição do erro obtido para malha com $N \simeq 64$ discretizada por triângulos lineares.}
 \label{fig:HeterogeneoAnisoError_N=64}
 \end{figure}
+
+Para a resolução do sistema de equações lineares resultante da discretização foi novamente verificado o desempenho para diferentes tipos de métodos, mesmo sabendo de antemão que este problema é representado por uma matriz simétrica positiva-definida, sendo portanto um candidato natural a ser resolvido usando métodos do tipo gradiente conjugado, seja isoladamente ou com o multigrid algébrico como pré-condicionador.
 
 \begin{figure}
 \centering
