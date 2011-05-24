@@ -13,8 +13,8 @@
 #############################################################
 from dolfin import *
 from DelfineData import RockType
-from math import *
 
+from math import *
 # FIXME: Merge both PermeabilityTensor classes in a more
 # "elegant" one(deal with value_shape), or take them to their own file
 class PermeabilityTensor3D(Expression):

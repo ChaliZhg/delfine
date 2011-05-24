@@ -6,7 +6,7 @@
 # Date: 07/02/11
 # Modifications Date:
 # 14/04/11: Added functionality to use solver parameter read from data file
-#
+# 23/05/11: Added functionality to use the blackbox solve from PyAMG 2.0
 #
 #
 #
@@ -61,12 +61,14 @@ class SolveEqSystem:
         b = rhs.data()
         residuals = []
         
-        #FIXME: Add blackbox option to input file
-        blackbox = 'yes'
-        if (blackbox == 'yes'):
-            x = solve(Asp, b, verb=True,tol=1e-8)
+        # Solves equation system
+        if (solverType == 'blackbox'):
+            # Uses PyAMG blackbox solver, which implies that the program detect automatically
+            # the best solver parameters for the case. Very useful for debugging and
+            # "difficult" to converge cases. Does not allow to set max. iterations or this kind
+            # of stuff.
+            x = solve(Asp, b, verb=True,tol=tolerance)
         else:
-            # Solves equation system
             if (preCondType == "amg"):
                 # Using AMG Solver as preconditioner with 'solverType' (cg,gmres) as 
                 # accelerator. If ilu is defined as solver, it will use pure AMG without
@@ -134,8 +136,8 @@ class SolveEqSystem:
                     sys.exit(1)
         
         # Print residuals history
-        #FIXME: See how to deal with residuals and blackbox solver
-        #residuals = residuals/residuals[0]
+        if (solverType != 'blackbox'):
+            residuals = residuals/residuals[0]
   
         # Define return parameters
         delfineVar.x = x
