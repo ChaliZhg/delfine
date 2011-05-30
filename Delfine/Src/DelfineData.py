@@ -8,9 +8,9 @@
 # 16/02/11 - Data structure altered. Now the classes, methods and attributes correspond to the
 # ones found in the ./XML/delfineGrammar.rnc file. This should make this file a whole more
 # complicated, but should make the rest of the program easier to deal with.
-#
 # 31/03/11 - Added a 'rocks' list to the RockData class in order to store all the rocks created 
 # with the rockType type
+# 28/05/11 - Permeability Tensor class moved in to this module for code organization
 #
 ############################################################
 from dolfin import *
@@ -105,6 +105,7 @@ class MeshData:
     """3rd level - Class for mesh information"""
     def __init__(self):
         self.dim = None
+        self.order = None
         self.type = None
         # if type = dolfin-generated
         self.dolfinGen = DolfinGen()
@@ -180,4 +181,89 @@ class DelfineData:
             self.phys = PhysData()
             # Numerical
             self.num = NumData()
+ 
+ # Auxiliary class for elliptic assembly module------------------------------------------------------------------------------------------           
+class PermeabilityTensor3D(Expression):
+    """Defines the 3D permeability tensor for each cell"""
+    def __init__(self, mesh, parameter):
+        self.mesh = mesh
+        self.rocks = parameter.phys.rock.rocks
+        self.DomainID = []
+        self.K =[]
+        # Getting rocks IDs and respective K from parameter structure
+        for i in range(len(self.rocks)):
+            self.DomainID.append(int(self.rocks[i].id))
+            self.K.append(self.rocks[i].permeability.K)
+    def eval_cell(self, values, x, ufc_cell):
+        # Get material indicator(which corresponds to rock ID) from mesh with mesh_function
+        mf = self.mesh.data().mesh_function("material_indicators")
+        i = ufc_cell.index
+        j = 0
+        if (type(i) is int):
+            if (mf != None):
+                for id in self.DomainID:
+                    if (mf[i] == id):
+                        values[0] = self.K[j][0] # Kxx
+                        values[1] = self.K[j][1] # Kxy
+                        values[2] = self.K[j][2] # Kxz            | Kxx  Kxy  Kxz |       | values[0] values[1] values[2] |
+                        values[3] = values[1]   # Kyx     K = | Kyx  Kyy  Kyz  | => | values[3] values[4] values[5] |
+                        values[4] = self.K[j][3] # Kyy            | Kzx  Kzy  Kzz  |       | values[6] values[7] values[8] |
+                        values[5] = self.K[j][4] # Kyz
+                        values[6] = values[2]   # Kzx
+                        values[7] = values[5]   # Kzy
+                        values[8] = self.K[j][5] # Kzz
+                    j += 1
+            else: 
+                # For dolfin-generated meshes or meshes without "material_indicator"
+                # This option consider just homogeneous cases
+                values[0] = self.K[0][0] # Kxx
+                values[1] = self.K[0][1] # Kxy
+                values[2] = self.K[0][2] # Kxz            | Kxx  Kxy  Kxz |       | values[0] values[1] values[2] |
+                values[3] = values[1]    # Kyx     K = | Kyx  Kyy  Kyz  | => | values[3] values[4] values[5] |
+                values[4] = self.K[0][3] # Kyy            | Kzx  Kzy  Kzz  |       | values[6] values[7] values[8] |
+                values[5] = self.K[0][4] # Kyz
+                values[6] = values[2]    # Kzx
+                values[7] = values[5]    # Kzy
+                values[8] = self.K[0][5] # Kzz
+        else:
+            pass
+    def value_shape(self):
+        return (3, 3)
+ # Auxiliary class for elliptic assembly module------------------------------------------------------------------------------------------  
+class PermeabilityTensor2D(Expression):
+    """Defines the 2D permeability tensor for each cell"""
+    def __init__(self, mesh, parameter):
+        self.mesh = mesh
+        self.rocks = parameter.phys.rock.rocks
+        self.DomainID = []
+        self.K =[]
+        # Getting rocks IDs and respective K from parameter structure
+        for i in range(len(self.rocks)):
+            self.DomainID.append(int(self.rocks[i].id))
+            self.K.append(self.rocks[i].permeability.K)
+    def eval_cell(self, values, x, ufc_cell):
+        # Get material indicator(which corresponds to rock ID) from mesh with mesh_function
+        mf = self.mesh.data().mesh_function("material_indicators")
+        i = ufc_cell.index
+        j = 0
+        if (type(i) is int):
+            if (mf != None):
+                for id in self.DomainID:
+                    if (mf[i] == id):
+                        values[0] = self.K[j][0] # Kxx
+                        values[1] = self.K[j][1] # Kxy     K = | Kxx  Kxy | => | values[0] values[1] |
+                        values[2] = values[1]   # Kyx            | Kyx  Kyy  |       | values[2] values[3] |      
+                        values[3] = self.K[j][2] # Kyy
+                    j += 1
+            else: 
+                # For dolfin-generated meshes or meshes without "material_indicator"
+                # This option consider just homogeneous cases
+                values[0] = self.K[0][0] # Kxx
+                values[1] = self.K[0][1] # Kxy
+                values[2] = values[1]    # Kyx
+                values[3] = self.K[0][2] # Kyy
+        else:
+            pass
+    def value_shape(self):
+        return (2, 2)
 #############################################################

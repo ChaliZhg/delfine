@@ -26,11 +26,11 @@ numerical-element = element numerical {
 # 3rd-level elements
 mesh-element = element mesh {
                              attribute dimension {"1" | "2" | "3"}&
+                             attribute order {"1" | "2" | "3"}&
                              ((attribute type {"gmsh" | "xml"}&
                              filename-element) |
                              (attribute type{"dolfin-generated"}&
-                             dolfin-generated-element))&
-                             subdomains-element*
+                             dolfin-generated-element))
                             }
 boundary-conditions-element = element boundary-conditions {
                                                            well-element*        
@@ -82,9 +82,6 @@ dolfin-generated-element = element dolfin-generated {
                                                      attribute nx {text},
                                                      attribute ny {text}))
                                                     }
-subdomains-element = element subdomains {
-                                         attribute quantity {text}
-                                        } 
 well-element = element well {
                              attribute bctype {"water-saturation" | "pressure" | "flux-rate(m^3/d)"},
                              attribute function {"injection" | "production"},
