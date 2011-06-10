@@ -266,4 +266,38 @@ class PermeabilityTensor2D(Expression):
             pass
     def value_shape(self):
         return (2, 2)
+# Auxiliary class for elliptic assembly module------------------------------------------------------------------------------------------ 
+# Do not confuse with the Viscosity class used also in this module just for data transfer.
+class ViscScalar(Expression):
+    """Defines the constant viscosity for each point"""
+    def __init__(self, fluid, parameter):
+        self.fluid = fluid
+        if (self.fluid == "water"):
+            self.mu =  parameter.phys.fluid.water.viscosity.value
+        elif (self.fluid == "oil"):
+            self.mu =  parameter.phys.fluid.oil.viscosity.value
+    def eval (self, values, x):
+        values[0] = self.mu
+# Auxiliary class for elliptic assembly module------------------------------------------------------------------------------------------ 
+class RelatPermScalar(Expression):
+    """Defines the relative permeability for each point"""
+    def __init__(self, fluid, parameter, Sw):
+        self.fluid = fluid
+        self.model = parameter.phys.rockFluid.relativePerm.type
+        self.Sw = Sw
+        # Read data for Corey model (Attention: other models(Stone's I, II) still pending)
+        if (self.model == "corey"):
+            if (self.fluid == "water"):
+                self.Swr =  parameter.phys.rockFluid.relativePerm.krw.Sr
+                self.krwEnd = parameter.phys.rockFluid.relativePerm.krw.krEnd
+                self.nw = parameter.phys.rockFluid.relativePerm.krw.n
+            elif (self.fluid == "oil"):
+                self.Sor =  parameter.phys.rockFluid.relativePerm.kro.Sr
+                self.no = parameter.phys.rockFluid.relativePerm.kro.n
+    def eval (self, values, x):
+        if (self.model == "corey"):
+            if (self.fluid == "water"):
+                values[0] = self.Sw**4 #FIXME: Fix corey's formulae
+            elif (self.fluid == "oil"):
+                values[0] = (1 - self.Sw)**4
 #############################################################

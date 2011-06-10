@@ -13,7 +13,7 @@ from math import *
 class Source(Expression):
     """Assembles the source terms (Wells) for elliptic problem variational form with Dolfin."""
     def eval (self, values, x):
-        pass
+        values[0] = 0.0
     ############### Begin - Heterogeneous Anisotropic Ex.##############  
 #    def eval(self, values, x):
 #        alpha = 1000
@@ -30,3 +30,12 @@ class Source(Expression):
 #    def eval(self, values, x):
 #        values[0]  = 2*pow(pi,2)*cos(pi*x[0])*cos(pi*x[1])
     ############### End - Homogeneous Isotropic Ex.#################
+    ############### Begin - Five-Spot Well Example###################
+#    def eval(self, values, x):
+#        if ((x[0] == 0.0) and (x[1] == 0.0)):
+#            values[0]  = 1.0
+#        elif ((x[0] == 1.0) and (x[1] ==1.0)):
+#            values[0] = -1.0
+#        else:
+#            values[0] = 0.0
+    ############### End - Five-Spot Well Example####################

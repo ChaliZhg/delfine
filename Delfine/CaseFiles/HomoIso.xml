@@ -1,6 +1,6 @@
 <delfine>
     <geometry>
-        <mesh dimension="2" order="2" type="dolfin-generated">
+        <mesh dimension="2" order ="1" type="dolfin-generated">
             <dolfin-generated type="UnitSquare" nx="64" ny="64"/>
         </mesh>
         <boundary-conditions>
@@ -56,7 +56,7 @@
         </rock-fluid-properties>
     </physical>
     <numerical>
-        <pressure-solver type="gmres">
+        <pressure-solver type="cg">
             <tolerance>1e-10</tolerance>
             <max-number-steps>200</max-number-steps>
             <pre-conditioning type="amg">

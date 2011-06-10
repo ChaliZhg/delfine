@@ -12,6 +12,7 @@
 #############################################################
 from dolfin import *
 import numpy
+import pylab
 
 class DelfinePlot:
     """Plots the results as contour plots and the residuals history as x-y plot"""
@@ -85,18 +86,17 @@ class DelfinePlot:
         print 'Error norm L2: %1.2E' % E
         
         # Plot analytic solution
-        plot(u0_interp, interactive=True, title="Analytical Solution")
+        #plot(u0_interp, interactive=True, title="Analytical Solution")
         fileVtk = File("Results/poissonanalytic.pvd")
         fileVtk << u0_interp
         
         # Plot difference between numerical and analytical solution
         e = as_vector(diff)
         fe = Function(V, e)
-        plot(fe, interactive=True,  title="Error")
+        #plot(fe, interactive=True,  title="Error")
         fileVtk = File("Results/poissonerror.pvd")
         fileVtk << fe
         
-        import pylab
         pylab.figure(2)
         pylab.semilogy(residuals)
         pylab.show()

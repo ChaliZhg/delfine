@@ -12,12 +12,16 @@ from math import *
 
 def u0_boundary(x, on_boundary):
     """Defines of a point x lies on the actual boundary of the domain"""  
-    return on_boundary
+    #return on_boundary
+    return ((x[0] == 1.0) and (x[1] == 1.0)) #FIXME: Generalize boundaries
             
 class BCCond(Expression):
     """Defines values for the boundary conditions"""
+#    def eval (self, values, x):
+#        pass
     def eval (self, values, x):
-        pass
+            values[0] = 0.0
+            
     ############### Begin - Heterogeneous Anisotropic Ex.##############
 #    def eval(self, values, x):
 #        alpha = 1000
