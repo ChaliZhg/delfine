@@ -4,15 +4,14 @@
             <dolfin-generated type="UnitSquare" nx="64" ny="64"/>
         </mesh>
         <boundary-conditions>
-            <well bctype="water-saturation" function="injection" id="57">1.0</well>
-            <well bctype="flux-rate(m^3/d)" function="production" id="89">1000</well>
-            <well bctype="flux-rate(m^3/d)" function="production" id="2">100</well>
+            <well bctype="flux-rate(m^3/d)" function="injection" id="301">1.0</well>
+            <well bctype="pressure" function="production" id="1">0.0</well>
         </boundary-conditions>  
     </geometry>
     <physical>
         <fluid-properties>
             <water use="no">
-                <viscosity model="none">1.7</viscosity>
+                <viscosity model="none">1.0</viscosity>
                 <density model="none">0.01</density>
             </water>
             <oil use="yes">

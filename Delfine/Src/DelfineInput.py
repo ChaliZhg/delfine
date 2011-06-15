@@ -18,6 +18,8 @@
 import sys, os
 from xml.etree import ElementTree as ET
 from dolfin import *
+from DelfineData import Well # Import this class locally for read purposes (see Dev. Diary for details)
+from DelfineData import RockType # Import this class locally for read purposes (see Dev. Diary for details)
 
 class DelfineInput:
      """Reads all the input data"""
@@ -116,7 +118,6 @@ class DelfineInput:
         # ## Boundary conditions - geom.bcgeom.bc
         etWells = bc.findall('well')
         log.write("The Number of Wells is: " + str(len(etWells)) +  "\n")
-        from DelfineData import Well # Import this class locally for read purposes (see Dev. Diary for details)
         w =[] # Dummy list to store well informations
         for i in range(len(etWells)):
             w.append(Well())
@@ -212,7 +213,7 @@ class DelfineInput:
         # ## Rock roperties - phys.rock
         etRockTypes = rockProp.findall('rock-type')
         log.write("The Number of Rock types is: " + str(len(etRockTypes)) +  "\n")
-        from DelfineData import RockType # Import this class locally for read purposes (see Dev. Diary for details)
+        
         r =[] # Dummy list to store rock-types informations
         for i in range(len(etRockTypes)):
             r.append(RockType())

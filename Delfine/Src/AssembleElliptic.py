@@ -59,12 +59,14 @@ class AssembleElliptic:
         # Create function space
         V = FunctionSpace(mesh, "CG", order)
 
-        # Define boundary conditions (except wells)
+        # Define Dirichlet boundary conditions
         u0= BCCond()
         bc = DirichletBC(V, u0, u0_boundary,  "pointwise") 
 
-        # Define source terms (wells, etc.)
+        # Define distributed source terms (not wells)
         f = Source()
+        
+        # Define Neumman boundary conditions
         g = Expression("0.0")
 
         # Define variational problem
@@ -77,7 +79,8 @@ class AssembleElliptic:
         # Assemble matrices and vectors
         A, rhs = assemble_system(a, L)
         bc.apply(A, rhs)
-
+        
+        # Apply well source/sink conditions
         p = Point(0, 0)
         delta = PointSource(V, p, 1)
         delta.apply(rhs)

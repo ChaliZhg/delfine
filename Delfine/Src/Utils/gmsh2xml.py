@@ -85,6 +85,9 @@ def gmsh2xml(ifilename, handler):
     # Scan file for cell type
     cell_type = None
     dim = 0
+    # Delfine-convert:------------------------------------------------
+    pointTag = False
+    # end-delfine-convert---------------------------------------------
     line = ifile.readline()
     while line:
 
@@ -108,9 +111,15 @@ def gmsh2xml(ifilename, handler):
             # Also determine which vertices are not used.
             dim_2_count = 0
             dim_3_count = 0
-            vertices_2_used = []
+            # Delfine-convert:------------------------------------------------
+            # Array used to store gmsh tags for 1D (type 1/point) elements
+            dim_1_count = 0
+            tags_1 = []
+            vertices_1_used = []
+            # end-delfine-convert---------------------------------------------
             # Array used to store gmsh tags for 2D (type 2/triangular) elements
             tags_2 = []
+            vertices_2_used = []
             # Array used to store gmsh tags for 3D (type 4/tet) elements
             tags_3 = []
             vertices_3_used = []
@@ -118,6 +127,16 @@ def gmsh2xml(ifilename, handler):
                 element = line.split()
                 elem_type = int(element[1])
                 num_tags = int(element[2])
+                # Delfine-convert:------------------------------------------------
+                if elem_type == 15:
+                    if pointTag == False:                    
+                        pointTag = True
+                    node_num_list = [int(node) for node in element[3 + num_tags:]]
+                    vertices_1_used.extend(node_num_list)
+                    if num_tags > 0:
+                        tags_1.append(tuple(int(tag) for tag in element[3:3+num_tags]))
+                    dim_1_count += 1
+                # end-delfine-convert---------------------------------------------
                 if elem_type == 2:
                     if dim < 2:
                         cell_type = "triangle"
@@ -265,13 +284,41 @@ def gmsh2xml(ifilename, handler):
     else:
         _error("Gmsh tags not supported for dimension %i. Probably a bug" % dim)
 
+    # Delfine-convert---------------------------------------------------
+    # Initialize general meshfunction header in case there are any tags
+    if not all(tag == 0 for tag in tags):
+        handler.start_meshfunctionfile()
+    elif not all(tagW == 0 for tagW in tags_1):
+        handler.start_meshfunctionfile()
+    # end - delfine-convert---------------------------------------------
+
+    # Delfine-convert---------------------------------------------------
+    # Execute this snippet only if well(physical) points were found
+    if (dim_1_count > 0):
+        physical_points = tuple(tag[0] for tag in tags_1)
+        point_index = tuple(tag[1] for tag in tags_1)
+        if not all(tag == 0  for tag in tags_1):
+            handler.start_meshfunction("well_indicators", 0, dim_1_count)
+            for i, physical_point in enumerate(physical_points):
+                handler.add_entity_meshfunction(point_index[i], physical_point)
+            handler.end_meshfunction()
+    # end - delfine-convert---------------------------------------------
+
     physical_regions = tuple(tag[0] for tag in tags)
     if not all(tag == 0 for tag in tags):
-        handler.start_meshfunction("physical_region", dim, num_cells)
+        handler.start_meshfunction("material_indicators", dim, num_cells_counted)
         for i, physical_region in enumerate(physical_regions):
             handler.add_entity_meshfunction(i, physical_region)
         handler.end_meshfunction()
-    
+       
+    # Delfine-convert---------------------------------------------------
+    # Finalize general meshfunction footer in case there were any tags
+    if not all(tag == 0 for tag in tags):
+        handler.end_meshfunctionfile()
+    elif not all(tagW == 0 for tagW in tags_1):
+        handler.end_meshfunctionfile()
+    # end - delfine-convert---------------------------------------------
+
     # Check that we got all data
     if state == 10:
         print "Conversion done"
@@ -281,25 +328,31 @@ def gmsh2xml(ifilename, handler):
     # Close files
     ifile.close()
 
-def write_header_meshfunction(ofile, dimensions, size):
+def write_header_meshfunction(ofile, name, dimensions, size):
     # Delfine-convert: Alteration to ensure that all the information
     # is saved in just one file
-    header = """<data>
-                <data_entry name="material_indicators">
-  <meshfunction type="uint" dim="%d" size="%d">
-""" % (dimensions, size)
+    header = """        <data_entry name="%s">
+          <meshfunction type="uint" dim="%d" size="%d">\n""" % (name, dimensions, size)
     ofile.write(header)
 
 def write_entity_meshfunction(ofile, index, value):
-    ofile.write("""    <entity index=\"%d\" value=\"%d\"/>
+    ofile.write("""            <entity index=\"%d\" value=\"%d\"/>
 """ % (index, value))
 
 def write_footer_meshfunction(ofile):
     # Delfine-convert: Alteration to ensure that all the information
     # is saved in just one file
-    ofile.write("""  </meshfunction>
-</data_entry>
-</data>""")
+    ofile.write("""          </meshfunction>
+        </data_entry>\n""")
+
+# Delfine-convert---------------------------------------------------
+# General header and footer for meshfunction file
+def write_header_meshfunctionfile(ofile):
+    ofile.write("""      <data>\n""")
+
+def write_footer_meshfunctionfile(ofile):
+    ofile.write("""      </data>\n""")
+# end - delfine-convert---------------------------------------------
 
 class ParseError(Exception):
     """ Error encountered in source file.
@@ -362,7 +415,16 @@ class DataHandler(object):
     def end_meshfunction(self):
         assert self._state == self.State_MeshFunction
         self._state = self.State_Init
-
+     
+    # Delfine-convert:-----------------------------------------------------------
+    def start_meshfunctionfile(self):
+        assert self._state == self.State_Init
+        self._state = self.State_Init
+    def end_meshfunctionfile(self):
+        assert self._state == self.State_Init
+        self._state = self.State_Init
+    # end-delfine-convert:-----------------------------------------------------------
+    
     def warn(self, msg):
         """ Issue warning during parse.
         """
@@ -426,7 +488,7 @@ class XmlHandler(DataHandler):
         #write_header_meshfunction(self.__ofile_meshfunc, dim, size)
         # Delfine-convert: Alteration to ensure that all the information
         # is saved in just one file
-        write_header_meshfunction(self.__ofile, dim, size)
+        write_header_meshfunction(self.__ofile, name, dim, size)
 
     def add_entity_meshfunction(self, index, value):
         DataHandler.add_entity_meshfunction(self, index, value)
@@ -444,7 +506,16 @@ class XmlHandler(DataHandler):
         # is saved in just one file
         write_footer_meshfunction(self.__ofile)
         self.__ofile_meshfunc = None
-
+    
+    # Delfine-convert:-----------------------------------------------------------
+    def start_meshfunctionfile(self):
+        DataHandler.start_meshfunctionfile(self)
+        write_header_meshfunctionfile(self.__ofile)
+    def end_meshfunctionfile(self):
+        DataHandler.end_meshfunctionfile(self)
+        write_footer_meshfunctionfile(self.__ofile)
+    # end-delfine-convert:-----------------------------------------------------------
+    
     def close(self):
         DataHandler.close(self)
         if self.__ofile.closed:
