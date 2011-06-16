@@ -58,7 +58,7 @@ class AssembleElliptic:
         
         # Create function space
         V = FunctionSpace(mesh, "CG", order)
-
+        
         # Define Dirichlet boundary conditions
         u0= BCCond()
         bc = DirichletBC(V, u0, u0_boundary,  "pointwise") 

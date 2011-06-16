@@ -17,6 +17,7 @@ from DelfineData import DelfineData
 from DelfineInput import DelfineInput
 from DelfineMesh import DelfineMesh
 from DelfinePlot import DelfinePlot
+from DelfineVelocity import DelfineVelocity
 from SolveEqSystem import SolveEqSystem
 
 class Delfine:
@@ -53,6 +54,9 @@ class Delfine:
         # Equation system solver
         self.solver = SolveEqSystem()
         
+        # Obtain velocity from pressure
+        self.velocity = DelfineVelocity()
+        
         # Results and residual plotter
         self.outPlot = DelfinePlot()
         
@@ -62,8 +66,11 @@ class Delfine:
         # Assemble elliptic (pressure) equation
         self.elliptic.assemble_withDolfin(self.transferData, self.parameter,  self.mesh)
         
-        # Solve equations system provenient from the variational form of the problem
+        # Solve equations system for pressure provenient from variational form
         self.solver.solve_withPyAMG(self.transferData, self.parameter)
+        
+        # Solve for velocity
+        self.velocity.velCalc(self.transferData, self.parameter,  self.mesh)
         
         # Plot solution, residual and compare numerical to analytical solution
         self.outPlot.plotResults(self.transferData,  self.parameter)

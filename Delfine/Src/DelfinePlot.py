@@ -47,7 +47,7 @@ class DelfinePlot:
         
         vx = as_vector(x)
         fx = Function(V, vx)
-        
+    
         # Save solution in VTK format
         fileVtk = File("Results/poisson.pvd")
         fileVtk << fx
