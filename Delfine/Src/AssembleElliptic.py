@@ -132,6 +132,7 @@ class AssembleElliptic:
     
     # Project velocity vector on vector function space
     Vg = VectorFunctionSpace(mesh, "Lagrange", order)
-    vT = project(-K*mob*grad(p), Vg) - project(-K*mobW*dPc*grad(Sw), Vg)
+    vT = project(-K*mob*grad(p), Vg) - 
+            project(-K*mobW*dPc*grad(Sw), Vg)
 
 
