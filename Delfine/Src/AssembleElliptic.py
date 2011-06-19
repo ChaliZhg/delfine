@@ -117,22 +117,3 @@ class AssembleElliptic:
         delfineVar.V = V
         delfineVar.u0 = u0
 ############################################################
-
-
-
-    # Define variational problem
-    V = FunctionSpace(mesh, "Lagrange", order)
-    v = TestFunction(V)
-    p = TrialFunction(V)
-
-    a = inner(grad(v), K*mob*grad(p))*dx
-    L = v*f*dx - g*v*ds
-    A, rhs = assemble_system(a, L) # A*p=rhs
-    
-    
-    # Project velocity vector on vector function space
-    Vg = VectorFunctionSpace(mesh, "Lagrange", order)
-    vT = project(-K*mob*grad(p), Vg) - 
-         project(-K*mobW*dPc*grad(Sw), Vg)
-
-
