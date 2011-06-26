@@ -1,11 +1,11 @@
 <delfine>
     <geometry>
-        <mesh dimension="2" order ="1" type="dolfin-generated">
-            <dolfin-generated type="UnitSquare" nx="64" ny="64"/>
+        <mesh dimension="2" order ="1" type="gmsh">
+            <filename>HomoIsoBCStruct.msh</filename>
         </mesh>
         <boundary-conditions>
             <well bctype="flux-rate(m^3/d)" function="injection" id="301">1.0</well>
-            <well bctype="pressure" function="production" id="1">0.0</well>
+            <well bctype="flux-rate(m^3/d)" function="production" id="351">-1.0</well>
         </boundary-conditions>  
     </geometry>
     <physical>
@@ -21,7 +21,7 @@
             </oil>
         </fluid-properties>
         <rock-properties>
-            <rock-type id="0">
+            <rock-type id="1">
                 <porosity compressible="no">1.0</porosity>
                 <rock-heat-coefficient>1.0</rock-heat-coefficient>
                 <permeability type="per-domain">
@@ -58,7 +58,7 @@
         <pressure-solver type="cg">
             <tolerance>1e-10</tolerance>
             <max-number-steps>200</max-number-steps>
-            <pre-conditioning type="amg">
+            <pre-conditioning type="none">
                 <number-coarse-levels>4</number-coarse-levels>
                 <number-relax-iterations>3</number-relax-iterations>
             </pre-conditioning>

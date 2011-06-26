@@ -94,7 +94,13 @@ def gmsh2xml(ifilename, handler):
         # Remove newline
         if line[-1] == "\n":
             line = line[:-1]
-
+        
+        # Delfine-convert:------------------------------------------------
+        if line.find("$Nodes") == 0:
+            line = ifile.readline()
+            num_nodes = int(line)
+        
+        # end-delfine-convert---------------------------------------------
         # Read dimension
         if line.find("$Elements") == 0:
 
@@ -293,14 +299,18 @@ def gmsh2xml(ifilename, handler):
     # end - delfine-convert---------------------------------------------
 
     # Delfine-convert---------------------------------------------------
-    # Execute this snippet only if well(physical) points were found
+    # This snippet is executed only if well(physical) points were found
     if (dim_1_count > 0):
         physical_points = tuple(tag[0] for tag in tags_1)
         point_index = tuple(tag[1] for tag in tags_1)
         if not all(tag == 0  for tag in tags_1):
-            handler.start_meshfunction("well_indicators", 0, dim_1_count)
-            for i, physical_point in enumerate(physical_points):
-                handler.add_entity_meshfunction(point_index[i], physical_point)
+            handler.start_meshfunction("well_indicators", 0, num_nodes)
+            wellType = [0]*num_nodes
+            for i in xrange(num_nodes):
+                for j in xrange(len(point_index)):
+                    if (i == (point_index[j] - 1)):
+                        wellType[i] = physical_points[j]
+                handler.add_entity_meshfunction((i), wellType[i])
             handler.end_meshfunction()
     # end - delfine-convert---------------------------------------------
 
