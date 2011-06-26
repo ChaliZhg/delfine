@@ -53,7 +53,7 @@ class DelfinePlot:
         fileVtk << fx
         
         # Plot numerical solution
-        plot(fx, interactive=True,  title="Numerical Solution")
+        plot(fx, interactive=True,  title="Pressure - PyAMG")
         
         # Create array with residuals of the solution
         resList = list(residuals)

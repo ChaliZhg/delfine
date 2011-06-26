@@ -5,7 +5,7 @@
 # Date: 07/02/11
 # Modifications Date:
 # 04/04/11 - Added function to read mesh data outside the main loop
-#
+# 25/06/11 - Added option to use mixed FEM in addition to Galerkin
 #
 #
 #
@@ -49,7 +49,7 @@ class Delfine:
         self.mesh = DelfineMesh(self.parameter)
         
         # Elliptic equations assembler
-        self.elliptic = AssembleElliptic()
+        self.elliptic = AssembleElliptic(self.parameter,  self.mesh)
         
         # Equation system solver
         self.solver = SolveEqSystem()
@@ -63,17 +63,27 @@ class Delfine:
     def drive(self):
         """Manages solution procedure"""
         
-        # Assemble elliptic (pressure) equation
-        self.elliptic.assemble_withDolfin(self.transferData, self.parameter,  self.mesh)
+        self.formulation = "MixedFEM" # FIXME: Input from file
         
-        # Solve equations system for pressure provenient from variational form
-        self.solver.solve_withPyAMG(self.transferData, self.parameter)
+        # Assemble elliptic equation
+        if (self.formulation == "Galerkin"):
+            # Assemble pressure system with standard Galerkin
+            self.elliptic.Galerkin(self.transferData, self.parameter,  self.mesh)
+            
+            # Solve for pressure
+            self.solver.solve_withPyAMG(self.transferData, self.parameter)
         
-        # Solve for velocity
-        self.velocity.velCalc(self.transferData, self.parameter,  self.mesh)
+            # Solve for velocity
+            self.velocity.velCalc(self.transferData, self.parameter,  self.mesh)
         
-        # Plot solution, residual and compare numerical to analytical solution
-        self.outPlot.plotResults(self.transferData,  self.parameter)
+            # Plot solution, residual and compare numerical to analytical solution
+            self.outPlot.plotResults(self.transferData,  self.parameter)
+        elif (self.formulation == "MixedFEM"):
+            # Assemble and solve for pressure and velocity
+            self.elliptic.MixedFEM(self.transferData)
+       
+
         
 
 #############################################################
+

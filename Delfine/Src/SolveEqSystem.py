@@ -137,7 +137,8 @@ class SolveEqSystem:
         
         # Print residuals history
         if (solverType != 'blackbox'):
-            residuals = residuals/residuals[0]
+            pass
+            #residuals = residuals/residuals[0]
   
         # Define return parameters
         delfineVar.x = x

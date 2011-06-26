@@ -28,7 +28,7 @@ class DelfineMesh:
             if (dolfinGenType == "UnitInterval"):
                 mesh = UnitInterval(n[0])
             elif (dolfinGenType == "UnitSquare"):
-                mesh = UnitSquare(n[0], n[1])
+                mesh = UnitSquare(n[0], n[1], 'crossed') # crossed edges used to avoid mesh orientation efffect
             elif (dolfinGenType == "UnitCube"):
                 mesh = UnitCube(n[0], n[1],  n[2])
             elif (dolfinGenType == "UnitCircle"):

@@ -17,14 +17,25 @@ class DelfineVelocity:
     def velCalc(self, delfineVar, parameter,  meshData):
         """Calculates the velocity from the pressure results"""  
     
+        mesh = meshData.allData
+        dim = parameter.geom.mesh.dim
+        order = parameter.geom.mesh.order
+        
         # Compute solution with Dolfin internal solver
         # FIXME: Use solution from PyAMG
         V = delfineVar.V
         A = delfineVar.A
         rhs = delfineVar.rhs
         w = Function(V)
-        solve(A, w.vector(), rhs)
-        plot(w, title='Pressure')
+        solve(A, w.vector(), rhs, 'gmres')
+        
+        int_p = w*dx
+        average_p = assemble (int_p, mesh=mesh)
+        p_array = w.vector().array() - average_p
+        w.vector()[:] = p_array
+        
+        plot(w, title='Pressure - Dolfin')
+        
         mesh = meshData.allData
         dim = parameter.geom.mesh.dim
         order = parameter.geom.mesh.order
