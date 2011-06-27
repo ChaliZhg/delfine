@@ -314,11 +314,13 @@ class DelfineInput:
         saturSolv = num.find('saturation-solver')
         
         # ## Pressure Solver parameters - num.pressSolv
+        parameter.num.pressSolv.formulation = pressSolv.attrib["formulation"]
         parameter.num.pressSolv.type = pressSolv.attrib["type"]
         parameter.num.pressSolv.tolerance = float(pressSolv.findtext('tolerance'))
         parameter.num.pressSolv.maxNumSteps = int(pressSolv.findtext('max-number-steps'))
         parameter.num.pressSolv.preConditioning.type = pressSolv.find('pre-conditioning').attrib["type"]
         # Writing in .log file for check purposes
+        log.write("Pressure Solver Formulation: " + str(parameter.num.pressSolv.formulation) +"\n")
         log.write("Pressure Solver Type: " + str(parameter.num.pressSolv.type) +"\n")
         log.write("Pressure Solver Tolerance: " + str(parameter.num.pressSolv.tolerance) +"\n")
         log.write("Pressure Solver Max. Num. Steps: " + str(parameter.num.pressSolv.maxNumSteps) +"\n")

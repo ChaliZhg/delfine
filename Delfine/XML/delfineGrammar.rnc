@@ -47,6 +47,7 @@ rock-fluid-properties-element = element rock-fluid-properties {
                                                                relative-permeability-element          
                                                               }
 pressure-solver-element = element pressure-solver {
+                                                   attribute formulation {"galerkin" | "mixedfem"}&
                                                    attribute type {"lu" | "gmres" | "cg" | "blackbox" | "none"}&
                                                    tolerance-element&
                                                    max-number-steps-element&

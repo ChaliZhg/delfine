@@ -63,12 +63,13 @@ class Delfine:
     def drive(self):
         """Manages solution procedure"""
         
-        self.formulation = "MixedFEM" # FIXME: Input from file
+        # Formulation for pressure equation (Galerkin or MixedFEM)
+        formulation = self.parameter.num.pressSolv.formulation
         
         # Assemble elliptic equation
-        if (self.formulation == "Galerkin"):
+        if (formulation == "galerkin"):
             # Assemble pressure system with standard Galerkin
-            self.elliptic.Galerkin(self.transferData, self.parameter,  self.mesh)
+            self.elliptic.Galerkin(self.transferData, self.parameter)
             
             # Solve for pressure
             self.solver.solve_withPyAMG(self.transferData, self.parameter)
@@ -78,9 +79,9 @@ class Delfine:
         
             # Plot solution, residual and compare numerical to analytical solution
             self.outPlot.plotResults(self.transferData,  self.parameter)
-        elif (self.formulation == "MixedFEM"):
+        elif (formulation == "mixedfem"):
             # Assemble and solve for pressure and velocity
-            self.elliptic.MixedFEM(self.transferData)
+            self.elliptic.MixedFEM(self.transferData, self.parameter)
        
 
         

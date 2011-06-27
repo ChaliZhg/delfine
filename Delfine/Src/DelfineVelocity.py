@@ -26,6 +26,9 @@ class DelfineVelocity:
         V = delfineVar.V
         A = delfineVar.A
         rhs = delfineVar.rhs
+        K = delfineVar.K
+        mob = delfineVar.mob
+        
         w = Function(V)
         solve(A, w.vector(), rhs, 'gmres')
         
@@ -42,8 +45,7 @@ class DelfineVelocity:
         
         # Compute and plot flux function
         Vg = VectorFunctionSpace(mesh, "CG", order)
-        #velocity = project(-K*mob*grad(w), Vg) # FIXME: Pass K and mob from assemble
-        velocity = project(-grad(w), Vg)
+        velocity = project(-K*mob*grad(w), Vg)
         plot(velocity,  title='Velocity')
     
         flux_x, flux_y = velocity.split(deepcopy=True) # extract components

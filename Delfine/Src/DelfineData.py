@@ -135,6 +135,7 @@ class RockFluidData:
 class PressSolvData:
     """3rd level - Class for pressure solver parameters"""
     def __init__(self):
+        self.formulation = None
         self.type = None
         self.tolerance = None #4th level
         self.maxNumSteps = None #4th level
@@ -174,6 +175,8 @@ class DelfineData:
             self.residuals = None
             self.V = None
             self.u0 = None
+            self.K = None
+            self.mob = None
         elif (type == "input"):
             # Geometric
             self.geom = GeomData()
@@ -192,8 +195,67 @@ class PermeabilityTensor3D(Expression):
         self.K =[]
         # Getting rocks IDs and respective K from parameter structure
         for i in range(len(self.rocks)):
-            self.DomainID.append(int(self.rocks[i].id))
-            self.K.append(self.rocks[i].permeability.K)
+            if (self.rocks[i].permeability.type == 'per-domain'):
+                self.DomainID.append(int(self.rocks[i].id))
+                self.K.append(self.rocks[i].permeability.K)
+    def eval_cell(self, values, x, ufc_cell):
+        # Get material indicator(which corresponds to rock ID) from mesh with mesh_function
+        mf = self.mesh.data().mesh_function("material_indicators")
+        i = ufc_cell.index
+        j = 0
+        if (type(i) is int):
+            if (mf != None):
+                for id in self.DomainID:
+                    if (mf[i] == id):
+                        values[0] = self.K[j][0] # Kxx
+                        values[1] = self.K[j][1] # Kxy
+                        values[2] = self.K[j][2] # Kxz            | Kxx  Kxy  Kxz |       | values[0] values[1] values[2] |
+                        values[3] = values[1]   # Kyx     K = | Kyx  Kyy  Kyz  | => | values[3] values[4] values[5] |
+                        values[4] = self.K[j][3] # Kyy            | Kzx  Kzy  Kzz  |       | values[6] values[7] values[8] |
+                        values[5] = self.K[j][4] # Kyz
+                        values[6] = values[2]   # Kzx
+                        values[7] = values[5]   # Kzy
+                        values[8] = self.K[j][5] # Kzz
+                    j += 1
+            else: 
+                # For dolfin-generated meshes or meshes without "material_indicator"
+                # This option consider just homogeneous cases
+                values[0] = self.K[0][0] # Kxx
+                values[1] = self.K[0][1] # Kxy
+                values[2] = self.K[0][2] # Kxz            | Kxx  Kxy  Kxz |       | values[0] values[1] values[2] |
+                values[3] = values[1]    # Kyx     K = | Kyx  Kyy  Kyz  | => | values[3] values[4] values[5] |
+                values[4] = self.K[0][3] # Kyy            | Kzx  Kzy  Kzz  |       | values[6] values[7] values[8] |
+                values[5] = self.K[0][4] # Kyz
+                values[6] = values[2]    # Kzx
+                values[7] = values[5]    # Kzy
+                values[8] = self.K[0][5] # Kzz
+        else:
+            pass
+    def value_shape(self):
+        return (3, 3)
+# Auxiliary class for elliptic assembly module------------------------------------------------------------------------------------------           
+class InversePermeabilityTensor3D(Expression):
+    """Defines the 3D inverse permeability tensor for each cell. Used for MixedFEM"""
+    def __init__(self, mesh, parameter):
+        self.mesh = mesh
+        self.rocks = parameter.phys.rock.rocks
+        self.DomainID = []
+        self.K =[]
+        self.detK =[]
+        # Getting rocks IDs and respective K from parameter structure
+        for i in range(len(self.rocks)):
+            if (self.rocks[i].permeability.type == 'per-domain'):
+                self.DomainID.append(int(self.rocks[i].id))
+                self.K.append(self.rocks[i].permeability.K)
+                Kxx = self.K[i][0]
+                Kxy = self.K[i][1]
+                Kxz = self.K[i][2]
+                Kyy = self.K[i][3]
+                Kyz = self.K[i][4]
+                Kzz = self.K[i][5]
+                self.detK.append(Kxx*(Kyy*Kzz - Kyz*Kyz) + \
+                Kxy*(Kyz*Kxz - Kzz*Kxy) + \
+                Kxz*(Kxy*Kyz - Kyy*Kxz))
     def eval_cell(self, values, x, ufc_cell):
         # Get material indicator(which corresponds to rock ID) from mesh with mesh_function
         mf = self.mesh.data().mesh_function("material_indicators")
@@ -239,8 +301,9 @@ class PermeabilityTensor2D(Expression):
         self.K =[]
         # Getting rocks IDs and respective K from parameter structure
         for i in range(len(self.rocks)):
-            self.DomainID.append(int(self.rocks[i].id))
-            self.K.append(self.rocks[i].permeability.K)
+            if (self.rocks[i].permeability.type == 'per-domain'):
+                self.DomainID.append(int(self.rocks[i].id))
+                self.K.append(self.rocks[i].permeability.K)
     def eval_cell(self, values, x, ufc_cell):
         # Get material indicator(which corresponds to rock ID) from mesh with mesh_function
         mf = self.mesh.data().mesh_function("material_indicators")
@@ -262,6 +325,51 @@ class PermeabilityTensor2D(Expression):
                 values[1] = self.K[0][1] # Kxy
                 values[2] = values[1]    # Kyx
                 values[3] = self.K[0][2] # Kyy
+        else:
+            pass
+    def value_shape(self):
+        return (2, 2)
+# Auxiliary class for elliptic assembly module------------------------------------------------------------------------------------------  
+class InversePermeabilityTensor2D(Expression):
+    """Defines the 2D inverse permeability tensor for each cell. Used for MixedFEM"""
+    def __init__(self, mesh, parameter):
+        self.mesh = mesh
+        self.rocks = parameter.phys.rock.rocks
+        self.DomainID = []
+        self.K = []
+        self.detK =[]
+        # Getting rocks IDs and respective K from parameter structure
+        for i in range(len(self.rocks)):
+            if (self.rocks[i].permeability.type == 'per-domain'):
+                self.DomainID.append(int(self.rocks[i].id))
+                self.K.append(self.rocks[i].permeability.K)
+                Kxx = self.K[i][0]
+                Kxy = self.K[i][1]
+                Kyy = self.K[i][2]
+                self.detK.append(Kxx*Kyy - Kxy*Kxy)
+    def eval_cell(self, values, x, ufc_cell):
+        # Get material indicator(which corresponds to rock ID) from mesh with mesh_function
+        mf = self.mesh.data().mesh_function("material_indicators")
+        i = ufc_cell.index
+        j = 0
+        if (type(i) is int):
+            if (mf != None):
+                for id in self.DomainID:
+                    if (mf[i] == id):
+                        invDetK = 1/(self.detK[j])
+                        values[0] = invDetK*self.K[j][2]
+                        values[1] = invDetK*(-self.K[j][1])  #    invK = (1/detK) * | Kyy  -Kxy | =>  | values[0] values[1] |
+                        values[2] = values[1]                     #                               | -Kyx  Kxx  |       | values[2] values[3] |      
+                        values[3] = invDetK*self.K[j][0]      # 
+                    j += 1
+            else: 
+                # For dolfin-generated meshes or meshes without "material_indicator"
+                # This option consider just homogeneous cases
+                        invDetK = 1/(self.detK[0])
+                        values[0] = invDetK*self.K[0][2]
+                        values[1] = invDetK*(-self.K[0][1])  #    invK = (1/detK) * | Kyy  -Kxy | =>  | values[0] values[1] |
+                        values[2] = values[1]                      #                               | -Kyx  Kxx  |       | values[2] values[3] |      
+                        values[3] = invDetK*self.K[0][0]      # 
         else:
             pass
     def value_shape(self):

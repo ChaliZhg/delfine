@@ -4,8 +4,8 @@
             <filename>HomoIsoBCStruct.msh</filename>
         </mesh>
         <boundary-conditions>
-            <well bctype="flux-rate(m^3/d)" function="injection" id="301">1.0</well>
-            <well bctype="flux-rate(m^3/d)" function="production" id="351">-1.0</well>
+            <well bctype="flux-rate(m^3/d)" function="injection" id="301">.250</well>
+            <well bctype="flux-rate(m^3/d)" function="production" id="351">-.250</well>
         </boundary-conditions>  
     </geometry>
     <physical>
@@ -25,10 +25,10 @@
                 <porosity compressible="no">1.0</porosity>
                 <rock-heat-coefficient>1.0</rock-heat-coefficient>
                 <permeability type="per-domain">
-                    <Kxx>1.0</Kxx>
+                    <Kxx>0.50</Kxx>
                     <Kxy>0.0</Kxy>
                     <Kxz>0.0</Kxz>
-                    <Kyy>1.0</Kyy>
+                    <Kyy>0.50</Kyy>
                     <Kyz>0.0</Kyz>
                     <Kzz>0.0</Kzz>
                 </permeability>
@@ -55,7 +55,7 @@
         </rock-fluid-properties>
     </physical>
     <numerical>
-        <pressure-solver type="cg">
+        <pressure-solver formulation="galerkin" type="cg">
             <tolerance>1e-10</tolerance>
             <max-number-steps>200</max-number-steps>
             <pre-conditioning type="none">
