@@ -1,31 +1,32 @@
 \chapter{Introdução}
 \label{ch:introduction}
 
-
-
 \section{Motivação}
 \label{sc:motivation}
 
-Dentro do contexto atual de busca constante por um diferencial
-competitivo, tem havido uma procura, tanto a nível acadêmico como
-empresarial, de encontrar modos para maximizar a produtividade nas
-mais diversas atividades. 
+Nowadays, the numerical simulation of fluid flow in porous media is fundamental in many engineering fields, such as in the analysis of groundwater flow and contaminant transport \citep{Bear1992}, management of water and heat in polymer membranes for fuel cells \citep{Matamoros2006} or for the simulation of multiphase flows in petroleum reservoirs \citep{Peaceman1977, Aziz1979,Ewing1983,Carvalho2005,Silva2008}.
 
-\citep{Savitch2004} \citep{Sorensen2001} \cite{Sorensen2001}
-\citep{Mavriplis1998} \citep{Venkatakrishnan1994}
-\citep{Bell2008} \citep{Wells2008} \citep{Li2004}
-\citep{Langtangen2010} \citep{Martelli2006} \citep{Peaceman1977} \citep{Aziz1979}
-\citep{Marle1981} \citep{Ewing1983}
+The scientific modeling of fluid flow in porous media for the petroleum industry has been done since the 1930's, initially using sand-packed models to understand the production of water in oil reservoirs and the reason why the water-oil rate increases with time. In the late 1930's and 1940's some experiments with electrolytic models were used to model the flow in porous media, as it was already recognized the analogy between electric current and the Darcy flow \citep{Peaceman1990}. All these physical analogs models allowed a deeper insight in the phenomena governing this kind of problem, but it was not just until the advent of the electronic computers that engineers were able to simulate real-world problems as, for example, that of oil reservoirs in 2 and 3 dimensions. 
 
-A idéia central do Multigrid consiste na escolha de um método de
-solução (suavizador) adequado para amortecer os erros associados às
-altas frequências, enquanto que os erros associados às baixas frequências
-são amortecidos através de malhas grosseiras, onde estes se manifestam
-como frequências altas.
+Parallel to the development of new hardware, there has been a extensive work on computational methods applied to multiphase flow in porous media. The first method used in large scale for solving partial diffential equations (PDE) numerically and still the standard in the petroleum industry is the finite difference method (FDM) \citep{Peaceman1990}. However, this kind of method presents some disadvantages, as the difficulty to handle complex domains, general boundary conditions or variable material properties \citep{Chen2006}, especially when compared to methods adequate to handle with unstructured meshes that have been applied more recently in this area as the finite volume method (FVM) \citep{Carvalho2005, Cordazzo2006} or the finite element method (FEM) \citep{Chen2006}. For the reasons already cited, the last class of method has been used along this work.
+
+A common aspect among all these computational methods is the considerable amount of time necessary for the development of computer programs that implement formulations for general and/or complex cases. Much of this time is spent coding tasks that are common to almost any numerical simulation software, as for example the matrix assembly, I/O data handling or iterative solutions for linear system of equations. The approach of this work to overcome this difficulty was to use the open source tool \emph{FEniCS/DOLFIN} \citep{Logg2010}, which performs a low-level code (in \emph{C++}),  automatized generation based on some high-level code (in \emph{Python}) input, allowing the developer to focus on developing and testing different mathematical and numerical formulations for the problem of interest using a syntax very similar to the one used for the mathematical description of the problem, instead of spending time writing auxiliary code for ``administrative'' tasks.
+
+Moreover, there is a need to reduce the computing time of the program in order to make the simulations feasible in the time-frame of a project. Normally, the most CPU-time consuming part of a simulation is the solution of the linear equation system resulting from the PDE's discretization with a numerical method \citep{Saad2003}. Meanwhile, several techniques are available to solve iteratively this kind of system, each of them with its own advantages and disadvantages in terms of speed and generality, whereas these mentioned features often lead to distinct directions, that is, a method that is extremely fast for one specific type of problem is not general and vice-versa. In this work, we used one method that is believed to couple almost ideally these two features, namely the Multigrid method \citep{Trottenberg2001, Saad2003, Briggs2000}. Nevertheless, these desired characteristics are not obtained without cost, and in this case the main additional difficulties associated with Multigrid methods are the need of a sequence of progressive coarser meshes whose generation can become an issue if not adequately addressed and the use of operators for data transfer among the successive levels. Following the principle of sparing coding time with general tasks and focusing on the problem of interest, we used in this work the open source library \emph{PyAMG} \citep{Bell2008}, which not only performs in an fully automatic way the matrix-sequence generation given an initial mesh, but also allows the use of many different variants of the Algebraic Multigrid Method (AMG), including the classical Ruge-St\"uben and the Smoothed Aggregation (SA) algorithms \citep{Trottenberg2001}.
+
+\section{Histórico da Simulação de Reservatórios de Petróleo}
+\label{sc:histSimRes}
 
 \section{Histórico do Multigrid}
-\section{Histórico da Simulação de Reservatórios de Petróleo}
-\section{Objetivos}
+\label{sc:histMult}
 
+\section{Histórico da Modelagem Automática de Equações Diferenciais}
+\label{sc:histMult}
+
+\section{Objetivos}
+\label{sc:obj}
+
+\section{Organização do Trabalho}
+\label{sc:orgTrab}
 
 

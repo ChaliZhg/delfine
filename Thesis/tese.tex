@@ -14,8 +14,10 @@
 \usepackage{acronym}
 %% Change the following pdf author attribute name to your name.
 \usepackage[linkcolor=black,citecolor=black,urlcolor=black,colorlinks,pdfpagelabels,pdftitle={brunoluna-msc},pdfauthor={Bruno Gustavo Borges Luna}]{hyperref}
+% Command added to present problem in 'theorem form'
+\newtheorem{problem}{Problem}
 
-\address{RECIFE}
+\address{Recife}
 
 \universitypt{Universidade Federal de Pernambuco}
 \universityen{Federal University of Pernambuco}
@@ -29,8 +31,8 @@
 \majorfieldpt{Engenharia Mecânica}
 \majorfielden{Mechanical Engineering}
 
-\title{Aceleração de Convergência via Multigrid de Simulador de Escoamentos em Meios Porosos}
-\date{AGOSTO/2011}
+\title{Modelagem Automática de Escoamentos em Meios Porosos via Método dos Elementos Finitos}
+\date{Agosto/2011}
 
 \author{Bruno Gustavo Borges Luna}
 \adviser{Paulo Roberto Maciel Lyra}
@@ -43,7 +45,7 @@
 \presentationpage
 
 \begin{dedicatory}
-Dedico esta dissertação à \ldots
+Dedico à \ldots
 \end{dedicatory}
 
 \acknowledgements
@@ -59,10 +61,10 @@ Gostaria de agradecer \ldots
 \listoffigures
 \listoftables
 % Acronyms
-%\input{chapters/extras/acronyms}
+\input{chapters/extras/acronyms}
 \mainmatter
 
-%% Here you include your chapters
+%% BEGIN CHAPTERS---------------------------------------
 % CHAPTER 01 - INTRODUCTION
 \include{chapters/ch01/introduction}
 
@@ -78,6 +80,10 @@ Gostaria de agradecer \ldots
 % CHAPTER 05 - RESULTS
 \include{chapters/ch05/resultados}
 
+% CHAPTER 05 - CONCLUSION
+\include{chapters/ch06/conclusoes}
+%% END CHAPTERS---------------------------------------
+
 \bibliographystyle{natbib}
 \addcontentsline{toc}{chapter}{Referências Bibliográficas}
 %% REFERENCES
@@ -88,5 +94,8 @@ Gostaria de agradecer \ldots
 \appendix
 % A01 - USER GUIDE
 \include{chapters/appendix/a01}
+
+% A02 - SELECTED SECTIONS OF CODE
+\include{chapters/appendix/a02}
 
 \end{document}

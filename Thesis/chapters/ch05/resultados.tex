@@ -125,16 +125,16 @@ Para uma sequência de malhas formadas por triângulos lineares, se espera uma tax
 
 Para a resolução do sistema de equações lineares provenientes da discretização do problema foram testadas três diferentes alternativas:
 \begin{itemize}
-\item Métodos dos Gradientes Conjugados(CG) aplicado isoladamente.
-\item Método do Multigrid Algébrico(AMG) aplicado isoladamente.
+\item Métodos dos Gradientes Conjugados (CG) aplicado isoladamente.
+\item Método do Multigrid Algébrico (AMG) aplicado isoladamente.
 \item Multigrid Algébrico aplicado como pré-condicionador para o método dos Gradientes Conjugados (AMG+CG).
 \end{itemize}
 
-Para a realização dos testes, foi utilizada uma malha de 32x32 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 "malhas" sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
+Para a realização dos testes, foi utilizada uma malha de 32x32 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
 
-Como pode ser observado na figura \ref{fig:residualHomogeneoIsotropico_N=32}, os esquemas utilizando o método multigrid (AMG e AMG+CG) apresentaram resultados bastante superiores em relação ao método puramente iterativo CG. Enquanto o método AMG+CG reduz o resíduo em aproximadamente uma ordem de grandeza por iteração, o método CG necessita de aproximadamente 10 vezes mais iterações para reduzir o resíduo na mesma proporção. É interessante comparar também os resultados obtidos ao utilizar-se o AMG isoladamente e ao usá-lo como um pré-condicionador para o método dos Gradientes Conjugados. Percebe-se que nas primeiras iterações os dois métodos apresentam fatores de convergência para o resíduo praticamente idênticos, porém a medida que se prossegue com as iterações, o AMG usado isoladamente tende a apresentar uma piora na taxa de convergência, enquanto o método que utiliza a combinação AMG+CG mantém o excelente fator de convergência obtido inicialmente.
+Como pode ser observado na figura \ref{fig:residualHomogeneoIsotropico_N=32}, os esquemas utilizando o método multigrid (AMG e AMG+CG) apresentaram resultados bastante superiores em relação ao método CG, o qual utiliza apenas um único sistema de equações lineares (ou seja, uma única ``malha''). Enquanto o método AMG+CG reduz o resíduo em aproximadamente uma ordem de grandeza por iteração, o método CG necessita de aproximadamente 10 vezes mais iterações para reduzir o resíduo na mesma proporção. É interessante comparar também os resultados obtidos ao utilizar-se o AMG isoladamente e ao usá-lo como um pré-condicionador para o método dos Gradientes Conjugados. Percebe-se que nas primeiras iterações os dois métodos apresentam fatores de convergência para o resíduo praticamente idênticos, porém a medida que se prossegue com as iterações, o AMG usado isoladamente tende a apresentar uma piora na taxa de convergência, enquanto o método que utiliza a combinação AMG+CG mantém o excelente fator de convergência obtido inicialmente.
 
-Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg2001,Oosterlee1998,Mavriplis2001} no qual um único ou poucos autovalores da matriz representante do operador de iteração Multigrid estão com um valor muito acima daquele obtido para os demais autovalores. Sendo que o autovalor máximo (também chamados de raio espectral) do operador de iteração indicam em última análise o fator de convergência assimptótica para o problema \citep{Briggs2000}, limitando portanto a taxa de convergência possível de ser obtida. Um modo de contornar tal problema é justamento utilizar algum método de subespaço de Krylov, como é o caso do método CG, os quais tem a característica de em poucas iterações obter os autovetores relacionados aos poucos autovalores isolados \citep{Trottenberg2001}.
+Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg2001,Oosterlee1998,Mavriplis2001} no qual um único ou poucos autovalores da matriz representante do operador de iteração Multigrid estão com um valor muito acima daquele obtido para os demais autovalores. Sendo que o autovalor máximo (também chamados de raio espectral) do operador de iteração indicam em última análise o fator de convergência assimptótica para o problema \citep{Briggs2000}, limitando portanto a taxa de convergência possível de ser obtida. Um modo de contornar tal problema é justamento utilizar algum método de subespaço de Krylov, como é o caso do método CG, os quais têm a característica de em poucas iterações amortecer os autovetores relacionados aos poucos autovalores elevados \citep{Trottenberg2001}.
 
 \begin{figure}
 \centering
@@ -145,13 +145,12 @@ Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg200
 
 \subsection{Meio Homogêneo e Anisotrópico}
 \label{sc:homogeneoaniso}
-Este problema foi originalmente proposto em \cite{Crumpton1995}, onde foi resolvido utilizando um método de volumes finitos centrado na célula (FCFV), tendo também sido estudado em \cite{Carvalho2005} e \cite{Silva2008} utilizando o já mencionado método dos volumes finitos baseado em arestas (EBFV)
+Este problema foi originalmente proposto em \cite{Crumpton1995}, onde foi resolvido utilizando um método de volumes finitos centrado na célula (FCFV), tendo também sido estudado em \cite{Carvalho2005} e \cite{Silva2008} utilizando o já mencionado método dos volumes finitos baseado em arestas (EBFV).
 
-Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores diagonais ou cheios para representar o coeficiente $\mathbf{K}$. O problema proposto pode ser descrito através da equação \ref{eq:homogeneoaniso} aplicada em um domínio $\Omega = (0,1)x(0,1)$.
+Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores diagonais ou cheios para representar o coeficiente $\mathbf{K}$. O problema proposto pode ser descrito através da equação (\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
 \begin{equation} \label{eq:homogeneoaniso}
 \nabla(\mathbf{K} \nabla u) = -2(1 + x^2 + xy + y^2)e^{xy}
 \end{equation}
-
 Onde $\mathbf{K}$ é uma matriz simétrica e não-diagonal representada por:
 \begin{equation} \label{eq:coeffhomoaniso}
 \mathbf{K} = \left( \begin{array}{cc}
@@ -233,6 +232,8 @@ Assim como para o primeiro exemplo, também neste fizemos um estudo a respeito da
 \item Multigrid Algébrico aplicado como pré-condicionador para o método do Resíduo Mínimo Generalizado (AMG+GMRES).
 \end{itemize}
 
+É importante mencionar que o método GMRES é normalmente utilizado para problemas envolvendo matrizes não-simétricas \citep{Saad2003}, tendo sido avaliado apenas para verificar a flexibilidade do resolvedor de sistemas de equações lineares, já que a discretização deste problema resulta em uma matriz auto-adjunta (e portanto simétrica se considerarmos apenas termos reais).
+
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch05/residualHomoAniso_N=64}
@@ -240,7 +241,7 @@ Assim como para o primeiro exemplo, também neste fizemos um estudo a respeito da
 \label{fig:residualHomogeneoAnisotropico_N=64}
 \end{figure}
 
-Para a realização dos testes, foi utilizada uma malha de 64x64 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Em todos os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 "malhas" sucessivamente mais grosseiras. Um gráfico mostrando a evolução do resíduo normalizado para todos os métodos testados pode ser observado na figura \ref{fig:residualHomogeneoAnisotropico_N=64}, onde fica claro novamente a grande superioridade dos métodos que utilizam aceleração de convergência via multigrid em comparação com procedimentos puramente iterativos. É interessante notar também que para este exemplo os métodos CG e GMRES tiveram desempenhos bastante próximos, tanto isoladamente quanto em conjunto com o AMG enquanto pre-condicionador.
+Para a realização dos testes, foi utilizada uma malha de 64x64 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Em todos os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras. Um gráfico mostrando a evolução do resíduo normalizado para todos os métodos testados pode ser observado na figura \ref{fig:residualHomogeneoAnisotropico_N=64}, onde fica claro novamente a grande superioridade dos métodos que utilizam aceleração de convergência via multigrid em comparação com os outros métodos. É interessante notar também que para este exemplo os métodos CG e GMRES tiveram desempenhos bastante próximos, tanto isoladamente quanto em conjunto com o AMG enquanto pré-condicionador.
 
 
 
@@ -309,8 +310,8 @@ Pode ser observado na figura \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da 
 \subfigure[$\alpha=1000$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoContour_N=64_alpha=1000}
 }
+\caption[Caso heterogêneo e anisotrópico. Campo escalar para malha de 64x64.]{Campo escalar obtido para diferentes fatores de descontinuidade $\alpha$ utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
 \label{fig:HeterogeneoAnisoContour_N=64}
-\caption[Caso heterogêneo e anisotrópico. Campo escalar para malha de 64x64.]{Campo escalar obtido para diferentes fatores de descontinuidade $\alpha$ utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.} 
 \end{figure}
 
 \begin{table}
@@ -403,6 +404,8 @@ Este comportamento pode ser explicado pelo fato de que para maiores valores de $
 \end{figure}
 
 Para a resolução do sistema de equações lineares resultante da discretização foi novamente verificado o desempenho para diferentes tipos de métodos, mesmo sabendo de antemão que este problema é representado por uma matriz simétrica positiva-definida, sendo portanto um candidato natural a ser resolvido usando métodos do tipo gradiente conjugado, seja isoladamente ou com o multigrid algébrico como pré-condicionador.
+
+Os resultados obtidos para a evolução dos resíduos podem ser verificados na figura \ref{fig:residualHeterogeneoAniso_N=64_alpha=1}, onde mais uma vez é constatada a superioridade dos métodos que utilizam multigrid, mesmo para este problema que apresenta sub-domínios com propriedades diferentes.
 
 \begin{figure}
 \centering

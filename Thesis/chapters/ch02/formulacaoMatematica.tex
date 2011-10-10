@@ -1,15 +1,110 @@
 \chapter{Formulação Matemática}
 \label{ch:form_mat}
 
-Neste capítulo será apresentada a formulação matemática utilizada para modelar o escoamento de fluidos em meios porosos. As equações apresentadas se baseiam na hipótese de um escoamento tri-fásico do tipo \emph{black-oil}, onde as fases são normalmente água, óleo e gás, sendo que admite-se que não haverá troca de massa entre as fases água e óleo, e que o componente óleo não pode passar para a fase gasosa, entretanto a fase gás pode existir tanto isoladamente quanto dissolvida na fase óleo.
+In this work, we have adopted the classical mathematical formulation proposed in \cite{Peaceman1977} for the simultaneous flow of two immiscible phases in a saturated porous medium. This approach has been used by many researchers \citep{Ewing1983,Chavent1986,Carvalho2005,Silva2008} and has as one of its main characteristics the manipulation of the mass conservation equation using the Darcy law to form a system of a parabolic-elliptic pressure and a parabolic-hyperbolic saturation equations \citep{Carvalho2005}, as opposed to other formulations where the pressure and saturation fields are solved simultaneously in a system of parabolic PDEs \citep{Aziz1979}. 
+%Describe briefly Aziz's formulation in the thesis, for comparison purposes
 
-\section{Engenharia de Reservatório de Petróleo}
-\label{sc:reservatorio}
-O objetivo final ao se realizar simulações de reservatórios de petróleo...
+The segregated formulation of Peaceman allows the use of specialized methods capable of exploring mathematical characteristics for each equation of the resulting system. The coupling of the two fields is achieved through the use of a total velocity term.
 
-\section{Equação de Pressão}
-\label{sc:eq_press}
-Considerando a lei da conservação de massa, podemos considerar...
+In order to use the equations presented in this section, it is necessary to adopt some simplifying assumptions \citep{Carvalho2005,Peaceman1977}:
+\begin{itemize}
+\item Totally saturated porous medium;
+\item Incompressible fluids and rocks;
+\item Immiscible fluids;
+\item Isothermal flow;
+\item Darcy law valid for the fluids velocities.
+\end{itemize}
+
+Considering the assumption of totally saturated porous medium and the existence of $n$ phases, the constitutive equation for saturation yields:
+\begin{equation} \label{eq:eq_const_sat}
+\sum_{\alpha=1}^n S_{\alpha} = 1
+\end{equation}
+
+Where $\alpha$ represents each phase (in this work, $\alpha = w$ and $o$ for water and oil, respectively) and $S_{\alpha}$ represents the saturation of the phase $\alpha$.
+% Describe concepts as effective porosity and volume, and then give definition of saturation in the thesis. 
+ 
+The generalized Darcy law for each phase velocity reads as:
+\begin{equation} \label{eq:eq_darcy_general}
+\vec{v}_{\alpha} = - \frac{K_{\alpha}}{\mu_{\alpha}} \nabla\left(p_{\alpha} - \rho_{\alpha}g\nabla z \right)
+\end{equation}
+with $K_{\alpha}$, $\mu_{\alpha}$, $p_{\alpha}$ and $\rho_{\alpha}$ represent the effective permeability, viscosity, pressure and density of phase $\alpha$, whereas $g$ and $z$ representing the gravity acceleration and the displacement in its direction, respectively. The relation between the effective  and absolute permeability $K$ accounts for the influence of one fluid on the other during the flow and is defined as the relative permeability:
+\begin{equation} \label{eq:relat_perm}
+k_{r\alpha} = \frac{K_{\alpha}}{K} \leq 1
+\end{equation}
+%Cite models for relative permeability (Chen,Aziz as general, Brooks-Corey as specific)
+
+The conservation equation for each phase is described as \citep{Peaceman1977}:
+\begin{equation} \label{eq:cons_eq}
+-\nabla \cdot \left(\rho_{\alpha} \vec{v}_{\alpha}\right) + q_{\alpha} =
+\frac{\partial \left(\phi \rho_{\alpha} S_{\alpha}\right)}{\partial t} 
+\end{equation}
+
+The terms $q_{\alpha}$, $\phi$ and $t$ represent sources/sinks of phase $\alpha$ (e.g., wells), effective porosity of rock and time, respectively. Further, if we consider two phases, a wetting (water) and a non-wetting (oil), combining the Eqs. (\ref{eq:eq_darcy_general}) and (\ref{eq:cons_eq}), and using the definition given in Eq. (\ref{eq:relat_perm}), we obtain the following system of partial differential equations which solve the two-phase flow problem under the assumptions taken:
+\begin{subequations} \label{eq:twophase_system}
+  \begin{equation} \label{eq:twophase_systema}
+\nabla \cdot \left(\frac{\rho_{w}Kk_{rw}}{\mu_{w}} \nabla\left(p_{w} - \rho_{w}g\nabla z \right)\right) + q_{w} =
+\frac{\partial \left(\phi \rho_{w} S_{w}\right)}{\partial t} 
+  \end{equation}
+  \begin{equation} \label{eq:twophase_systemb}
+\nabla \cdot \left(\frac{\rho_{o}Kk_{ro}}{\mu_{o}} \nabla\left(p_{o} - \rho_{o}g\nabla z \right)\right) + q_{o} =
+\frac{\partial \left(\phi \rho_{o} S_{o}\right)}{\partial t} 
+  \end{equation}
+\end{subequations}
+%Stress that these equations are more general then the ones necessary for our assumptions and that they will be simplified
+
+In Eqs. (\ref{eq:twophase_systema}) and (\ref{eq:twophase_systemb}), the pressure and saturation fields are coupled in both equations. These resemble the heat conduction equation and are therefore expected to act as essentially parabolic. This assertive is not necessarily true and can be assessed by obtaining a pair of equations that are dependent either on pressure or on saturation. The derivation of these equations is presented in the next subsection.
+
+\section{Pressure Equation} \label{sc:press_eq}
+The approach used to derive the pressure equation is to eliminate the time derivative of the saturation present in Eq. (\ref{eq:twophase_system}). First, the time derivatives are expanded to obtain:
+\begin{subequations} \label{eq:twophase_system2}
+  \begin{equation} \label{eq:twophase_system2a}
+-\nabla \cdot \left(\rho_{w} \vec{v}_{w}\right) + q_{w} =
+\rho_{w}S_{w}\frac{\partial \phi}{\partial t} + \phi S_{w} \frac{d\rho_{w}}{d p_{w}} \frac{\partial p_{w}}{\partial t} + \phi\rho_{w}\frac{\partial S_{w}}{\partial t}
+  \end{equation}
+  \begin{equation} \label{eq:twophase_system2b}
+-\nabla \cdot \left(\rho_{o} \vec{v}_{o}\right) + q_{o} =
+\rho_{o}S_{o}\frac{\partial \phi}{\partial t} + \phi S_{o} \frac{d\rho_{o}}{d p_{o}} \frac{\partial p_{o}}{\partial t} + \phi\rho_{o}\frac{\partial S_{o}}{\partial t}
+  \end{equation}
+\end{subequations}
+
+Then, dividing the first equation by $\rho_{w}$ and the second by $\rho_{o}$, considering the assumptions made previously that fluids and rock are both incompressible and finally adding the resulting equations, we obtain:
+% This step mentioned in the previous paragraph can be explained in more 'substeps' in the thesis for clarity
+\begin{equation} \label{eq:twophase_oneequation}
+-\nabla \cdot \vec{v}_{t} + Q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
+\end{equation}
+where $\vec{v}_{t} = \vec{v}_{w} + \vec{v}_{o}$ is the total velocity of the fluid and $Q_{t} = (q_{w}/\rho_{w}) + (q_{o}/\rho_{o})$ is the total volumetric rate. Moreover, considering Eq. (\ref{eq:eq_const_sat}) and rearranging the terms, we obtain the pressure equation for the two-phase flow in porous media:
+\begin{equation} \label{eq:pressure_eq_form1}
+\nabla \cdot \vec{v}_{t} = Q_{t}
+\end{equation}
+
+In order to present the Eq. (\ref{eq:pressure_eq_form1}) in relation to one single pressure variable, we may define an average pressure by:
+\begin{equation} \label{eq:average_press}
+p_{avg} = \frac{p_{w} + p_{o}} {2}
+\end{equation}
+
+Considering the definition of capillary pressure as $p_{c} = p_{o} - p_{w}$, we may express the individual phase pressures as:
+% The capillary pressure must be better explained in the thesis, including some classical models for it
+\begin{subequations} \label{eq:phase_pressures_cap}
+  \begin{equation} \label{eq:phase_pressures_capa}
+p_{w} = p_{avg} - \frac{p_{c}}{2}
+  \end{equation}
+  \begin{equation} \label{eq:phase_pressures_capb}
+p_{o} = p_{avg} + \frac{p_{c}}{2}
+  \end{equation}
+\end{subequations}
+
+We also define the phase mobilities as the relation between relative permeability and fluid viscosity:
+\begin{equation} \label{eq:phase_mob}
+\lambda_{\alpha} = \frac{k_{r\alpha}}{\mu_{\alpha}}
+\end{equation}
+
+Finally, rewriting Eq. (\ref{eq:pressure_eq_form1}) using average and capillary pressures, we obtain after some rearrangement of the terms:
+\begin{equation} \label{eq:pressure_eq_form2}
+\nabla \cdot \left(-K \left( \left(\lambda_{w} + \lambda{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
+\left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = Q_{t}
+\end{equation}
+
+Thus, it can be clearly observed that Eq. (\ref{eq:pressure_eq_form2}), considering the assumptions made previously, has an elliptic nature. A saturation equation can be deduced using similar algebraic manipulation and will complete the coupled pressure-saturation model for two phase (oil-water) fluid flow in porous media. For the present work we will concentrate on the single-phase flow governed by Eq. (\ref{eq:pressure_eq_form2}) and section \ref{sc:num_form} deals with methods to solve this kind of equation.
 
 \section{Equação de Saturação}
 \label{sc:eq_sat}
