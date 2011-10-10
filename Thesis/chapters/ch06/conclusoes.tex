@@ -1,0 +1,11 @@
+\chapter{Conclusões e Trabalhos Futuros}
+\label{ch:conclusoes}
+
+\section{Conclusões}
+\label{sc:conclusoes}
+In this work, a procedure for the solution of the pressure equation in heterogeneous and anisotropic porous media was presented. The PDEs resultant from the mathematical modeling were solved using a Standard Galerkin Finite Element Method approach. In order to accelerate the convergence of the resultant system of equations, an Algebraic Multigrid method was employed, both as stand-alone and as a preconditioner to other solvers. As this kind of numerical framework normally imply in a great time-effort in developing the computational tools that implement them, this work used some available open source libraries in order to automate the generation of low-level code based on some high-level description of the problem. This showed to be a very efficient work methodology, as it allowed to experiment more with the problem in question in less time, because the developer spares time that would be used in "administrative" coding tasks. The results obtained for a model example showed the good performance of the proposed procedure, as the solution converged even for a heterogeneous and highly anisotropic problem. 
+
+\section{Trabalhos Futuros}
+\label{sc:trabFuturos}
+A future work, which is already in progress, will be the solution of the saturation equation associated with the pressure by means of the velocity. The pressure-velocity equation will be solved using a mixed FEM and the saturation equation using a Petrov-Galerkin FEM.
+
