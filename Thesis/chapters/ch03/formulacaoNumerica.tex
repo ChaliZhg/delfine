@@ -2,52 +2,54 @@
 \label{ch:form_num}
 
 % Short comparison FEM and FDM(Papasta)
-The basic idea of almost all numerical methods for the solution of PDEs is the discretization and thereby reduction to a finite number of degrees of freedom (DOFs) of a continuum problem, which possesses a infinite number of DOFs. This discrete problem results in an system of equations with finite number of variables, which can normally be solved using an adequate method (see section \ref{sc:multigrid} for details) \citep{Chen2006}.
+A ideia básica de praticamente todos os métodos numéricos para a solução de \ac{EDP} é a discretização de um problema contínuo com infinitos graus de liberdade (DOFs) e desse modo redução para um número finito de DOFs. Este problema discreto resulta em um sistema de equações com um número finito de variáveis, o qual normalmente pode ser resolvido utilizando um método adequado (ver seção \ref{sc:multigrid} para detalhes) \citep{Chen2006}.
 
-In the Finite Difference Method (FDM), which is still the standard for numerical reservoir simulations, the derivatives of the original equations are simply replaced by quotients of differences. The values of the variables are defined only in a specified number of points, which can be located either on the corners or in the interior of the cells \citep{Fortuna2000}.
+No \ac{MDF}, o qual ainda é o padrão na simulação numérica de reservatórios, as derivadas das equações originais são simplesmente substituídas por quocientes de diferenças. Os valores das variáveis são definidos apenas por um número específico de pontos, os quais podem estar localizados tanto nos cantos quanto no interior das células \citep{Fortuna2000}.
 
-The discretization process within the Finite Element Method (FEM) is different in that it requires a reformulation of the PDEs in an equivalent variational form. The unknown variable, in this case the pressure, is described at each point of the region using an interpolation function. The support points of these functions are the grid nodes, which are connected forming elements. 
+O processo de discretização no caso do \ac{MEF} é diferente na medida em que ele requer a reformulação das \ac{EDP}s em uma forma variacional equivalente. As variáveis desconhecidas, neste caso a pressão e a saturação, são descritas em cada ponto da região usando uma função de interpolação. Os pontos de suporte para estas funções são os nós da malha, os quais são conectados para formar os elementos.
 
-In this work, we experimented with classical Standard Galerkin Finite Element Method. This methodology is briefly described in the following subsections and references are pointed for further informations.
+Neste trabalho, foram experimentados tanto o clássico Método de Elementos Finitos de Galerkin quanto uma formulação dos Métodos dos Elementos Finitos Mistos para resolver a equação de pressão \ref{sc:press_eq}. Estas metodologias são discutidas nas seções subsequentes e referências são citadas para informações adicionais.
+% Add after the information that we are also going to have a formulation for the saturation equation (SUPG until now) and that these are a % coupled through a numerical methodology (the IMPES formulation)
 
-\section{Finite Element Method} \label{sc:fem}
+\section{Método dos Elementos Finitos de Galerkin} \label{sc:fem}
 % Garcia / Chen / Shan / Comentarios Ewing
-Before specifying the numerical formulation that will be used, some definitions regarding the boundary conditions and simplifying assumptions must be discussed.
-In this work, we made the usual consideration adopted in petroleum reservoir problems \citep{Peaceman1977, Ewing1983} of no-flow condition on all the external boundaries of the domain, that is:
+Antes de especificar a formulação numérica utilizada, algumas definições a respeito das condições de contorno e hipóteses simplificadoras têm que ser discutidas.
+
+Neste trabalho, foi feita a consideração usual adotada em problemas de reservatório de petróleo \citep{Peaceman1977, Ewing1983} de condição de fluxo zero em todas as fronteiras exteriores do domínio, isto é:
 \begin{equation} \label{noflowbc}
 \lambda K \nabla p \cdot n = 0 \quad \textrm{in $\Gamma_{N}$}
 \end{equation}
 
-Where $\lambda$ is the total mobility, that is, $\lambda = \lambda_{w} + \lambda_{o}$, $p$ is the average pressure ($p = p_{avg}$) and $n$ is the unit vector normal to the external boundaries.
+Onde $\lambda$ é a mobibilidade total, ou seja, $\lambda = \lambda_{w} + \lambda_{o}$, $p$ é a pressão média ($p = p_{avg}$) e $n$ é o vetor unitário normal aos contornos externos.
 
-The boundaries are described as $\Gamma = \partial \Omega$ $= \Gamma_{I} \cup$ $\Gamma_{P} \cup$ $\Gamma_{D} \cup$ $\Gamma_{N}$, where \citep{Carvalho2005}:
+Os contornos são descritos como $\Gamma = \partial \Omega$ $= \Gamma_{I} \cup$ $\Gamma_{P} \cup$ $\Gamma_{D} \cup$ $\Gamma_{N}$, onde \citep{Carvalho2005}:
 % Talvez mudar a ordem passando a descricao acima para junto da parte de discretizacao,
 % comecando portanto apenas com a parte referente a formulacao fraca 'analitica'
 \begin{itemize}
-\item $\Gamma_{I}$ = Injection Wells;
-\item $\Gamma_{P}$ = Production Wells;
-\item $\Gamma_{D}$ = Dirichlet Boundary Condition (Prescribed Pressure);
-\item $\Gamma_{N}$ = Neumann Boundary Condition (Prescribed Flux).
+\item $\Gamma_{I}$ = Poços injetores;
+\item $\Gamma_{P}$ = Poços produtores;
+\item $\Gamma_{D}$ = Condição de contorno de Dirichlet (Variável prescrita);
+\item $\Gamma_{N}$ = Condição de contorno de Neumman (Fluxo prescrito).
 \end{itemize}
 
-Usually, the wells are treated as internal boundary conditions, being modeled by special methods to deal with the increased velocity in the vicinities of a well \citep{Peaceman1977} compared with the rest of the domain. Despite that, we adopted in this work a simplifying assumption, considering the wells as source/sink terms of injected or produced fluid in a single node of the mesh, that is, a Dirac function in that point. Furthermore, in this work were made the assumptions that the flow is horizontal (no influence of the gravity) and with negligible capillary pressure. This way it was possible to concentrate on the elliptic characteristics of the pressure equation.
+Usualmente, os poços são tratados como condições de contorno internas, sendo modelados através de métodos especiais para lidar com a velocidade alta nas adjacências de um poço \citep{Peaceman1977} comparada com o resto do domímio. Apesar disso, foi adotada neste trabalho uma hipótese simplificador, considerando que os poços são termos fonte/sumidouros de produção ou injeção concentrados em um único nó da malha, isto é, uma função delta de Dirac neste ponto. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão.
 
-In order to solve a problem with the FEM, it is necessary initially to express it in the so-called \emph{weak form}. The first step to obtain this new formulation (also called the variational problem) is to multiply the PDE by a function $w$, called a \emph{test function}, after that the result is integrated over the domain $\Omega$ and finally an integration by parts is performed on terms with second-order derivatives \citep{Hughes2000}. The unknown function (pressure $p$ in this case) is referred to as a \emph{trial function}. Appropriated function spaces must be defined for the test and trial functions.
+A fim de resolver o problema utilizando o \ac{MEF}, é necessário inicialmente expressar o mesmo na chamada \emph{forma fraca}. O primeiro passo para obter esta nova formulação (também chamada de problema variacional) é multiplicar a \ac{EDP} por uma função $w$, chamada de \emph{função de teste}, em seguida o resultado é integrado no domínio $\Omega$ e finalmento uma integração por partes é efetuada nos termos com derivadas de segunda ordem \citep{Hughes2000}. A função desconhecida (pressão $p$, por exemplo) é chamada de \emph{função tentativa}. Espaços de funções apropriados devem ser definidos tanto para função de teste quanto para a função tentativa.
 %Perform the steps above mentioned in a detailed step-by-step presenting the equations
 % See Fenics tutorial for reference on that
 
-The variational problem for the pressure equation (Eq. (\ref{eq:pressure_eq_form2})) considering all the mentioned assumptions, has the following form:
-\begin{problem} [Continuous]
-Find $p$ $\in$ $P$ such that:
+O problema variacional para a Eq. (\ref{eq:pressure_eq_form2}) considerando todas as hipóteses mencionadas tem a seguinte forma:
+\begin{problem} [Contínuo]
+Encontre $p$ $\in$ $P$ tal que:
 \begin{equation} \label{eq:variational}
 A(p,w) = f(w) \quad \forall w \in W
 \end{equation}
-with 
+com
 \begin{equation} \label{eq:funcspace1}
-P = \{ p \in H^{1}(\Omega), \textrm{$p = p_{D}$ on $\Gamma$} \}  
+P = \{ p \in H^{1}(\Omega), \textrm{$p = p_{D}$ em $\Gamma$} \}  
 \end{equation}
 \begin{equation} \label{eq:funcspace2}
-W = \{ w \in H^{1}(\Omega), \textrm{$w = 0$ on $\Gamma$} \}  
+W = \{ w \in H^{1}(\Omega), \textrm{$w = 0$ em $\Gamma$} \}  
 \end{equation}
 \begin{equation} \label{eq:bilinearform}
 A(p,w) = \int_{\Omega} \lambda K \nabla p \cdot \nabla w d \Omega \quad \forall p,w \in P,W
@@ -56,25 +58,25 @@ A(p,w) = \int_{\Omega} \lambda K \nabla p \cdot \nabla w d \Omega \quad \forall 
 f(w) = \int_{\Omega} Q_{t}w d \Omega \quad \forall w \in W
 \end{equation}
 \end{problem}
-where $p_{D}$ is a prescribed value of $p$ on the Dirichlet boundaries and $H^{1}$ is the Sobolev space of functions with square-integrables derivatives of first order. This means that while the PDE solution must lie in a function space with continuous derivatives (\emph{strong form}), the Sobolev space required in the \emph{weak form} allows functions with discontinuous derivatives \citep{Langtangen2010}.
+onde $p_{D}$ é o valor prescrito de $p$ nos contornos de Dirichlet e $H^{1}$ é o Espaço de Sobolev de funções com derivadas de primeira ordem quadrado-integráveis. Isto significa que ao passo que a solução da \ac{EDP} tem que existir em um espaço de funções com derivadas contínuas (\emph{forma forte}), o Espaço de Sobolev exigido pela \emph(forma fraca) permite funções com derivadas descontínuas \citep{Langtangen2010}.
 % Explain better about function spaces (Sobolev, L2, etc.). Fenics tutorial good on that
-The existence and uniqueness of the solution for this problem are given by the Lax lemma and their full derivation is found in \cite{Garcia1997}.
+A existência e unicidade da solução deste problema é dada pelo lema de Lax e seu detalhamento completo pode ser encontrado em \cite{Garcia1997}.
 
 % Verify the statement about the velocity on well region and the assumptions made for simplification.
-For the finite element analysis of this variational problem, we must transform the continuous variational problem defined by Eq. (\ref{eq:variational}) to a discrete one. Consider a domain $\Omega$ which is discretized with $N$ non-overlaping elements $E_{i}$ such that $\Omega_{h} = \bigcup_{i=1}^{N}E_{i}$ and $E_{i} \cap E_{j} = \emptyset, i \not = j$, where the subindex $h$ denotes a mesh size parameter representing the discretized problem.
+Para a análise via elementos finitos deste problema variacional, é necessário transformar este formulação contínua definida pela Eq. (\ref{eq:variational}) em um problema discreto. Considere o domínio $\Omega$, o qual é discretizado por $N$ elementos não sobrepostos $E_{i}$ de modo que $\Omega_{h} = \bigcup_{i=1}^{N}E_{i}$ e $E_{i} \cap E_{j} = \emptyset, i \not = j$, onde o subíndice $h$ denota um parâmetro de tamanho de malha que representa o problema discretizado.
 
-The discrete variational problem for the pressure equation using the classical Galerkin approach described in \citep{Hughes2000} and adopted in \citep{Wells2008, Barbosa2009} is:
-\begin{problem} [Discrete]
-Find $p_{h}$ $\in$ $P_{h}$ such that:
+O problema variacional discreto para a equação de pressão utilizando a abordagem clássica de Galerkin descrita em \citep{Hughes2000} e adotada em \citep{Wells2008, Barbosa2009} é:
+\begin{problem} [Discreto]
+Encontre $p_{h}$ $\in$ $P_{h}$ tal que:
 \begin{equation} \label{eq:galerkin}
 A(p_{h},w_{h}) = f(w_{h}) \quad \forall w_{h} \in W_{h}
 \end{equation}
-with 
+com
 \begin{equation} \label{eq:funcspace1h}
-P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}), p_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$p_{h} = p_{d}$ on $\Gamma$} \}  
+P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}), p_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$p_{h} = p_{d}$ em $\Gamma$} \}  
 \end{equation}
 \begin{equation} \label{eq:funcspace2h}
-W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}), w_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$w_{h} = 0$ on $\Gamma$} \}  
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}), w_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$w_{h} = 0$ em $\Gamma$} \}  
 \end{equation}
 \begin{equation} \label{eq:bilinearformh}
 A(p_{h},w_{h}) = \int_{\Omega_{h}} \lambda K \nabla p_{h} \cdot \nabla w_{h} d \Omega \quad \forall p_{h},w_{h} \in P_{h},W_{h}
@@ -83,24 +85,24 @@ A(p_{h},w_{h}) = \int_{\Omega_{h}} \lambda K \nabla p_{h} \cdot \nabla w_{h} d \
 f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 \end{equation}
 \end{problem}
-where $\mathbf{P}^{k}(E_{i})$ defines Lagrange finite element basis functions of order $k$ on the element $E_{i}$. The Eq. (\ref{eq:galerkin}) above applied to a mesh results in a set of discrete equations on the variable $p$, whose solution is obtained using the methods described in section \ref{sc:multigrid}. 
+onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$. A Eq. (\ref{eq:galerkin}) aplicada a uma malha resulta em um conjunto de equações discretas na variável $p$, cuja solução é obtida usando os métodos descritos na seção \ref{sc:multigrid}.
 % Colocar figuras dos elementos triangulares 1st,2nd e 3rd ordem do dolfin-plot
 
 \section{Multigrid} \label{sc:multigrid}
 % Relatorios de IC / Trottenberg/ Briggs / Mavriplis
-The basic idea of Multigrid methods is to accelerate the solution of a equation system in a fine mesh using corrections calculated in a coarser mesh. The motivation for this approach comes from the observation of the numerical solution error behavior in the frequency domain. High frequency errors, which are associated to local variations of the solution, are well resolved by conventional iterative methods (gauss-seidel, conjugated gradients, etc.). However, low frequency error, associated to global variations of the solution, are much more insensitive to these methods.
+A ideia básica dos métodos Multigrid é acelerar a solução de sistemas de equações em uma malha fina usando correções caculadas em uma malha grosseira. A motivação para esta abordagem vem da observação de que o comportamento do erro da solução numérica no domínio da frequência. Erros de alta frequência, os quais estão associados à variações locais da solução, são bem resolvidos por métodos iterativos convencionais (Gauss-Seidel, Gradientes Conjugados, etc.). Entretanto, erros de baixa frequência, associados à variação global das soluções, são muito mais insensíveis a esses métodos.
 
-A Multigrid scheme starts damping the high frequency errors associated to the initial solution in the fine mesh, using some relaxation method (usually an iterative method that would normally be used stand-alone). Once this is achieved, performing more iterations would just result in poorer convergence. Therefore, the error is transfered to a coarser mesh, where the remaining low frequency modes of the finer mesh present themselves as high frequency, thus being easily eliminated using some direct method, in case the mesh is coarse enough, or even using the same relaxation method as before for larger problems. The corrections are then computed in the coarse mesh and transfered back to the fine mesh in order to update the solution. This procedure can be applied recursively in a sequence of increasingly coarser meshes, so that each level in this hierarchy is responsible for the elimination of one error frequency band \citep{Briggs2000}.
+Um esquema Multigrid começa amortecendo os erros de alta frequência associados à solução inicial na malha fina, usando algum tipo de método de relaxação (usualmente um método iterativo que seria usado isoladamente). Uma vez atingido este objetivo inicial, efetuar mais iterações iria apenas resultas em uma pior convergência. Sendo assim, o resíduo é transferido para uma malha grosseira, onde os modos de baixa frequência da malha fina se comportam com de alta frequência, sendo portanto facilmente eliminados usando algum tipo de método direto, no caso da malha ser grosseira o suficiente, ou mesmo usando o mesmo método de relaxação aplicado na malha mais fina. As correções são então calculadas na malha grosseira e transferidos de volta para a malha fina de modo a atualizar a solução. Este procedimento pode ser aplicado recursivamente em uma sequência de malhas cada vez mais grosseiras, a fim de que cada nível nesta hierarquia seja responsável pela eliminação de uma faixa de frequência de erro \citep{Briggs2000}. 
 % 1- Explicar matematica do multigrid (Relatorio IC) 2 - Explicar GMGxAMG e AMG(Sorensen / Trottenberg)!!
 
-There are two main different approaches for Multigrid methods: the geometric multigrid (GMG), which works directly on the meshes that represent the discrete domain, and the algebraic multigrid (AMG), which operate just on linear systems of equations resulting from the application of a numerical formulation, so that it does not have a direct geometrical interpretation.
+Existem dois tipos principais de método Multigrid: o \ac{GMG}, o qual trabalha diretamente nas malhas que representam o domínio discreto, e o Multigrid Algébrico (AMG), o qual opera apenas no sistema de equações lineares resultantes da aplicação de uma formulação numérica, não tendo portanto uma interpretação geométrica direta.
 
-The main motivation for the development of the AMG was the necessity for robust and flexible methods for accelerating the convergence without requiring fine tuning for each problem, as is often the case of GMG methods, which requires special attention in the generation of coarse meshes sequences, specially in the presence of complex geometries \citep{Trottenberg2001}. This robustness is achieved because AMG relies on a fully automatic coarsening process that acts only in directions in which the relaxation will effectively smooth the error for the given problem, whereas GMG requires a fixed pre-determined hierarchy before starting its cycle. Figure \ref{fig:gmgxamg} presents a graphical comparison of these two methods.
+A maior motivação para o desenvolvimento do \ac{AMG} foi a necessidade de métodos robustos e flexíveis para acelerar a convergência sem a exigência de calibração fina para cada problema, como é frequentemente o caso para métodos \ac{GMG}, o qual requer atenção especial na geração da sequência de malhas grosseiras, principalmente na presença de geometrias complexas \citep{Trottenberg2001}. Esta robustez é alcançada porque o \ac{AMG} conta com um processo totalmente automático de engrossamento que pode agir apenas nas direções nas quais a relaxação irá efetivamente suavizar o erro para o problema dado, enquanto o \ac{GMG} requer uma hierarquia fixa pré-determinada antes de começar o ciclo. A Fig. \ref{fig:gmgxamg} apresenta uma comparação gráfica destes dois métodos.
 
 \begin{figure} 
 \centering
 \includegraphics[width=1\textwidth]{chapters/ch03/GMGxAMG}
-\caption{Comparison of Geometrical and Algebraic Multigrid approaches (from \cite{Trottenberg2001}).}
+\caption{Comparação dos métodos Multigrid Geométrico e Algébrico (retirado de \cite{Trottenberg2001}).}
 \label{fig:gmgxamg}
 \end{figure}
 
