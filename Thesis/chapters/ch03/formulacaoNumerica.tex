@@ -106,39 +106,40 @@ A maior motivação para o desenvolvimento do \ac{AMG} foi a necessidade de método
 \label{fig:gmgxamg}
 \end{figure}
 
-Mathematically, both approaches can be described in almost the same way, it is just necessary to consider that meshes and nodes are linear system of equation and varibles of this system in AMG, respectively. Therefore, the Multigrid method can be briefly described for both approaches as follows:
+Matematicamente, ambas as abordagens podem ser descritas aproximadamente do mesmo modo, é apenas necessário considerar que malhas e nós no \ac{AMG} são sistemas de equações lineares e variáveis destes sistemas, respectivamente. Portanto, o método Multigrid pode ser brevemente descrito como segue:
 
-Consider the system of equations on the finest level:
+Considere o sistema de equações no nível mais refinado:
 \begin{equation} \label{eq:mg1}
 A_{f}p_{f} = f_{f}
 \end{equation}
-where $A_{f}$ is the matrix resultant from the procedure described in section \ref{sc:fem} and the subindex $f$ represent values on the fine level. After performing some iterations with a relaxation method, the error will be smoothed and its residual $r_{h}$ is:
+onde $A_{f}$ é a matriz resultante do procedimento descrito na seção \ref{sc:fem} e o subíndice $f$ representa valores no nível refinado. Depois de efetuadas algumas iterações com um método de relaxação, o erro estará suavizado e seu resídual $r_{h}$ será: 
 \begin{equation} \label{eq:mg2}
 A_{f}\hat{p_{f}} - f_{f} = r_{h}
 \end{equation}
-where $\hat{p_{f}}$ is the estimated solution for the variable of interest. Subtracting Eq. (\ref{eq:mg2}) from Eq. (\ref{eq:mg1}) yields:
+onde  $\hat{p_{f}}$ é a solução estimada para a variável de interesse. Subtraindo a Eq. (\ref{eq:mg2}) da Eq. (\ref{eq:mg1}) resulta:
 \begin{equation} \label{eq:mg3}
 A_{f}p_{f} - A_{f}\hat{p_{f}}= - r_{h}
 \end{equation}
-and if the operator $A_{h}$ is linear, this equation can be presented as a correction equation:
+e se o operador $A_{h}$ for linear, esta equação pode ser apresentada como a equação de correção:
 \begin{equation} \label{eq:mg4}
 A_{f}\Delta p_{f}= - r_{h}
 \end{equation}
 
-Assuming, as already mentioned, that the high frequency modes of the error were already damped after the relaxation on the fine level, the reminiscent correction error will contain mainly low frequency modes and must be also solved, but in order to achieve this it is necessary to restrict it to a coarser level, where it will present itself as a high frequency mode, i.e.
+Assumindo, como já mencionado, que os modos de alta frequência do erro foram amortecidos depois da relaxação no nível mais refinado, o erro reminiscente irá conter basicamente modos de baixa frequência que devem ser resolvidos, mas de modo a alcançar tal objetivo é necessário restringir tais modos ao nível grosseiro, onde os mesmos irão se comportar como modos de alta frequência, ou seja:
 \begin{equation} \label{eq:mg5}
 A_{c}\Delta p_{c}= - I_{f}^{c}r_{f}
 \end{equation}
-In Eq. (\ref{eq:mg5}) $I_{f}^{c}$ represents the restriction operator, which transfer values from the residual in the fine level $f$ to the coarse level $c$. Once Eq. \ref{eq:mg5} is solved by means of an adequate solver (many times a direct solver will suffice, as this level presents lower storage and computation requirements), its solution can be interpolated back to the fine level using a prolongation operator $I_{c}^{f}$ and the original approximation on the fine level can then be corrected:
+Na Eq. (\ref{eq:mg5}) $I_{f}^{c}$ representa o operador de restrição, o qual transfere valores do resíduo do nível refinado $f$ para o nível grosseiro $c$. Uma vez que a Eq. \ref{eq:mg5} é resolvida adequadamente (frequentemente um resolvedor direto será suficiente, já que este nível apresenta menores exigência de processamento e armazenamento), sua solução pode ser interpolada de volta para o nível refinado usando um operador de prolongamento $I_{c}^{f}$ e a aproximação original no nível refinado pode então ser corrigida:
 \begin{equation} \label{eq:mg6}
 \hat{p_{f}^{\phantom{.}\ast}} = \hat{p_{f}} + I_{c}^{f} \Delta p_{c}
 \end{equation}
-where $\hat{p_{f}^{\phantom{.}\ast}}$ is the updated solution on the fine level. It is important to notice that this procedure is intrinsically recursive, so that the system on the coarse level could be seen as a new fine level, being itself smoothed again until some level is reached where the contributions of the corrections on the coarse levels are taken back to their respective fine levels. There are various schemes to handle this strategy, among them are the V-,W- and F-Cycle. Figure \ref{fig:mgcycles} shows a graphical representation of these cycles on a 4-level multigrid solution, see \cite{Briggs2000} or \cite{Trottenberg2001} for a detailed explanation of each of these cycles.
+onde $\hat{p_{f}^{\phantom{.}\ast}}$ é a solução atualizada no nível refinado. É importante observar que este procedimento é intrinsecamente recursivo, podendo o sistema no nível grosseiro ser visto como um novo nível refinado, sendo suavizado novamente até que seja atingido um nível no qual as contribuições das correções nos níveis grosseiros seja trazidas de volta para os seus respectivos níveis refinados. Existem diversos tipos de esquemas para lidar com esta estratégia, entre eles estão os ciclos V, W e F. A Fig. \ref{fig:mgcycles} mostra uma representação gráfica destes ciclos em um esquema Multigrid de 4 níveis, ver \cite{Briggs2000} ou \cite{Trottenberg2001} para uma explicação mais detalhada de cada um destes ciclos.
+% Keep the references, but explain in the thesis also much more about the cycles (see Sorensen for examples, has also some
+% estimation of computing and storage requirements for each cycle).
 
 \begin{figure} 
 \centering
 \includegraphics[width=0.9\textwidth]{chapters/ch03/MGCycles}
-\caption{V- W- and F-Cycles. $S$ represents smoothing and $E$ is the solution on the coarsest level.}
+\caption{Cicloes V, W e F. $S$ representa suavização e $E$ é a solução no nível mais grosseiro.}
 \label{fig:mgcycles}
 \end{figure}
-
