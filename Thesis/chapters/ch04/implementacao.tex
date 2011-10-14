@@ -1,7 +1,7 @@
 \chapter{Implementação Computacional}
 \label{ch:implementacao}
 
-All the computational tools described in this work present great challenges not only in terms of theoretical understanding but also in terms of software development, as it is of paramount importance to adequately implement these methods in a way that a positive trade-off between generality and performance is found, as these two goals often lead the coding directives to different directions.
+Todas as ferramentas computacionais descritas neste trabalham apresentam grandes desafios não apenas em relação à compreensão teórica, mas também em termos de desenvolvimento de software, já que é de fundamental importância uma implementação adequada destes métodos a fim de se atingir um compromisso vantajoso entre generalidade e perfomance computacional, já que estes dois objetivos frequentemente tendem a conduzir as diretivas de codificação do programa para direções diferentes.
 
 \section{Estrutura Geral do Program}
 \label{sc:est_prog}
@@ -9,10 +9,10 @@ O programa foi escrito na linguagem python, a qual apresenta várias vantagens so
 
 \section{FEniCS/Dolfin}
 \label{sc:dolfin}
-For the generation of the code responsible for assembling the matrices and vectors necessary for the finite element analysis of the problem we used the \emph{FEniCS/DOLFIN} library \citep{Logg2010}, which allows the developer to write the linear and bilinear forms presented in Eq. (\ref{eq:galerkin}) using a script written in \emph{Python} in a very high-level way, that resembles the mathematical notation,  and this script is then automatically converted in optimized \emph{C++} code, which can run quite effectively for general problems.
+Para a geração do código responsável pela montagem das matrizes e vetores necessários para a análise via \ac{MEF} do problema foi utilizada a biblioteca \emph{FEniCS/DOLFIN} \citep{Logg2010}, a qual permite ao desenvolvedor escrever as formas lineares e bilineares apresentadas na Eq. (\ref{eq:galerkin}) usando um script escrito em código \emph{Python} de alto nível, o qual se assemelha à notação matemática, sendo este script convertido automaticamente em código \emph{C++} otimizado, o qual pode ser executado de modo bastante efetivo para problemas gerais.
 % Explicar com MUITO mais detalhe o DOLFIN
 
 \section{PyAMG}
 \label{sc:pyamg}
-The obtained system of equations from the discretization with help of the \emph{FEniCS/DOLFIN} library was solved in this work using an Algebraic Multigrid (AMG) approach utilizing the \emph{PyAMG} package \citep{Bell2008}, which allows one to access a number of multigrid algorithms already implemented through a \emph{Python} interface. The most CPU-intensive routines of this package are implemented and compiled in \emph{C++} for performance purposes, but the user does not have to interface with this lower-level code.
+O sistema de equações obtido da discretização com o auxílio da biblioteca \emph{FEniCS/DOLFIN} é resolvido neste trabalho utilizando uma abordagem via método Multigrid Algébrico \ac{AMG} implementado no pacote \emph{PyAMG} \citep{Bell2008}, o qual disponibiliza o acesso através de uma interface em \emph{Python} a vários tipos de algoritmos multigrid já implementados. As rotinas deste pacote que demandam a maior capacidade de processamento são implementadas e compiladas em \emph{C++} por motivo de performance, porém o usuário não precisa lidar com esta interface em código de baixo nível.
 % Explicar com MUITO mais detalhe o PyAMG
