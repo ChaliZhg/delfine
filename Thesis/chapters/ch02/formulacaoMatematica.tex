@@ -2,7 +2,7 @@
 \label{ch:form_mat}
 
 Neste trabalho, foi adotada a formulação matemática clássica proposta em \cite{Peaceman1977} para o escoamento simultâneo de duas fases imiscíveis em um meio poroso saturado. Esta abordagem vem sendo utilizada por muitos pesquisadores \citep{Ewing1983,Chavent1986,Carvalho2005,Silva2008} e tem com uma de suas principais características a manipulação da equação de conservação da massa usando a lei de Darcy de modo a formar um sistema com uma equação de pressão parabólica-elíptica e uma equação de saturação parabólica-hiperbólica \citep{Carvalho2005}, em oposição a outras formulações nas quais os campos de pressão e saturação são resolvidos simultaneamente em um sistema de \ac{EDP}s parabólicas \citep{Aziz1979}.
-%Describe briefly Aziz's formulation in the thesis, for comparison purposes
+% [1] Describe briefly Aziz's formulation in the thesis, for comparison purposes
 
 A formulação segregada de Peaceman permite o uso de métodos especializados capazes de explorar as particularidades matemáticas de cada equação do sistema resultante. O acoplamente entre estes dois campos é obtido através do uso de um termo de velocidade total.
 
@@ -22,7 +22,7 @@ Considerando a hipótese de meio poroso totalmente saturado e a existência de $n$
 \end{equation}
 
 Onde $\alpha$ representa cada fase (neste trabalho, $\alpha = w$ e $o$ para água e óleo, respectivamente) e $S_{\alpha}$ representa a saturação da fase ${\alpha}$.
-% Describe concepts as effective porosity and volume, and then give definition of saturation in the thesis. 
+% [2] Describe concepts as effective porosity and volume, and then give definition of saturation in the thesis. 
 
 A lei de Darcy generalizada para a velocidade de cada fase é expressa através da seguinte equação:
 \begin{equation} \label{eq:eq_darcy_general}
@@ -32,8 +32,8 @@ com $K_{\alpha}$, $\mu_{\alpha}$, $p_{\alpha}$ e $\rho_{\alpha}$ representando a
 \begin{equation} \label{eq:relat_perm}
 k_{r\alpha} = \frac{K_{\alpha}}{K} \leq 1
 \end{equation}
-% Cite models for relative permeability (Chen,Aziz as general, Brooks-Corey as specific)
-% Explain better Darcies experiment and how it led to the Darcy's law. Explain also its limitation and how it has been used nowadays far beyond its original intent.
+% [3] Cite models for relative permeability (Chen,Aziz as general, Brooks-Corey as specific)
+% [4] Explain better Darcies experiment and how it led to the Darcy's law. Explain also its limitation and how it has been used nowadays far beyond its original intent.
 
 A equação de conservação para cada fase é descrita como em \cite{Peaceman1977}:
 \begin{equation} \label{eq:cons_eq}
@@ -52,7 +52,7 @@ Os termos $q_{\alpha}$, $\phi$ e $t$ representam termos fontes/sumidores da fase
 \frac{\partial \left(\phi \rho_{o} S_{o}\right)}{\partial t} 
   \end{equation}
 \end{subequations}
-%Stress that these equations are more general then the ones necessary for our assumptions and that they will be simplified
+% [5] Stress that these equations are more general then the ones necessary for our assumptions and that they will be simplified
 
 Nas Eqs. (\ref{eq:twophase_systema}) e (\ref{eq:twophase_systemb}), os campos de pressão e saturação são acoplados em ambas as equações. As mesmas se assemelham à equação de condução de calor e por isso espera-se que tenham um comportamento essencialmente parabólico. Esta assertiva não é necessariamente verdadeira e pode ser avaliada através da obtenção de um par de equações que seja dependente ou da pressão ou da saturação. A derivação de tais equações é apresentada na seção seguinte.
 
@@ -70,7 +70,7 @@ A abordagem utilizada para se obter a equação de pressão é eliminar a derivada t
 \end{subequations}
 
 Então, dividindo a primeira equação por $\rho_{w}$ e a segunda por $\rho_{o}$, levando em consideração as hipóteses feitas anteriormente de que fluidos e rochas são incompressíveis e finalmente adicionando as equações resultantes, obtêm-se:
-% This step mentioned in the previous paragraph can be explained in more 'substeps' in the thesis for clarity
+% [6] This step mentioned in the previous paragraph can be explained in more 'substeps' in the thesis for clarity
 \begin{equation} \label{eq:twophase_oneequation}
 -\nabla \cdot \vec{v}_{t} + Q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
 \end{equation}
@@ -85,7 +85,7 @@ p_{avg} = \frac{p_{w} + p_{o}} {2}
 \end{equation}
 
 Considerando a definição de pressão capilar como $p_{c} = p_{o} - p_{w}$, pode-se expressão as pressões das fases individuais como:
-% The capillary pressure must be better explained in the thesis, including some classical models for it
+% [7] The capillary pressure must be better explained in the thesis, including some classical models for it
 \begin{subequations} \label{eq:phase_pressures_cap}
   \begin{equation} \label{eq:phase_pressures_capa}
 p_{w} = p_{avg} - \frac{p_{c}}{2}
