@@ -15,8 +15,42 @@ De modo a utilizar as equações apresentadas ao longo deste capítulo, faz-se nece
 \item Lei de Darcy válida para as velocidades consideradas.
 \end{itemize}
 
-Considerando a hipótese de meio poroso totalmente saturado e a existência de $n$ fases, a equação constitutiva para a saturação pode ser descrita por:
+Para o correto entendimento da formulação utilizada, faz-se necessário introduzir alguns conceitos, os quais serão discutidos na seção seguinte, usados para a descrição macroscópica das propriedades de rochas, fluidos e da interação entre os mesmos.
 
+\section{Propriedades} \label{sc:propriedades}
+Antes de iniciar a descrição das diversas propriedades necessárias para a elaboração do modelo matemático utilizado, é importante fazer um comentário a respeito do modo como essas propriedades se apresentam na realidade e como são de fato representadas na simulação do fenômeno no domínio de interesse.
+
+Para uma perfeita descrição do escoamento de fluidos em meios porosos, seria necessário adotar uma abordagem microscópica, a qual necessitaria do conhecimento das características geométricas de cada um dos poros para a definição das fronteiras e das condições de contorno. De posse dessas informações, seria possível utilizar uma formulação matemática, como as equações de Navier-Stokes \citep{Fortuna2000}, para simular o escoamento de cada um dos fluidos existentes no meio e a interação entre eles. Desnecessário comentar que tal alternativa é impraticável tanto do ponto de vista computacional, já que seria possível analisar domínios apenas em escalas cuja ordem de grandeza esteja na escala dos poros, quanto do ponto de vista da aquisição de dados de entrada, pois é impossível atualmente se obter toda a descrição morfológica de um meio como um reservatório de petróleo, do qual se obtém normalmente apenas algumas amostras, chamadas de testemunhas, as quais são retiradas de pontos que estão várias centenas de metros ou até quilômetros de distância entre si \citep{Thomas2001}.
+
+Sendo assim, para todos os efeitos práticos se utiliza na análise numérica de reservatórios de petróleo uma abordagem macroscópica, onde o valor das propriedades são consideradas variáveis contínuas definidas em todo o domínio ocupado pelo meio poroso. Tais valores das grandezas físicas representam para cada ponto específico uma média volumétrica dos valores da região circunvizinha a este ponto. Ou seja, não é mais necessário uma descrição da morfologia exata do reservatório, já que ao invés disso serão utilizadas propriedades não mensuráveis no nível microscópico, mas que representam no nível macroscópico o efeito equivalente ao da estrutura do meio poroso \citep{Hurtado2005}.
+
+Entretanto, é válido comentar que esta descrição macroscópica do meio poroso apresenta também dificuldades. As formações rochosas que formam os reservatórios de petróleo são frequentemente descritas através de modelos geológicos na escala de metros \citep{Aarnes2007}. Tal escala tornaria em muitos casos inviável a simulação de escoamentos de fluidos em tais reservatórios, já que os mesmos têm ordem de grandeza de quilômetros, o que implicaria para casos tridimensionais em malhas com vários milhões de células, passíveis de serem analisadas apenas em clusters de grande porte.
+
+Apesar do grande aumento percebido na capacidade computacional do hardware utilizado e também do uso de técnicas avançadas para extrair o máximo de desempenho de tais computadores, os modelos de reservatório a serem analisados na prática frequentemente tem que contar com o uso de técnicas de \emph{Upscaling} \citep{Menezes2009}, ou seja, uma restrição dos parâmetros geofísicos obtidos em modelos geológicos para malhas tipicamente dezenas ou centenas de vezes mais grosseiras que serão então analisadas via algum método numérico \citep{Aarnes2007}.
+
+\subsection{Porosidade}
+Uma rocha, para ter a capacidade de armazenar petróleo, deve possuir vazios no seu interior, os quais são chamados de poros. Além disso, para que haja fluxo dentro desta rocha-reservatório é necessário que tal poros estejam interconectados para que existam um caminho que os fluidos possam percorrer. Para efeitos de cálculo de porosidade, existe uma diferença entre a porosidade \emph{absoluta}, a qual abrange todos os poros, estejam eles interconectados ou não, e a porosidade \emph{efetiva}, onde apenas os poros ligados entre si são considerados. Apenas esse segundo tipo de porosidade será usado neste trabalho, já que é o de maior interesse para a análise de escoamentos. Portanto, sempre que houver referência à porosidade, pode-se entender como a variante efetiva da mesma.
+% Adicionar figura baseada na figura do chines para a porosidade (ou copiar e citar figura da tese do demetrio).
+
+A porosidade de uma rocha-reservatório é definida matematicamente como a razão entre o volume dos espaços vazios existentes entre os poros da rocha e o volume total da amostra \citep{Thomas2001}. Logo, podemos descrever a porosidade $\phi$ como:
+
+\begin{equation} \label{eq:porosidade}
+\phi = \frac{V_{p}}{V_{t}}
+\end{equation}
+onde o volume total é $V_{t} = V_{p} + V_{s}$, $V_{p}$ é o volume poroso e $V_{s}$ o volume da matriz sólida. Segundo a abordagem macroscópica adotada, a porosidade será uma função contínua no espaço. Logo, se está assumindo que o valor calculado pela Eq. (\ref{eq:porosidade}) representará a média de um volume representativo com dimensão pequena quando comparada ao meio poroso como um todo, porém grande em comparação com as dimensões características dos poros.
+
+\subsection{Permeabilidade Absoluta}
+\subsection{Permeabilidade Relativa}
+\subsection{Saturação}
+
+\begin{figure} 
+\centering
+\includegraphics[width=0.6\textwidth]{chapters/ch02/relat_perm}
+\caption{Exemplo de modelo de permeabilidade relativa para escoamentos bifásicos em meios porosos.}
+\label{fig:relat_perm}
+\end{figure}
+
+Considerando a hipótese de meio poroso totalmente saturado e a existência de $n$ fases, a equação constitutiva para a saturação pode ser descrita por:
 \begin{equation} \label{eq:eq_const_sat}
 \sum_{\alpha=1}^n S_{\alpha} = 1
 \end{equation}
