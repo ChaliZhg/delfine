@@ -30,7 +30,7 @@ Apesar do grande aumento percebido na capacidade computacional do hardware utili
 
 \subsection{Porosidade}
 Uma rocha, para ter a capacidade de armazenar petróleo, deve possuir vazios no seu interior, os quais são chamados de poros. Além disso, para que haja fluxo dentro desta rocha-reservatório é necessário que tal poros estejam interconectados para que existam um caminho que os fluidos possam percorrer. Para efeitos de cálculo de porosidade, existe uma diferença entre a porosidade \emph{absoluta}, a qual abrange todos os poros, estejam eles interconectados ou não, e a porosidade \emph{efetiva}, onde apenas os poros ligados entre si são considerados. Apenas esse segundo tipo de porosidade será usado neste trabalho, já que é o de maior interesse para a análise de escoamentos. Portanto, sempre que houver referência à porosidade, pode-se entender como a variante efetiva da mesma.
-% Adicionar figura baseada na figura do chines para a porosidade (ou copiar e citar figura da tese do demetrio).
+% Adicionar figura baseada na figura do chines para a porosidade (ou copiar e citar figura da tese do demetrio). Ou entao figura preparado por mim no powerpoint.
 
 A porosidade de uma rocha-reservatório é definida matematicamente como a razão entre o volume dos espaços vazios existentes entre os poros da rocha e o volume total da amostra \citep{Thomas2001}. Logo, podemos descrever a porosidade $\phi$ como:
 
@@ -40,8 +40,30 @@ A porosidade de uma rocha-reservatório é definida matematicamente como a razão e
 onde o volume total é $V_{t} = V_{p} + V_{s}$, $V_{p}$ é o volume poroso e $V_{s}$ o volume da matriz sólida. Segundo a abordagem macroscópica adotada, a porosidade será uma função contínua no espaço. Logo, se está assumindo que o valor calculado pela Eq. (\ref{eq:porosidade}) representará a média de um volume representativo com dimensão pequena quando comparada ao meio poroso como um todo, porém grande em comparação com as dimensões características dos poros.
 
 \subsection{Permeabilidade Absoluta}
+A permeabilidade absoluta é definida como uma medida da capacidade de um meio poroso de escoar uma única fase sob certas condições. Esta é uma propriedade mais difícil de ser medida do que a porosidade, porém mais importante no que tange ao escoamento de fluidos. Não necessariamente irá existir uma proporcionalidade direta entre estes dois parâmetros, já que para a permeabilidade importa não apenas a quantidade de poros interconectados, mas também o modo como eles estão conectados e a tortuosidade do caminho formado por eles. Existe também a possibilidade de se ter rochas com baixíssimas porosidades, como muitas vezes é o caso de algumas rochas carbonáticas, que porém apresentam uma alta permeabilidade devido à presença de fraturas ou falhas. Todavia, para vários casos específicos podem ser geradas correlações entre as duas propriedades, como pode ser visto na Fig. (\ref{fig:poropermcorrelation}) \citep{Schneider2003}.
+
+Normalmente a permeabilidade é representada matematicamente através de um tensor, denominado de $K$ ao longo deste trabalho. Isto significa que não apenas os valores da permeabilidade absoluta variam de acordo com a orientação da rocha, como também que, devido aos termos cruzados de um tensor cheio, os valores em uma direção influenciam a permeabilidade nas outras direções. Neste caso o tensor é chamado de anisotrópico. Se $K$ puder ser representado por uma função escalar, ou seja, a permeabilidade em todas as direções for a mesma, este tensor degenerado em um escalar é chamado de isotrópico. Além disso, devido a grande heterogeneidade entre as diferentes formações rochosas, a permeabilidade pode variar espacialmente em ordens de grandeza, sendo que variações locais no intervalo entre 1mD e 10D não são incomuns \citep{Aarnes2007}.
+
+O sistema elaborado neste trabalho pode lidar de modo efetivo tanto com tensores cheios (anisotropia), quanto com variações do mesmo ao longo do domínio (heterogeneidade).
+
+\begin{figure} 
+\centering
+\includegraphics[width=0.6\textwidth, angle=270]{chapters/ch02/PorosityPermModel}
+\caption{Exemplo de correlação entre porosidade e permeabilidade absoluta (retirado de \cite{Schneider2003}).}
+\label{fig:poropermcorrelation}
+\end{figure}
+
 \subsection{Permeabilidade Relativa}
-\subsection{Saturação}
+Apesar de termos assumido total imiscibilidade entre as fases é considerado para efeitos de simulação, segundo a abordagem macroscópica adotada neste trabalho, a presença de todas as fases simultaneamente no mesmo ponto, já que como mencionado anteriormente na seção \ref{sc:propriedades} o comportamento do escoamento na escala dos poros não é de interesse prático para a análise de reservatórios. Isto significa que todas as fases terão influência umas sobre as outras.
+
+Portanto, a permeabilidade de fato percebida por um fluido em um meio poroso será reduzida pela pela presença das outras fases, resultando portanto na necessidade da definição de um termo de permeabilidade relativa, representado neste trabalho por $k_{r\alpha}$, que irá descrever como uma fase escoa na presença simultânea de outras.
+
+As permeabilidades absoluta $K$, efetiva $K_{\alpha}$ e relativa $K_{r\alpha}$ estão relacionadas através da seguinte expressão:
+\begin{equation} \label{eq:relat_perm}
+k_{r\alpha} = \frac{K_{\alpha}}{K} \leq 1
+\end{equation}
+
+Dada a complexidade envolvida na interação entre a rocha e as diferentes fases na escala dos poros durante o escoamento, os valores para a permeabilidade relativa em função das propriedades dos fluidos e dos meios poroses são difíceis de serem obtidos. De um modo geral, depende-se de modelos semi-empíricos para uso em simulações de reservatórios de petróleo. Um exemplo típico de curva de permeabilidade relativa tanto da fase água quanto da fase óleo em função da saturação da água usando o modelo de Corey é apresentado na Fig. (\ref{fig:relat_perm}).
 
 \begin{figure} 
 \centering
@@ -49,6 +71,11 @@ onde o volume total é $V_{t} = V_{p} + V_{s}$, $V_{p}$ é o volume poroso e $V_{s
 \caption{Exemplo de modelo de permeabilidade relativa para escoamentos bifásicos em meios porosos.}
 \label{fig:relat_perm}
 \end{figure}
+
+% +-ok [3] Cite models for relative permeability (Chen,Aziz as general, Brooks-Corey as specific)
+\section{Equação da Conservação de Massa}
+
+
 
 Considerando a hipótese de meio poroso totalmente saturado e a existência de $n$ fases, a equação constitutiva para a saturação pode ser descrita por:
 \begin{equation} \label{eq:eq_const_sat}
@@ -62,11 +89,7 @@ A lei de Darcy generalizada para a velocidade de cada fase é expressa através da
 \begin{equation} \label{eq:eq_darcy_general}
 \vec{v}_{\alpha} = - \frac{K_{\alpha}}{\mu_{\alpha}} \nabla\left(p_{\alpha} - \rho_{\alpha}g\nabla z \right)
 \end{equation}
-com $K_{\alpha}$, $\mu_{\alpha}$, $p_{\alpha}$ e $\rho_{\alpha}$ representando a permeabilidade efetiva, viscosidade, pressão e densidade da fase $\alpha$, ao passo que $g$ e $z$ representam a aceleração da gravidade e o deslocamento na direção da mesma, respectivamente. A relação entre as permeabilidades efetiva e a absoluta $K$ descreve a influência de um fluido sobre o outro durante o escoamento e é definida como permabilidade relativa:
-\begin{equation} \label{eq:relat_perm}
-k_{r\alpha} = \frac{K_{\alpha}}{K} \leq 1
-\end{equation}
-% [3] Cite models for relative permeability (Chen,Aziz as general, Brooks-Corey as specific)
+com $K_{\alpha}$, $\mu_{\alpha}$, $p_{\alpha}$ e $\rho_{\alpha}$ representando a permeabilidade efetiva, viscosidade, pressão e densidade da fase $\alpha$, ao passo que $g$ e $z$ representam a aceleração da gravidade e o deslocamento na direção da mesma, respectivamente.
 % [4] Explain better Darcies experiment and how it led to the Darcy's law. Explain also its limitation and how it has been used nowadays far beyond its original intent.
 
 A equação de conservação para cada fase é descrita como em \cite{Peaceman1977}:
