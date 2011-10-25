@@ -48,7 +48,7 @@ u = -\cos(\pi x) & \textrm{para } 0<x<1 \textrm{ e } y=1}  \\
 \end{array} \right.
 \end{equation}
 
-Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas estruturadas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. O uso de malhas estruturadas se deu apenas para fins de comparação de erros e obtenção de ordens de convergência, já que a metodologia utilizada é perfeitamente capaz de lidar com malhas não-estruturadas bi- e tridimensionais. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema,a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A figura \ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de 64x64 elementos triangulares lineares, a qual já permite obter uma excelente concordância com a solução analítica.
+Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas estruturadas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. O uso de malhas estruturadas se deu apenas para fins de comparação de erros e obtenção de ordens de convergência, já que a metodologia utilizada é perfeitamente capaz de lidar com malhas não-estruturadas bi- e tridimensionais. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema,a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A Fig. \ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de 64x64 elementos triangulares lineares, a qual já permite obter uma excelente concordância com a solução analítica.
 
 \begin{figure}
 \centering
@@ -132,7 +132,7 @@ Para a resolução do sistema de equações lineares provenientes da discretização d
 
 Para a realização dos testes, foi utilizada uma malha de 32x32 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
 
-Como pode ser observado na figura \ref{fig:residualHomogeneoIsotropico_N=32}, os esquemas utilizando o método multigrid (AMG e AMG+CG) apresentaram resultados bastante superiores em relação ao método CG, o qual utiliza apenas um único sistema de equações lineares (ou seja, uma única ``malha''). Enquanto o método AMG+CG reduz o resíduo em aproximadamente uma ordem de grandeza por iteração, o método CG necessita de aproximadamente 10 vezes mais iterações para reduzir o resíduo na mesma proporção. É interessante comparar também os resultados obtidos ao utilizar-se o AMG isoladamente e ao usá-lo como um pré-condicionador para o método dos Gradientes Conjugados. Percebe-se que nas primeiras iterações os dois métodos apresentam fatores de convergência para o resíduo praticamente idênticos, porém a medida que se prossegue com as iterações, o AMG usado isoladamente tende a apresentar uma piora na taxa de convergência, enquanto o método que utiliza a combinação AMG+CG mantém o excelente fator de convergência obtido inicialmente.
+Como pode ser observado na Fig. \ref{fig:residualHomogeneoIsotropico_N=32}, os esquemas utilizando o método multigrid (AMG e AMG+CG) apresentaram resultados bastante superiores em relação ao método CG, o qual utiliza apenas um único sistema de equações lineares (ou seja, uma única ``malha''). Enquanto o método AMG+CG reduz o resíduo em aproximadamente uma ordem de grandeza por iteração, o método CG necessita de aproximadamente 10 vezes mais iterações para reduzir o resíduo na mesma proporção. É interessante comparar também os resultados obtidos ao utilizar-se o AMG isoladamente e ao usá-lo como um pré-condicionador para o método dos Gradientes Conjugados. Percebe-se que nas primeiras iterações os dois métodos apresentam fatores de convergência para o resíduo praticamente idênticos, porém a medida que se prossegue com as iterações, o AMG usado isoladamente tende a apresentar uma piora na taxa de convergência, enquanto o método que utiliza a combinação AMG+CG mantém o excelente fator de convergência obtido inicialmente.
 
 Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg2001,Oosterlee1998,Mavriplis2001} no qual um único ou poucos autovalores da matriz representante do operador de iteração Multigrid estão com um valor muito acima daquele obtido para os demais autovalores. Sendo que o autovalor máximo (também chamados de raio espectral) do operador de iteração indicam em última análise o fator de convergência assimptótica para o problema \citep{Briggs2000}, limitando portanto a taxa de convergência possível de ser obtida. Um modo de contornar tal problema é justamento utilizar algum método de subespaço de Krylov, como é o caso do método CG, os quais têm a característica de em poucas iterações amortecer os autovetores relacionados aos poucos autovalores elevados \citep{Trottenberg2001}.
 
@@ -161,7 +161,7 @@ Onde $\mathbf{K}$ é uma matriz simétrica e não-diagonal representada por:
 
 A definição deste problema está completa ao definir-se a condição de fronteira em todo o contorno $\delta\Omega$ como $u(x,y)=e^{xy}$.
 
-Na figura \ref{fig:HomogeneoAnisotropico_N=64} pode ser observado o campo escalar para a variável $u$, considerando uma discretização do domínio $\Omega$ com uma malha de 64x64 elementos triangulares de 1ª ordem.
+Na Fig. \ref{fig:HomogeneoAnisotropico_N=64} pode ser observado o campo escalar para a variável $u$, considerando uma discretização do domínio $\Omega$ com uma malha de 64x64 elementos triangulares de 1ª ordem.
 
 \begin{figure}
 \centering
@@ -241,7 +241,7 @@ Assim como para o primeiro exemplo, também neste fizemos um estudo a respeito da
 \label{fig:residualHomogeneoAnisotropico_N=64}
 \end{figure}
 
-Para a realização dos testes, foi utilizada uma malha de 64x64 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Em todos os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras. Um gráfico mostrando a evolução do resíduo normalizado para todos os métodos testados pode ser observado na figura \ref{fig:residualHomogeneoAnisotropico_N=64}, onde fica claro novamente a grande superioridade dos métodos que utilizam aceleração de convergência via multigrid em comparação com os outros métodos. É interessante notar também que para este exemplo os métodos CG e GMRES tiveram desempenhos bastante próximos, tanto isoladamente quanto em conjunto com o AMG enquanto pré-condicionador.
+Para a realização dos testes, foi utilizada uma malha de 64x64 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Em todos os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras. Um gráfico mostrando a evolução do resíduo normalizado para todos os métodos testados pode ser observado na Fig. \ref{fig:residualHomogeneoAnisotropico_N=64}, onde fica claro novamente a grande superioridade dos métodos que utilizam aceleração de convergência via multigrid em comparação com os outros métodos. É interessante notar também que para este exemplo os métodos CG e GMRES tiveram desempenhos bastante próximos, tanto isoladamente quanto em conjunto com o AMG enquanto pré-condicionador.
 
 
 
@@ -282,7 +282,7 @@ f(x,y) = \left\{ \begin{array}{ll}
 \end{equation}
 
 Para a resolução deste problema e obtenção de taxas de convergência, consideramos uma sequência de malhas sucessivamente refinadas com dimensões aproximadas de $(8x8), (16x16), (32x32), (64x64)$ e $(128x128)$.
-A malha não-estruturada utilizada para $N \simeq 8$ e a divisão dos subdomínios em $x=0$ pode ser observada na figura \ref{fig:HeterogeneoAnisoMaterials_N=8}.
+A malha não-estruturada utilizada para $N \simeq 8$ e a divisão dos subdomínios em $x=0$ pode ser observada na Fig. \ref{fig:HeterogeneoAnisoMaterials_N=8}.
 
 \begin{figure}
 \centering
@@ -291,7 +291,7 @@ A malha não-estruturada utilizada para $N \simeq 8$ e a divisão dos subdomínios 
 \label{fig:HeterogeneoAnisoMaterials_N=8}
 \end{figure}
 
-Pode ser observado na figura \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da descontinuidade na linha $x=0$, efeito este que se torna mais pronunciado ao aumentarmos o valor do parâmetro $\alpha$. Os valores para os erros da solução numérica quando comparada com a analítica para as normas do máximo e $L2$ são apresentados na tabela \ref{tab:heteroiso}, onde pode ser visto que um aumento na descontinuidade do tensor $\mathbf{K}$ para os diferentes sub-domínios causa um aumento nos valores absolutos dos erros obtidos.
+Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da descontinuidade na linha $x=0$, efeito este que se torna mais pronunciado ao aumentarmos o valor do parâmetro $\alpha$. Os valores para os erros da solução numérica quando comparada com a analítica para as normas do máximo e $L2$ são apresentados na tabela \ref{tab:heteroiso}, onde pode ser visto que um aumento na descontinuidade do tensor $\mathbf{K}$ para os diferentes sub-domínios causa um aumento nos valores absolutos dos erros obtidos.
 
 \begin{figure}
 \centering
@@ -378,7 +378,7 @@ Pode ser observado na figura \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da 
 Um fato interessante que pode ser constatado a partir dos valores obtidos para os erros da solução numérica obtida é que os mesmos apresentam uma taxa de convergência em torno de 1 para $\alpha = 1$ e $10$, sendo que esta taxa se aproxima de 2 quando aumentamos o fator de descontinuidade ($\alpha = 100$ e $1000$).
 Ao compararmos tais resultados com a literatura \citep{Crumpton1995,Hyman1997,Carvalho2005,Silva2008} percebemos que os métodos apresentados nos referidos trabalhos que fazem uma avaliação local dos fluxos tendem a obter uma convergência de ordem 2, enquanto métodos que trabalham apenas com a variável nodal (neste caso, $u(x,y)$) apresentam ordem 1 para o erro, tanto na norma do máximo quanto para a $L2$.
 
-Um aspecto a ser notado que pode contribuir para a compreensão deste comportamento é a distribuição do erro ao longo do domínio para diferentes valores de $\alpha$. Na figura \ref{fig:HeterogeneoAnisoError_N=64} pode ser visto que o erro varia suavemente para $\alpha = 1$ e $\alpha = 10$, sendo que o mesmo está concentrado na região de descontinuidade em $x=0$. Já para $\alpha = 100$ e $\alpha = 1000$, o erro para a malha de $N \simeq 64$ apresenta modos de frequência muito mais alta, estando também concentrado em um dos lados do domínio.
+Um aspecto a ser notado que pode contribuir para a compreensão deste comportamento é a distribuição do erro ao longo do domínio para diferentes valores de $\alpha$. Na Fig. \ref{fig:HeterogeneoAnisoError_N=64} pode ser visto que o erro varia suavemente para $\alpha = 1$ e $\alpha = 10$, sendo que o mesmo está concentrado na região de descontinuidade em $x=0$. Já para $\alpha = 100$ e $\alpha = 1000$, o erro para a malha de $N \simeq 64$ apresenta modos de frequência muito mais alta, estando também concentrado em um dos lados do domínio.
 
 Este comportamento pode ser explicado pelo fato de que para maiores valores de $\alpha$ temos uma intensidade maior de descontinuidade para o mesmo tamanho de malha, o que pode ser visto como equivalente a manter o valor do coeficiente de descontinuidade e engrossar a malha, levando portanto os componentes do erro a se apresentarem como de mais alta frequência, independente da magnitude dos mesmos \citep{Trottenberg2001}.
 
@@ -405,7 +405,7 @@ Este comportamento pode ser explicado pelo fato de que para maiores valores de $
 
 Para a resolução do sistema de equações lineares resultante da discretização foi novamente verificado o desempenho para diferentes tipos de métodos, mesmo sabendo de antemão que este problema é representado por uma matriz simétrica positiva-definida, sendo portanto um candidato natural a ser resolvido usando métodos do tipo gradiente conjugado, seja isoladamente ou com o multigrid algébrico como pré-condicionador.
 
-Os resultados obtidos para a evolução dos resíduos podem ser verificados na figura \ref{fig:residualHeterogeneoAniso_N=64_alpha=1}, onde mais uma vez é constatada a superioridade dos métodos que utilizam multigrid, mesmo para este problema que apresenta sub-domínios com propriedades diferentes.
+Os resultados obtidos para a evolução dos resíduos podem ser verificados na Fig. \ref{fig:residualHeterogeneoAniso_N=64_alpha=1}, onde mais uma vez é constatada a superioridade dos métodos que utilizam multigrid, mesmo para este problema que apresenta sub-domínios com propriedades diferentes.
 
 \begin{figure}
 \centering
