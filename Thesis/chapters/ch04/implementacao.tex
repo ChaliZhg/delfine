@@ -36,6 +36,53 @@ A diferença básica entre a segunda e a terceira alternativas reside exatamente n
 
 Já o \emph{delfine-convert} é uma adaptação do \emph{dolfin-convert} realizada durante este trabalho com o objetivo de importar todas as indicações de condições de contorno definidas no \emph{Gmsh} e exportá-las no formato lido pelo \emph{Delfine}. Esta funcionalidade é de fundamental importância para problemas de maior complexidade, pois permite agilizar bastante a etapa de pré-processamento. Por isto, dentre toda as citadas, a segunda alternativa foi a mais utilizada ao longo deste trabalho.
 
+Uma vez obtida a geometria discretizada, é necessário ler o arquivo de entrada de dados, o qual contém informações a respeito das condições de contorno, propriedades de rochas e fluidos, parâmetros numéricos, etc. De um modo geral, tais informações podem ser fornecidas através de um arquivo de texto comum, desde que as mesmas estejam ordenadas de modo estruturado para serem processadas pelo programa.
+
+Entretanto, tal abordagem não apresenta uma robustez adequada, pois permite que pequenos erros do usuário na confecção do arquivo de dados passem desapercebidos, o que pode acarretar tanto em demora para executar uma análise inicial, pois se torna necessário uma checagem manual de todos os parâmetros fornecidos até se encontrar a fonte de erro, como também se permite executar análises com valores não consistentes, os quais podem vir a gerar resultados totalmente não-físicos, podendo inclusivo levar o usuário a interpretar o fenômeno de interesse de maneira errônea.
+
+Sendo assim, de modo a aumentar a robustez da entrada de dados se optou pelo uso de arquivos estruturados no formato \ac{XML} \citep{Bray2000} com a utilização da linguagem de especificação de esquemas \ac{RNC} \citep{Clark2001}. Esta linguagem permite definir um padrão lógico a ser seguido por qualquer arquivo \ac{XML} gerado, caso contrário o mesmo não é considerado válido e o ponto exato onde o erro na entrada de dados foi encontrado é apresentado ao usuário antes mesmo de qualquer análise ter início. Este padrão é definido através de um arquivo chamado de \emph{Schema Grammar} e todo arquivo de entrada será checado contra esta gramática através do programa \ac{RNV} \citep{Sheen2007}. Este programa é sempre chamado automaticamente pelo \emph{Delfine} antes do início da análise para verificar a entrada de dados do usuário, garantindo assim que a execução só será realizado caso exista uma consistência mínima nos dados fornecidos. Na Fig. \ref{fig:arqxmlinput} é apresentado um trecho de um arquivo de entrada típico.
+
+\begin{figure}
+\centering
+\begin{xml}
+<delfine>
+    <geometry>
+        <mesh dimension="2" order ="1" type="gmsh">
+            <filename>HomoIsoBCStruct.msh</filename>
+        </mesh>
+        <boundary-conditions>
+            <well bctype="flux-rate(m^3/d)" function="injection" id="301">.250</well>
+        </boundary-conditions>  
+    </geometry>
+    <physical>
+        <fluid-properties>
+            <water use="no">
+                <viscosity model="none">1.0</viscosity>
+                <density model="none">0.01</density>
+            </water>
+        </fluid-properties>
+        <rock-properties>
+            <rock-type id="1">
+                <porosity compressible="no">1.0</porosity>
+                <permeability type="per-domain">
+                    <Kxx>0.50</Kxx>
+                    <Kxy>0.0</Kxy>
+                    <Kxz>0.0</Kxz>
+                </permeability>
+            </rock-type>
+        </rock-properties>
+    </physical>
+    <numerical>
+        <pressure-solver formulation="mixedfem" type="cg">
+            <tolerance>1e-10</tolerance>
+        </pressure-solver>
+    </numerical>
+</delfine>                            
+\end{xml}
+\caption{Trecho de arquivo de entrada no formato *.xml.}
+\label{fig:arqxmlinput}
+\end{figure}
+
 \begin{figure} 
 \centering
 \includegraphics[width=1.0\textwidth]{chapters/ch04/Pre-Process}
