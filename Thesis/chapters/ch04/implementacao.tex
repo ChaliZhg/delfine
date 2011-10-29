@@ -42,28 +42,21 @@ Entretanto, tal abordagem não apresenta uma robustez adequada, pois permite que 
 
 Sendo assim, de modo a aumentar a robustez da entrada de dados se optou pelo uso de arquivos estruturados no formato \ac{XML} \citep{Bray2000} com a utilização da linguagem de especificação de esquemas \ac{RNC} \citep{Clark2001}. Esta linguagem permite definir um padrão lógico a ser seguido por qualquer arquivo \ac{XML} gerado, caso contrário o mesmo não é considerado válido e o ponto exato onde o erro na entrada de dados foi encontrado é apresentado ao usuário antes mesmo de qualquer análise ter início. Este padrão é definido através de um arquivo chamado de \emph{Schema Grammar} e todo arquivo de entrada será checado contra esta gramática através do programa \ac{RNV} \citep{Sheen2007}. Este programa é sempre chamado automaticamente pelo \emph{Delfine} antes do início da análise para verificar a entrada de dados do usuário, garantindo assim que a execução só será realizado caso exista uma consistência mínima nos dados fornecidos. Na Fig. \ref{fig:arqxmlinput} é apresentado um trecho de um arquivo de entrada típico.
 
-\begin{figure}
-\centering
-\begin{xml}
+\begin{listing}[H]
+\begin{xmlcode}
 <delfine>
     <geometry>
         <mesh dimension="2" order ="1" type="gmsh">
             <filename>HomoIsoBCStruct.msh</filename>
         </mesh>
         <boundary-conditions>
-            <well bctype="flux-rate(m^3/d)" function="injection" id="301">.250</well>
+            <well function="inject" id="301">.250</well>
         </boundary-conditions>  
     </geometry>
     <physical>
-        <fluid-properties>
-            <water use="no">
-                <viscosity model="none">1.0</viscosity>
-                <density model="none">0.01</density>
-            </water>
-        </fluid-properties>
         <rock-properties>
             <rock-type id="1">
-                <porosity compressible="no">1.0</porosity>
+                <porosity>1.0</porosity>
                 <permeability type="per-domain">
                     <Kxx>0.50</Kxx>
                     <Kxy>0.0</Kxy>
@@ -72,16 +65,26 @@ Sendo assim, de modo a aumentar a robustez da entrada de dados se optou pelo uso
             </rock-type>
         </rock-properties>
     </physical>
-    <numerical>
-        <pressure-solver formulation="mixedfem" type="cg">
-            <tolerance>1e-10</tolerance>
-        </pressure-solver>
-    </numerical>
 </delfine>                            
-\end{xml}
+\end{xmlcode}
 \caption{Trecho de arquivo de entrada no formato *.xml.}
-\label{fig:arqxmlinput}
-\end{figure}
+\label{lst:arqxmlinput}
+\end{listing}
+
+\begin{listing}[H]
+\begin{pythoncode}
+def MixedFEM(self, delfineVar, parameter):
+	.
+	.
+	.      
+	# Define variational form
+	a = (dot((invK/mob)*sigma, tau)
+		- div(tau)*u - div(sigma)*v)*dx
+	L = - f*v*dx
+\end{pythoncode}
+\caption{Montagem do operador diferencial elíptico via \ac{MEFM}.}
+\label{lst:arqpymfem}
+\end{listing}
 
 \begin{figure} 
 \centering
