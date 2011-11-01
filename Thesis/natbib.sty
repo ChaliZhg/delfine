@@ -157,7 +157,7 @@
 \newcommand\bibstyle@egs{\bibpunct{(}{)}{;}{a}{,}{,}}%Eur. Geophys. Soc.
 \newcommand\bibstyle@agsm{\bibpunct{(}{)}{,}{a}{}{,}\gdef\harvardand{\&}}
 \newcommand\bibstyle@kluwer{\bibpunct{(}{)}{,}{a}{}{,}\gdef\harvardand{\&}}
-\newcommand\bibstyle@dcu{\bibpunct{(}{)}{;}{a}{;}{,}\gdef\harvardand{and}}
+\newcommand\bibstyle@dcu{\bibpunct{(}{)}{;}{a}{;}{,}\gdef\harvardand{e}} % BrunoLuna-01/11/11
 \newcommand\bibstyle@aa{\bibpunct{(}{)}{;}{a}{}{,}} %Astronomy & Astrophysics
 \newcommand\bibstyle@pass{\bibpunct{(}{)}{;}{a}{,}{,}}%Planet. & Space Sci
 \newcommand\bibstyle@anngeo{\bibpunct{(}{)}{;}{a}{,}{,}}%Annales Geophysicae
@@ -594,7 +594,7 @@
    \NAT@wrout{\arabic {NAT@ctr}}{#3}{#2}{#1}{#4}\fi}
 \newcommand\citestarts{\NAT@open}
 \newcommand\citeends{\NAT@close}
-\newcommand\betweenauthors{and}
+\newcommand\betweenauthors{e} % BrunoLuna-01/11/11
 \newcommand\astroncite{}
 \def\astroncite#1#2()()\@nil#3{\stepcounter{NAT@ctr}\NAT@wrout{\arabic
 {NAT@ctr}}{#2}{#1}{}{#3}}
@@ -607,7 +607,7 @@
 \newcommand\harvardright{\NAT@close}
 \newcommand\harvardyearleft{\NAT@open}
 \newcommand\harvardyearright{\NAT@close}
-\AtBeginDocument{\providecommand{\harvardand}{and}}
+\AtBeginDocument{\providecommand{\harvardand}{e}} % BrunoLuna-01/11/11
 \newcommand\harvardurl[1]{\textbf{URL:} \textit{#1}}
 \providecommand\bibsection{}
 \@ifundefined{chapter}%
