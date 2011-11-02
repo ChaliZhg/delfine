@@ -55,7 +55,7 @@
         </rock-fluid-properties>
     </physical>
     <numerical>
-        <pressure-solver formulation="galerkin" type="cg">
+        <pressure-solver formulation="mixedfem" type="cg">
             <tolerance>1e-10</tolerance>
             <max-number-steps>200</max-number-steps>
             <pre-conditioning type="none">

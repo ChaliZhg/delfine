@@ -177,7 +177,8 @@ class AssembleElliptic:
                             q.apply(rhs)
         
         
-        # Compute solution
+        # Compute solution # FIXME: Rename the next 'u' and 'v' variable to avoid confusion with
+        # trial and test functions above
         u = Function(W)
         solve(A, u.vector(), rhs)
         
@@ -194,12 +195,13 @@ class AssembleElliptic:
         # Plot results
         plot(v)
         plot(p)
-        interactive()
+        #interactive()
         
         # Save solution in VTK format
         ufile_pvd = File ( "Results/mfem_velocity.pvd" )
-        ufile_pvd << u
+        ufile_pvd << v 
         pfile_pvd = File ( "Results/mfem_pressure.pvd" )
         pfile_pvd << p
-
+        # Define return parameters
+        delfineVar.velocity = v
 ############################################################
