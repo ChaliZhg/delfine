@@ -88,6 +88,9 @@ f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$. A Eq. (\ref{eq:galerkin}) aplicada a uma malha resulta em um conjunto de equações discretas na variável $p$, cuja solução é obtida usando os métodos descritos na seção \ref{sc:multigrid}.
 % Colocar figuras dos elementos triangulares 1st,2nd e 3rd ordem do dolfin-plot
 
+\section{Método dos Elementos Finitos Mistos} \label{sc:mfem}
+\section{Estabilização do \ac{MEF} via \ac{SUPG}} \label{sc:supg}
+
 \section{Multigrid} \label{sc:multigrid}
 % Relatorios de IC / Trottenberg/ Briggs / Mavriplis
 A ideia básica dos métodos Multigrid é acelerar a solução de sistemas de equações em uma malha fina usando correções caculadas em uma malha grosseira. A motivação para esta abordagem vem da observação de que o comportamento do erro da solução numérica no domínio da frequência. Erros de alta frequência, os quais estão associados à variações locais da solução, são bem resolvidos por métodos iterativos convencionais (Gauss-Seidel, Gradientes Conjugados, etc.). Entretanto, erros de baixa frequência, associados à variação global das soluções, são muito mais insensíveis a esses métodos.

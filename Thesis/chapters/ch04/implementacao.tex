@@ -92,7 +92,16 @@ O fluxograma da Fig. \ref{fig:ellipticflux} representa os passos necessário para
 \label{fig:ellipticflux}
 \end{figure}
 
-O usuário tem a disposição duas alternativas de métodos numéricos para resolução do problema: o \acf{MEF} e o \acf{MEFM}. As diferenças entre os dois métodos do ponto de vista da formulação numérica são discutidas no capítulo \ref{ch:form_num}, sendo nesta seção discutidos apenas os aspectos de implementação. Ambos os métodos são codificados utilizando a interface na linguagem \emph{Python} da ferramenta \emph{FEniCS/DOLFIN}. A seguir faremos uma descrição geral deste pacote computacional e em seguida mostraremos como o mesmo foi utilizado neste trabalho.
+A parte parabólica/hiperbólica do problema é descrita pelo fluxograma apresentado na Fig. \ref{fig:hyperbolicflux}. As formulações matemática e numérica deste problema adotadas neste trabalho podem ser consultadas nas seções \ref{sc:eq_sat} e \ref{sc:supg}, respectivamente.
+
+\begin{figure} 
+\centering
+\includegraphics[width=1.0\textwidth]{chapters/ch04/Hyperbolic}
+\caption{Fluxograma da resolução da parte hiperbólica.}
+\label{fig:hyperbolicflux}
+\end{figure}
+
+O usuário tem a disposição duas alternativas de métodos numéricos para resolução do problema elíptico: o \acf{MEF} e o \acf{MEFM}. As diferenças entre os dois métodos do ponto de vista da formulação numérica são discutidas no capítulo \ref{ch:form_num}, sendo nesta seção discutidos apenas os aspectos de implementação. Já para o problema hiperbólico foi adotado o \ac{MEF} com estabilização via \acf{SUPG}. Todos os métodos foram codificados utilizando a interface na linguagem \emph{Python} da ferramenta \emph{FEniCS/DOLFIN}. A seguir faremos uma descrição geral deste pacote computacional e em seguida mostraremos como o mesmo foi utilizado neste trabalho.
 
 \subsection{FEniCS}
 \label{sc:fenics}
@@ -112,7 +121,7 @@ Em seguida, tais formas são compiladas utilizando o \ac{FFC} \citep{Logg2011}, o
 \end{figure}
 
 O \emph{DOLFIN} \citep{Logg2010} automatiza a montagem dos sistemas lineares ou não-lineares provenientes da discretização via \ac{MEF} de \ac{EDP}s expressas na forma variacional.
-Na Fig. \ref{fig:moduledolfin} é apresentada a estrutura modular da biblioteca, onde os dados de entrada para um problema específico são a malha, a forma variacional e os tipos de elementos finitos adotados.
+Na Fig. \ref{fig:moduledolfin} é apresentada a estrutura modular da biblioteca, onde os dados de entrada fornecidos pelo usuário para um problema específico são a malha, a forma variacional e os tipos de elementos finitos adotados. De posse destes dados, o \emph{DOLFIN} gera uma as matrizes e vetores necessários para resolução do sistema de equações provenientes da discretização. Como mostrado na figura, o \emph{DOLFIN} contém interfaces para as bibliotecas de álgebra linear computacional \emph{PETSc}, \emph{Epetra}, \emph{uBLAS} e \emph{MTL4}, além de permitir que o usuário utilize um outro programa qualquer, desde que o mesmo tenha suporte para matrizes no formato do \emph{SciPy} \citep{Jones2001}, como é o caso do \emph{PyAMG} usado neste trabalho.
 
 \begin{figure} 
 \centering
@@ -121,44 +130,125 @@ Na Fig. \ref{fig:moduledolfin} é apresentada a estrutura modular da biblioteca, 
 \label{fig:moduledolfin}
 \end{figure}
 
+O \emph{DOLFIN} permite a utilização de alguns operadores básicos na definição da forma variacional, como os de adição (\verb|v+w|), multiplicação (\verb|v*w|), diferenciação (\verb|v.dx(i)|) e integração (\verb|v*dx|). Além disso, e neste ponto reside o grande diferencial desta biblioteca em relação a outras existentes, é possível definir de modo bastante direto operações complexas que nada mais são do que composições dos operadores básicos citados. Entre estas operações podemos citar o produto interno (\verb|dot()|), produto vetorial (\verb|cross()|), divergente (\verb|div()|), gradiente (\verb|grad()|), rotacional (\verb|curl()|), entre outros. 
+
+Portanto, um dos grandes atrativos do \emph{DOLFIN} é a possibilidade de utilizar uma notação muito próxima da matemática para a escrita do código. De modo a exemplificar isto, serão apresentados a seguir os trechos de código correspondentes às formulações do \ac{MEF} de Galerkin, do \ac{MEFM} e do \ac{MEF} com estabilização via \ac{SUPG} discutidos nas seções \ref{sc:fem}, \ref{sc:mfem} e \ref{sc:supg}, respectivamente.
+
 \begin{listing}[H]
+\begin{equation} \label{eq:bilinearformh2}
+A(p,v) = \int_{\Omega} \nabla v \cdot \lambda K \nabla p d \Omega \nonumber
+\end{equation}
+\begin{equation} \label{eq:linearformh2}
+f(v) = \int_{\Omega} vf d \Omega - \int_{\Gamma} gv d \Gamma \nonumber
+\end{equation}
 \begin{pythoncode}
 def Galerkin(self, delfineVar, parameter):
 	.
 	.      
-	# Define variational form
-        a = inner(grad(v), K*mob*grad(u))*dx
-        L = v*f*dx - g*v*ds
+    # Define variational form
+    a = inner(grad(v), K*mob*grad(u))*dx
+    L = v*f*dx - g*v*ds
 \end{pythoncode}
-\caption{Montagem do operador elíptico via \ac{MEF} de Galerkin usando o \emph{FEniCS/DOLFIN}.}
+\caption{Comparação entre a notação matemática e a codificação em \emph{Python} da montagem do operador elíptico via \ac{MEF} de Galerkin usando o \emph{FEniCS/DOLFIN}.}
 \label{lst:arqpymfem}
 \end{listing}
 
 \begin{listing}[H]
+\begin{equation} \label{eq:bilinearformhmfem2}
+A(p,v) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \sigma \cdot \tau - \nabla \cdot \tau u - \nabla \sigma v \right) d \Omega \nonumber
+\end{equation}
+\begin{equation} \label{eq:linearformhmfem2}
+f(v) = - \int_{\Omega} fv d \Omega \nonumber
+\end{equation}
 \begin{pythoncode}
 def MixedFEM(self, delfineVar, parameter):
 	.
 	.  
-	# Define variational form
-	a = (dot((invK/mob)*sigma, tau)
-            - div(tau)*u - div(sigma)*v)*dx
-	L = - f*v*dx
+    # Define variational form
+    a = (dot((invK/mob)*sigma, tau)
+        - div(tau)*u - div(sigma)*v)*dx
+    L = - f*v*dx
 \end{pythoncode}
-\caption{Montagem do operador elíptico via \ac{MEFM} usando o \emph{FEniCS/DOLFIN}.}
-\label{lst:arqpymfem}
+\caption{Comparação entre a notação matemática e a codificação em \emph{Python} da montagem do operador elíptico via \ac{MEFM} usando o \emph{FEniCS/DOLFIN}.}
+\label{lst:arqpymmfem}
 \end{listing}
 
-A parte parabólica/hiperbólica do problema pode ser descrita pelo fluxograma apresentado na Fig. \ref{fig:hyperbolicflux}.
+\begin{listing}[H]
+\begin{equation} \label{eq:bilinearformhsupg2}
+F(S,v) = \int_{\Omega} \left( v \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
+\int_{\Omega} vf_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1} d \Omega +
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{u}^{n+1} \cdot \nabla v \right) \tau_{s} r^{n+1} d \Omega \nonumber
+\end{equation}
+\begin{equation} \label{eq:residuumsupg2}
+r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+ 
+          f_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1} \nonumber
+\end{equation}
+\begin{equation} \label{eq:stabtermsupg2}
+\tau_{s} = \frac{h}{2 \left| \left| \mathbf{u}^{n+1} \right| \right| }\nonumber
+\end{equation}
+\begin{pythoncode}
+def SUPG(self, delfineVar, parameter):
+	.
+	.      
+    # Galerkin variational problem
+    F = v*phi*((S-S0)/dt)*dx +
+        (v*dot(velocity, grad(S))*dx
+    # Residual
+    r = phi*((S-S0)/dt) + (dot(velocity, grad(S)))
+    # SUPG stabilisation terms
+    tau = h/(2.0*sqrt(dot(velocity, velocity)))
+    F += tau*dot(velocity, grad(v))*r*dx
+    # Create bilinear and linear forms
+    a = lhs(F)
+    L = rhs(F)
+\end{pythoncode}
+\caption{Comparação entre a notação matemática e a codificação em \emph{Python} da montagem do operador hiperbólico via \ac{MEF} com estabilização via \ac{SUPG} usando o \emph{FEniCS/DOLFIN}.}
+\label{lst:arqpymfemsupg}
+\end{listing}
 
-\begin{figure} 
-\centering
-\includegraphics[width=1.0\textwidth]{chapters/ch04/Hyperbolic}
-\caption{Fluxograma da resolução da parte hiperbólica.}
-\label{fig:hyperbolicflux}
-\end{figure}
+Como pôde ser visto, o \emph{DOLFIN} permite tanto a definição diretamente das formas bilineares e lineares, quanto a definição de um funcional e posterior subdivisão do mesmo através dos comandos \verb|rhs()| e \verb|lhs()|. Uma vez obtidas as formas que descrevem o problema, o sistema de equações é montado através de um simples comando, como exemplificado na listagem de código \ref{lst:assembly}.
+
+\begin{listing}[H]
+\begin{pythoncode}
+    # Assemble system
+    A, rhs = assemble_system(a, L)
+    bc.apply(A, rhs)
+\end{pythoncode}
+\caption{Montagem do sistema de equações no formato matricial e aplicação das condições de contorno usando o \emph{FEniCS/DOLFIN}.}
+\label{lst:assembly}
+\end{listing}
+
+Para a resolução do sistema de equações provenientes das matrizes e vetores resultantes da discretização foram utilizadas as bibliotecas de álgebra linear \emph{PyAMG} (prioritariamente) e \emph{uBLAS} (para matrizes provenientes do \ac{MEFM}). Como já mencionado, a interface desta última biblioteca com o \emph{DOLFIN} é implementada por default, logo o foco neste capítulo será na interface com o \emph{PyAMG}, o qual é descrito com mais detalhes na seção a seguir.
+
+\subsection{PyAMG}
+\label{sc:pyamg}
+
+\begin{listing}[H]
+\begin{pythoncode}
+def solve_withPyAMG(self, delfineVar, parameter):
+    # Getting data from elliptic eq. assembler
+    A = delfineVar.A
+    rhs = delfineVar.rhs
+    # Get sparse matrix data
+    (r,c,data) = A.data()
+    n = A.size(0)
+    # Matrix in scipy/numpy format
+    As = csr_matrix((data,c.view(),r.view()),shape=(n,n))
+    # Get right-hand side vector(rhs) data
+    b = rhs.data()
+    res = []
+    # Solve with AMG as preconditionar for the CG Method
+    ml = smoothed_aggregation_solver(Asp,max_coarse=10)
+    x = ml.solve(b,tol=1e-10,accel='cg',residuals=res)
+\end{pythoncode}
+\caption{Montagem do sistema de equações no formato matricial e aplicação das condições de contorno usando o \emph{FEniCS/DOLFIN}.}
+\label{lst:pyamg}
+\end{listing}
 
 \section{Pós-Processamento}
 \label{sc:pos-proc}
+
+Uma vez obtido finalizada a etapa de processamento, é necessário analisar os resultados obtidos. Em termos de implementação computacional, esta é a fase mais simples, como pode ser visto na Fig. \ref{fig:posprocessadorflux}.
 
 \begin{figure} 
 \centering
