@@ -223,6 +223,10 @@ Para a resolução do sistema de equações provenientes das matrizes e vetores resu
 \subsection{PyAMG}
 \label{sc:pyamg}
 
+O \emph{PyAMG} \citep{Bell2008} é uma coleção de resolvedores de equações lineares com uma interface em \emph{Python}. Diversas variações do método \ac{AMG} estão implementadas no \emph{PyAMG}, como o \ac{AMG} clássico, o \emph{smoothed aggregation} (SA) e o \emph{adaptive smoothed aggregation}. Por ter sido escrito de maneira modular, o \emph{PyAMG} se apresenta como uma excelente ferramenta para prototipagem rápida de métodos multigrid. Além disso, por ter suas operações de maior custo computacional compiladas em \emph{C++}, é possível a resolução eficiente de problemas de grande escala.
+
+A listagem de código \ref{lst:pyamg} apresenta um exemplo típico de utilização do \emph{PyAMG} em conjunto com o \emph{DOLFIN}. A comunicação das matrizes e vetores provenientes da montagem no \emph{DOLFIN} é feita através do formato \emph{SciPy}. Em seguida, tais dados são repassados em conjunto com alguns parâmetros numéricos para a função do \emph{PyAMG} responsável pela resolução do sistema de equações. No exemplo mostrado, se utilizou um resolvedor do tipo \ac{CG} com precondicionamento via \ac{AMG}. Os parâmetros passados foram o número máximo de níveis grosseiros (ver seção \ref{sc:multigrid} para mais detalhes) e a tolerância considerada. A grande vantagem do uso desta biblioteca é justamente a possibilidade de testar diversas possibilidades apenas com a mudança destes parâmetros de entrada, já que seria perfeitamente possível trocar o resolvedor do tipo \ac{CG} para um \ac{GMRES}, caso se esteja trabalhando com matrizes não-simétricas. Outra flexibilidade permitida é a de alterar o tipo de ciclo multigrid utilizado, sendo o tipo $V$ considerado default caso nenhuma informação seja fornecida, como no caso do exemplo utilizado.
+
 \begin{listing}[H]
 \begin{pythoncode}
 def solve_withPyAMG(self, delfineVar, parameter):
@@ -241,14 +245,29 @@ def solve_withPyAMG(self, delfineVar, parameter):
     ml = smoothed_aggregation_solver(Asp,max_coarse=10)
     x = ml.solve(b,tol=1e-10,accel='cg',residuals=res)
 \end{pythoncode}
-\caption{Montagem do sistema de equações no formato matricial e aplicação das condições de contorno usando o \emph{FEniCS/DOLFIN}.}
+\caption{Leitura da matriz que representa o sistema de equações e resolução do mesmo utilizando o \emph{PyAMG}.}
 \label{lst:pyamg}
 \end{listing}
 
 \section{Pós-Processamento}
 \label{sc:pos-proc}
 
-Uma vez obtido finalizada a etapa de processamento, é necessário analisar os resultados obtidos. Em termos de implementação computacional, esta é a fase mais simples, como pode ser visto na Fig. \ref{fig:posprocessadorflux}.
+Uma vez finalizada a etapa de processamento, é necessário analisar os resultados obtidos. Em termos de implementação computacional esta é a fase que envolve menos componentes, como pode ser visto na Fig. \ref{fig:posprocessadorflux}.
+
+O \emph{DOLFIN} dispões de funções para impressão em formato \ac{XML} dos dados armazenados (como malhas, propriedades, etc.) e resultados gerados durante a análise. Esta funcionalidade pode ser utilizada de modo bastante direto no programa devido ao uso de operadores sobrecarregados. A listagem de código \ref{lst:satoutput} apresenta um exemplo de impressão do campo de saturação $S$ em um passo de tempo $t$. O formato utilizado (\verb|.vtk|) nada mais é do que um arquivo \ac{XML} formatado para seguir um padrão definido que pode ser lido por vários programas de visulaziação. Neste trabalho foi utilizado prioritariamente o \emph{Paraview} \citep{Henderson2007}, porém o arquivo também poderia ter sido visualizado em outros programas de visualização, como o \emph{VisIt} ou o \emph{TecPlot}. Além disso, o \emph{DOLFIN} permite a visualização rápida de resultados durante a própria simulação utilizando uma ferramenta própria chamada \emph{Viper}.
+
+\begin{listing}[H]
+\begin{pythoncode}
+    # Output file
+    out_file = File("Results/supg_saturation.vtk")
+    # Save the saturation solution to file
+    out_file << (S, t)
+\end{pythoncode}
+\caption{Impressão dos resultados em arquivos do tipo \ac{XML} usando o \emph{FEniCS/DOLFIN}.}
+\label{lst:satoutput}
+\end{listing}
+
+Além da impressão dos arquivos com os resultados associados aos campos de pressão, velocidade e saturação, foi implementado neste trabalho um script em \emph{Python} para comparação da performance de diversos métodos de resolução do sistema de equações (\ac{AMG}, \ac{CG}, \ac{GMRES}, \ac{AMG}+\ac{CG} e \ac{AMG}+\ac{GMRES}). Este script lê automaticamente todos os resíduos gerados pelos métodos desejados e cria gráficos semi-logarítmicos para visualização da evolução do resíduo em comparação ao número de iterações.
 
 \begin{figure} 
 \centering
