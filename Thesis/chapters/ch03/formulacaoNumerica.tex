@@ -11,7 +11,7 @@ O processo de discretização no caso do \ac{MEF} é diferente na medida em que ele
 Neste trabalho, foram experimentados tanto o clássico Método de Elementos Finitos de Galerkin quanto uma formulação dos Métodos dos Elementos Finitos Mistos para resolver a equação de pressão \ref{sc:press_eq}. Estas metodologias são discutidas nas seções subsequentes e referências são citadas para informações adicionais.
 % Add after the information that we are also going to have a formulation for the saturation equation (SUPG until now) and that these are a % coupled through a numerical methodology (the IMPES formulation)
 
-\section{Método dos Elementos Finitos de Galerkin} \label{sc:fem}
+\section{Método dos Elementos Finitos de Galerkin para a Eq. de Pressão} \label{sc:fem}
 % Garcia / Chen / Shan / Comentarios Ewing
 Antes de especificar a formulação numérica utilizada, algumas definições a respeito das condições de contorno e hipóteses simplificadoras têm que ser discutidas.
 
@@ -88,8 +88,24 @@ f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$. A Eq. (\ref{eq:galerkin}) aplicada a uma malha resulta em um conjunto de equações discretas na variável $p$, cuja solução é obtida usando os métodos descritos na seção \ref{sc:multigrid}.
 % Colocar figuras dos elementos triangulares 1st,2nd e 3rd ordem do dolfin-plot
 
-\section{Método dos Elementos Finitos Mistos} \label{sc:mfem}
-\section{Estabilização do \ac{MEF} via \ac{SUPG}} \label{sc:supg}
+\section{Método dos Elementos Finitos Mistos para a Eq. de Pressão} \label{sc:mfem}
+\section{Estabilização do \ac{MEF} via \ac{SUPG} para a Eq. de Saturação} \label{sc:supg}
+O \ac{MEF} de Galerkin até o momento permite obter respostas bastantes acuradas para problemas com soluções suaves, como normalmente é o caso para equações essencialmente elípticas como a equação de pressão. Entretanto, o mesmo não se mostra adequado para a simulação de fenômenos dominados por termos convectivos, caso frequente de equações com características hiperbólicas como a equação de saturação descrita em \ref{sc:eq_sat}. Nestes casos a solução tende a se tornar instável na região de choque, sendo que tal instabilidade é transportada para todo o domínio, deteriorando rapidamente a acurácia global.
+
+Mesmo antes do aparecimento deste problema no contexto do \ac{MEF}, o mesmo já era bastante conhecido do estudo do \ac{MDF}, podendo ser explicado em ambos os casos pelo uso de aproximações que se baseiam no uso de discretizações centradas, ou seja, quando as contribuições vindo de todas as direções possuem o mesmo peso na solução. Inicialmente (CITAR PAPASTAVROU), uma das técnicas para se contornar este tipo de problema era adicionar um termo artifical de difusão diretamente nas \ac{EDP}s que se desejava aproximar. Todavia, esta técnica apresenta a desvantagem fundamental de alterar a descrição matemática do problema, ocasionando assim uma perda de consistência, já que mesmo que se utilize uma discretização tendendo ao contínuo, continuaria-se obtendo uma resposta que não tenderia à analítica.
+
+Uma solução proposta no contexto do \ac{MDF} consiste na ponderação da solução com um peso maior para a informação que segue a direção do fluxo (esta técnica é comumente conhecida como \emph{Upwinding}). No caso do \ac{MEF}, (CITAR HUGHES) propuseram um método no qual a função de teste não mais corresponde à função de forma do elemento utilizado (ou seja, um método do tipo Petrov-Galerkin), sendo adicionado um termo de caratér difusivo que atua apenas na direção da linha de fluxo. Este método, o qual se tornou conhecido pelo nome de \ac{SUPG} foi extensamente utilizado na litetura para várias aplicações, inclusive na resolução da equação de saturação em escoamentos multifásicos (CITAR PAPER CATABRIGA E COUTINHO E ETC.). Uma representação gráfica desta função de teste pode ser vista na Fig. (CITAR FIGURA), sendo que na Eq. (CITAR EQ.) é apresentada a forma matemática desta função.
+% FIGURA ADAPTADA DE PAPASTAVROU
+% EQ GERAL PARA FUNCAO TESTE MODIFICADA NO SUPG
+
+Uma vez definida tal função, basta aplicar um procedimento semelhante ao utilizado para a discretização pelo Método de Galerkin, onde se integra a Eq. (CITAR EQ. SATURACAO), porém a multiplicação é pela função de teste modificada (CITAR EQ. DO PARAG. ANTERIOR) para se obter, de modo totalmente consistente, a seguinte forma variacional para o problema da equação de saturação:
+% DERIVACAO DO PROBLEMA NA FORMA FRACA PARA SATURACAO. USAR TEMPLATE DE PROBLEM.
+
+A consistência da formulação utilizada é garantida pelo fato do termo adicionado ser diretamente proporcional ao resíduo da solução, o qual tende a zero para a resposta exata, cancelando portanto qualquer difusão que poderia ser adicionada.
+
+O termo \delta é chamado de parâmetro de estabilização, sendo que existem diversas sugestões na literatura acerca do modo mais adequado de definir o mesmo (CITAR PAPASTA,HUGHES,CODINA,CATABRIGA,etc.). De um modo geral este termo está relacionado à uma dimensão característica de malha e à velocidade de transporte, tendo portanto que ser calculado para cada elemento. Neste trabalho, optou-se pelo uso da expressão apresentada a seguir, a qual normalmente se mostra adequada para problemas altamente hiperbólicos, como é o caso da equação de saturação ao se desprezar os termos de capilaridade e gravidade.
+% EQ. DO PARAMETRO DE ESTABILIZACAO
+\subsection{Termo de Captura de Choque}
 
 \section{Multigrid} \label{sc:multigrid}
 % Relatorios de IC / Trottenberg/ Briggs / Mavriplis
