@@ -15,6 +15,11 @@
 \usepackage{subfigure}
 \usepackage{fancybox}
 \usepackage{acronym}
+% Commands for list of symbols
+\usepackage[intoc,portuguese]{nomencl}
+\makenomenclature
+\renewcommand{\nomname}{Lista de Símbolos}
+% Commands for code listings
 \usepackage{codehighlight}
 \usepackage{minted}
 \usemintedstyle{tango}
@@ -25,7 +30,8 @@
 \usepackage[linkcolor=black,citecolor=black,urlcolor=black,colorlinks,pdfpagelabels,pdftitle={brunoluna-msc},pdfauthor={Bruno Gustavo Borges Luna}]{hyperref}
 % Command added to present problem in 'theorem form'
 \newtheorem{problem}{Problema}
-
+% Definition for tensors format
+\def\mathbi#1{\textbf{\em #1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FRONT MATTER
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,7 +50,7 @@
 \majorfielden{Mechanical Engineering}
 
 \title{Modelagem Automática de Escoamentos em Meios Porosos via Método dos Elementos Finitos}
-\date{Agosto/2011}
+\date{Janeiro/2012}
 
 \author{Bruno Gustavo Borges Luna}
 \adviser{Paulo Roberto Maciel Lyra}
@@ -74,6 +80,7 @@ Gostaria de agradecer \ldots
 \listoftables
 % ACRONYMS
 \input{chapters/extras/acronyms}
+\printnomenclature
 \mainmatter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
