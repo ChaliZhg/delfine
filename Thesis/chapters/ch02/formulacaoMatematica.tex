@@ -33,7 +33,7 @@ Uma rocha, para ter a capacidade de armazenar petróleo, deve possuir vazios no s
 % Adicionar figura baseada na figura do chines para a porosidade (ou copiar e citar figura da tese do demetrio). Ou entao figura preparado por mim no powerpoint.
 
 A porosidade de uma rocha-reservatório é definida matematicamente como a razão entre o volume dos espaços vazios existentes entre os poros da rocha e o volume total da amostra \citep{Thomas2001}. Logo, podemos descrever a porosidade $\phi$%
-\nomenclature[ap]{$\phi$}{Porosidade efetiva}
+\nomenclature[a1po]{$\phi$}{Porosidade efetiva}
 como:
 
 \begin{equation} \label{eq:porosidade}
@@ -103,9 +103,10 @@ Dada a complexidade envolvida na interação entre a rocha e as diferentes fases n
 Considerando a hipótese de meio poroso totalmente saturado e a existência de $n$ fases, a equação constitutiva para a saturação pode ser descrita por:
 \begin{equation} \label{eq:eq_const_sat}
 \sum_{\alpha=1}^n S_{\alpha} = 1
-\end{equation}
-
-Onde $\alpha$ representa cada fase (neste trabalho, $\alpha = w$ e $o$ para água e óleo, respectivamente) e $S_{\alpha}$ representa a saturação da fase ${\alpha}$.
+\end{equation}%
+\nomenclature[as]{$S$}{Saturação}%
+\nomenclature[an]{$n$}{Quantidade total de fases}%
+onde $\alpha$ representa cada fase (neste trabalho, $\alpha = w$ e $o$ para água e óleo, respectivamente) e $S_{\alpha}$ representa a saturação da fase ${\alpha}$.
 % [2] Describe concepts as effective porosity and volume, and then give definition of saturation in the thesis. 
 
 A lei de Darcy generalizada para a velocidade de cada fase é expressa através da seguinte equação:
@@ -113,6 +114,10 @@ A lei de Darcy generalizada para a velocidade de cada fase é expressa através da
 \mathbi{v}_{\alpha} = - \frac{K_{\alpha}}{\mu_{\alpha}} \nabla\left(p_{\alpha} - \rho_{\alpha}g\nabla z \right)
 \end{equation}%
 \nomenclature[bv]{$\mathbi{v}$}{Velocidade}%
+\nomenclature[a1vi]{$\mu$}{Viscosidade}%
+\nomenclature[apr]{$p$}{Pressão}%
+\nomenclature[a1de]{$\rho$}{Densidade}%
+\nomenclature[agr]{$g$}{Aceleração da gravidade}%
 com $K_{\alpha}$, $\mu_{\alpha}$, $p_{\alpha}$ e $\rho_{\alpha}$ representando a permeabilidade efetiva, viscosidade, pressão e densidade da fase $\alpha$, ao passo que $g$ e $z$ representam a aceleração da gravidade e o deslocamento na direção da mesma, respectivamente.
 % [4] Explain better Darcies experiment and how it led to the Darcy's law. Explain also its limitation and how it has been used nowadays far beyond its original intent.
 
@@ -121,7 +126,8 @@ A equação de conservação para cada fase é descrita como em \cite{Peaceman1977}:
 -\nabla \cdot \left(\rho_{\alpha} \vec{v}_{\alpha}\right) + q_{\alpha} =
 \frac{\partial \left(\phi \rho_{\alpha} S_{\alpha}\right)}{\partial t} 
 \end{equation}
-
+\nomenclature[aqf]{$q$}{Termo fonte/sumidouro}%
+\nomenclature[ate]{$t$}{Tempo}%
 Os termos $q_{\alpha}$, $\phi$ e $t$ representam termos fontes/sumidores da fase $\alpha$ (por exemplo, poços), porosidade efetiva da rocha e o tempo, respectivamente. Além disso, se forem consideradas duas fases, uma molhante (água) e uma não-molhante (óleo), combinando as Eqs. (\ref{eq:eq_darcy_general}) e (\ref{eq:cons_eq}), e usando a definição dada na Eq. (\ref{eq:relat_perm}), é obtido o seguinte sistema de equações diferenciais parciais que resolve o problem do escoamento bifásico dadas as hipóteses já mencionadas:
 \begin{subequations} \label{eq:twophase_system}
   \begin{equation} \label{eq:twophase_systema}
@@ -176,11 +182,11 @@ p_{o} = p_{avg} + \frac{p_{c}}{2}
   \end{equation}
 \end{subequations}
 
-As mobilidades das fases são definidas como a relação entre a permeabilidade relatica e a viscosidade do fluido:
+As mobilidades das fases são definidas como a relação entre a permeabilidade relativa e a viscosidade do fluido:
 \begin{equation} \label{eq:phase_mob}
 \lambda_{\alpha} = \frac{k_{r\alpha}}{\mu_{\alpha}}
-\end{equation}
-
+\end{equation}%
+\nomenclature[a1mo]{$\lambda$}{Mobilidade}%
 Finalmente, reescrevendo a Eq. (\ref{eq:pressure_eq_form1}) utilizando pressões médias e capilares pode-se obter depois de um rearranjo dos termos a seguinte expressão:
 \begin{equation} \label{eq:pressure_eq_form2}
 \nabla \cdot \left(-K \left( \left(\lambda_{w} + \lambda{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
@@ -195,7 +201,9 @@ Calculando a velocidade a partir do grandiente de pressão obtido no passo anteri
 \begin{equation} \label{eq:sat}
 \phi \frac{\partial S}{\partial t} + f_{,S} \mathbf{u} \cdot \nabla S + \nabla \cdot 
 (\mathbf{\kappa}\lambda_{o}f(\rho_{w} - \rho_{o})\mathbf{g})=0
-\end{equation}
+\end{equation}%
+\nomenclature[aff]{$f$}{Fluxo fracional}%
+\nomenclature[afs]{$f_{,S}$}{Derivada do fluxo fracional em relação à saturação}%
 a partir de (\ref{eq:sat}) podemos derivar...
 
 \section{Sistema de Equações para Escoamento Bifásico}

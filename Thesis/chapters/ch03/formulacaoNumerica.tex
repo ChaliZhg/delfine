@@ -17,10 +17,12 @@ Antes de especificar a formulação numérica utilizada, algumas definições a respe
 
 Neste trabalho, foi feita a consideração usual adotada em problemas de reservatório de petróleo \citep{Peaceman1977, Ewing1983} de condição de fluxo zero em todas as fronteiras exteriores do domínio, isto é:
 \begin{equation} \label{noflowbc}
-\lambda K \nabla p \cdot n = 0 \quad \textrm{in $\Gamma_{N}$}
+\lambda K \nabla p \cdot \mathbi{n} = 0 \quad \textrm{in $\Gamma_{N}$}
 \end{equation}
 
-Onde $\lambda$ é a mobibilidade total, ou seja, $\lambda = \lambda_{w} + \lambda_{o}$, $p$ é a pressão média ($p = p_{avg}$) e $n$ é o vetor unitário normal aos contornos externos.
+Onde $\lambda$ é a mobibilidade total, ou seja, $\lambda = \lambda_{w} + \lambda_{o}$, $p$ é a pressão média ($p = p_{avg}$) e $\mathbi{n}$%
+\nomenclature[bnv]{$\mathbi{n}$}{Vetor normal ao contorno}
+ é o vetor unitário normal aos contornos externos.
 
 Os contornos são descritos como $\Gamma = \partial \Omega$ $= \Gamma_{I} \cup$ $\Gamma_{P} \cup$ $\Gamma_{D} \cup$ $\Gamma_{N}$, onde \citep{Carvalho2005}:
 % Talvez mudar a ordem passando a descricao acima para junto da parte de discretizacao,
@@ -34,7 +36,9 @@ Os contornos são descritos como $\Gamma = \partial \Omega$ $= \Gamma_{I} \cup$ $
 
 Usualmente, os poços são tratados como condições de contorno internas, sendo modelados através de métodos especiais para lidar com a velocidade alta nas adjacências de um poço \citep{Peaceman1977} comparada com o resto do domímio. Apesar disso, foi adotada neste trabalho uma hipótese simplificador, considerando que os poços são termos fonte/sumidouros de produção ou injeção concentrados em um único nó da malha, isto é, uma função delta de Dirac neste ponto. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão.
 
-A fim de resolver o problema utilizando o \ac{MEF}, é necessário inicialmente expressar o mesmo na chamada \emph{forma fraca}. O primeiro passo para obter esta nova formulação (também chamada de problema variacional) é multiplicar a \ac{EDP} por uma função $w$, chamada de \emph{função de teste}, em seguida o resultado é integrado no domínio $\Omega$ e finalmento uma integração por partes é efetuada nos termos com derivadas de segunda ordem \citep{Hughes2000}. A função desconhecida (pressão $p$, por exemplo) é chamada de \emph{função tentativa}. Espaços de funções apropriados devem ser definidos tanto para função de teste quanto para a função tentativa.
+A fim de resolver o problema utilizando o \ac{MEF}, é necessário inicialmente expressar o mesmo na chamada \emph{forma fraca}. O primeiro passo para obter esta nova formulação (também chamada de problema variacional) é multiplicar a \ac{EDP} por uma função $w$%
+\nomenclature[awf]{$w$}{Função de ponderação do \ac{MEF}}
+chamada de \emph{função de ponderação}, em seguida o resultado é integrado no domínio $\Omega$ e finalmento uma integração por partes é efetuada nos termos com derivadas de segunda ordem \citep{Hughes2000}. A função desconhecida (pressão $p$, por exemplo) é chamada de \emph{função tentativa}. Espaços de funções apropriados devem ser definidos tanto para função de ponderação quanto para a função tentativa.
 %Perform the steps above mentioned in a detailed step-by-step presenting the equations
 % See Fenics tutorial for reference on that
 
@@ -102,7 +106,7 @@ O \ac{MEF} de Galerkin até o momento permite obter respostas bastantes acuradas 
 
 Mesmo antes do aparecimento deste problema no contexto do \ac{MEF}, o mesmo já era bastante conhecido do estudo do \ac{MDF}, podendo ser explicado em ambos os casos pelo uso de aproximações que se baseiam no uso de discretizações centradas, ou seja, quando as contribuições vindo de todas as direções possuem o mesmo peso na solução. Inicialmente, uma das técnicas para se contornar este tipo de problema era adicionar um termo artificial de difusão diretamente nas \ac{EDP}s que se desejava aproximar \citep{Papastavrou1998}. Todavia, esta técnica apresenta a desvantagem fundamental de alterar a descrição matemática do problema, ocasionando assim uma perda de consistência, já que mesmo que se utilize uma discretização tendendo ao contínuo, continuaria-se obtendo uma resposta que não tenderia à analítica.
 
-Uma solução proposta no contexto do \ac{MDF} consiste na ponderação da solução com um peso maior para a informação que segue a direção do fluxo (esta técnica é comumente conhecida como \emph{Upwinding}). No caso do \ac{MEF}, (CITAR HUGHES) propuseram um método no qual a função de teste não mais corresponde à função de forma do elemento utilizado (ou seja, um método do tipo Petrov-Galerkin), sendo adicionado um termo de caráter difusivo que atua apenas na direção da linha de fluxo. Este método, o qual se tornou conhecido pelo nome de \ac{SUPG} foi extensamente utilizado na literatura para várias aplicações, inclusive na resolução da equação de saturação em escoamentos multifásicos (CITAR PAPER CATABRIGA E COUTINHO E ETC.). Uma representação gráfica desta função de teste pode ser vista na Fig. \ref{fig:supgweightfunc}, sendo que na Eq. (\ref{eq:supgweight}) é apresentada a forma matemática desta função.
+Uma solução proposta no contexto do \ac{MDF} consiste na ponderação da solução com um peso maior para a informação que segue a direção do fluxo (esta técnica é comumente conhecida como \emph{Upwinding}). No caso do \ac{MEF}, (CITAR HUGHES) propuseram um método no qual a função de ponderação não mais corresponde à função de forma do elemento utilizado (ou seja, um método do tipo Petrov-Galerkin), sendo adicionado um termo de caráter difusivo que atua apenas na direção da linha de fluxo. Este método, o qual se tornou conhecido pelo nome de \ac{SUPG} foi extensamente utilizado na literatura para várias aplicações, inclusive na resolução da equação de saturação em escoamentos multifásicos (CITAR PAPER CATABRIGA E COUTINHO E ETC.). Uma representação gráfica desta função de ponderação pode ser vista na Fig. \ref{fig:supgweightfunc}, sendo que na Eq. (\ref{eq:supgweight}) é apresentada a forma matemática desta função.
 % FIGURA ADAPTADA DE PAPASTAVROU
 % EQ GERAL PARA FUNCAO PONDERACAO MODIFICADA NO SUPG
 \begin{figure} 
@@ -116,7 +120,7 @@ Uma solução proposta no contexto do \ac{MDF} consiste na ponderação da solução c
 w = v + \delta \mathbf{u} \cdot \nabla v
 \end{equation}
 
-Uma vez definida tal função, basta aplicar um procedimento semelhante ao utilizado para a discretização pelo Método de Galerkin, onde se integra a Eq. (CITAR EQ. SATURACAO), porém a multiplicação é pela função de teste modificada (CITAR EQ. DO PARAG. ANTERIOR) para se obter, de modo totalmente consistente, a seguinte forma variacional para o problema da equação de saturação:
+Uma vez definida tal função, basta aplicar um procedimento semelhante ao utilizado para a discretização pelo Método de Galerkin, onde se integra a Eq. (CITAR EQ. SATURACAO), porém a multiplicação é pela função de ponderação modificada (CITAR EQ. DO PARAG. ANTERIOR) para se obter, de modo totalmente consistente, a seguinte forma variacional para o problema da equação de saturação:
 % DERIVACAO DO PROBLEMA NA FORMA FRACA PARA SATURACAO. USAR TEMPLATE DE PROBLEM.
 
 A consistência da formulação utilizada é garantida pelo fato do termo adicionado ser diretamente proporcional ao resíduo da solução, o qual tende a zero para a resposta exata, cancelando portanto qualquer difusão que poderia ser adicionada.
@@ -147,28 +151,36 @@ Matematicamente, ambas as abordagens podem ser descritas aproximadamente do mesm
 
 Considere o sistema de equações no nível mais refinado:
 \begin{equation} \label{eq:mg1}
-A_{f}p_{f} = f_{f}
+\mathbi{A}_{f}p_{f} = \mathbi{f}_{f}
 \end{equation}
-onde $A_{f}$ é a matriz resultante do procedimento descrito na seção \ref{sc:fem} e o subíndice $f$ representa valores no nível refinado. Depois de efetuadas algumas iterações com um método de relaxação, o erro estará suavizado e seu resídual $r_{h}$ será: 
+onde $\mathbi{A}_{f}$%
+\nomenclature[cam]{$\mathbi{A}$}{Matriz resultante da discretização via \ac{MEF}}%
+\nomenclature[bfc]{$\mathbi{f}$}{Vetor de carregamentos}%
+\nomenclature[df]{$f$}{Relativo ao nível refinado}
+ é a matriz resultante do procedimento descrito na seção \ref{sc:fem} e o subíndice $f$ representa valores no nível refinado. Depois de efetuadas algumas iterações com um método de relaxação, o erro estará suavizado e seu resíduo $r_{h}$ %
+\nomenclature[are]{$r$}{Resíduo da solução aproximada}%
+será: 
 \begin{equation} \label{eq:mg2}
-A_{f}\hat{p_{f}} - f_{f} = r_{h}
+\mathbi{A}_{f}\hat{p_{f}} - \mathbi{f}_{f} = r_{h}
 \end{equation}
 onde  $\hat{p_{f}}$ é a solução estimada para a variável de interesse. Subtraindo a Eq. (\ref{eq:mg2}) da Eq. (\ref{eq:mg1}) resulta:
 \begin{equation} \label{eq:mg3}
-A_{f}p_{f} - A_{f}\hat{p_{f}}= - r_{h}
+\mathbi{A}_{f}p_{f} - \mathbi{A}_{f}\hat{p_{f}}= - r_{h}
 \end{equation}
 e se o operador $A_{h}$ for linear, esta equação pode ser apresentada como a equação de correção:
 \begin{equation} \label{eq:mg4}
-A_{f}\Delta p_{f}= - r_{h}
+\mathbi{A}_{f}\Delta p_{f}= - r_{h}
 \end{equation}
 
 Assumindo, como já mencionado, que os modos de alta frequência do erro foram amortecidos depois da relaxação no nível mais refinado, o erro reminiscente irá conter basicamente modos de baixa frequência que devem ser resolvidos, mas de modo a alcançar tal objetivo é necessário restringir tais modos ao nível grosseiro, onde os mesmos irão se comportar como modos de alta frequência, ou seja:
 \begin{equation} \label{eq:mg5}
-A_{c}\Delta p_{c}= - I_{f}^{c}r_{f}
+\mathbi{A}_{c}\Delta p_{c}= - \mathbi{I}_{f}^{c}r_{f}
 \end{equation}
-Na Eq. (\ref{eq:mg5}) $I_{f}^{c}$ representa o operador de restrição, o qual transfere valores do resíduo do nível refinado $f$ para o nível grosseiro $c$. Uma vez que a Eq. \ref{eq:mg5} é resolvida adequadamente (frequentemente um resolvedor direto será suficiente, já que este nível apresenta menores exigência de processamento e armazenamento), sua solução pode ser interpolada de volta para o nível refinado usando um operador de prolongamento $I_{c}^{f}$ e a aproximação original no nível refinado pode então ser corrigida:
+Na Eq. (\ref{eq:mg5}) $\mathbi{I}_{f}^{c}$%
+\nomenclature[cio]{$\mathbi{I}$}{Operador de transferência entre níveis}%
+ representa o operador de restrição, o qual transfere valores do resíduo do nível refinado $f$ para o nível grosseiro $c$. Uma vez que a Eq. \ref{eq:mg5} é resolvida adequadamente (frequentemente um resolvedor direto será suficiente, já que este nível apresenta menores exigência de processamento e armazenamento), sua solução pode ser interpolada de volta para o nível refinado usando um operador de prolongamento $\mathbi{I}_{c}^{f}$ e a aproximação original no nível refinado pode então ser corrigida:
 \begin{equation} \label{eq:mg6}
-\hat{p_{f}^{\phantom{.}\ast}} = \hat{p_{f}} + I_{c}^{f} \Delta p_{c}
+\hat{p_{f}^{\phantom{.}\ast}} = \hat{p_{f}} + \mathbi{I}_{c}^{f} \Delta p_{c}
 \end{equation}
 onde $\hat{p_{f}^{\phantom{.}\ast}}$ é a solução atualizada no nível refinado. É importante observar que este procedimento é intrinsecamente recursivo, podendo o sistema no nível grosseiro ser visto como um novo nível refinado, sendo suavizado novamente até que seja atingido um nível no qual as contribuições das correções nos níveis grosseiros seja trazidas de volta para os seus respectivos níveis refinados. Existem diversos tipos de esquemas para lidar com esta estratégia, entre eles estão os ciclos V, W e F. A Fig. \ref{fig:mgcycles} mostra uma representação gráfica destes ciclos em um esquema Multigrid de 4 níveis, ver \cite{Briggs2000} ou \cite{Trottenberg2001} para uma explicação mais detalhada de cada um destes ciclos.
 % Keep the references, but explain in the thesis also much more about the cycles (see Sorensen for examples, has also some
