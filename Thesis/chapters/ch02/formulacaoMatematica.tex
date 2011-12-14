@@ -192,11 +192,16 @@ As mobilidades das fases são definidas como a relação entre a permeabilidade rel
 \nomenclature[a1mo]{$\lambda$}{Mobilidade}%
 Finalmente, reescrevendo a Eq. (\ref{eq:pressure_eq_form1}) utilizando pressões médias e capilares pode-se obter depois de um rearranjo dos termos a seguinte expressão:
 \begin{equation} \label{eq:pressure_eq_form2}
-\nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
+\nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
 \left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = q_{t}
 \end{equation}
 
-Logo, pode ser claramente observado que a Eq. (\ref{eq:pressure_eq_form2}), considerando as hipóteses feitas, tem uma natureza elíptica. A equação de saturação pode ser deduzida usando uma manipulação algébrica similar para completar o modelo acoplado de pressão-saturação para um escoamento bifásico água-óleo em meios porosos conforme mostraremos nas próximas sessões.
+Logo, pode ser claramente observado que a Eq. (\ref{eq:pressure_eq_form2}), considerando as hipóteses feitas, tem uma natureza elíptica. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão. A forma simplificada da equação de pressão pode ser apresentada como:
+\begin{equation} \label{eq:pressure_eq_form3}
+\nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} \right) \right) = q_{t}
+\end{equation}
+
+A equação de saturação pode ser deduzida usando uma manipulação algébrica similar para completar o modelo acoplado de pressão-saturação para um escoamento bifásico água-óleo em meios porosos conforme mostraremos nas próximas sessões.
 
 \section{Equação da Saturação}
 \label{sc:eq_sat}
@@ -212,4 +217,48 @@ a partir de (\ref{eq:sat}) podemos derivar...
 O capítulo \ref{ch:form_num} apresenta métodos para resolver de forma aproximada este tipo de equação.
 \section{Sistema de Equações para Escoamento Bifásico}
 \section{Condições Iniciais e de Contorno}
+\label{sc:cond_ini_bc}
+% Garcia / Chen / Shan / Comentarios Ewing
+Antes de especificar a formulação numérica utilizada, algumas definições a respeito das condições iniciais, de contorno e hipóteses simplificadoras têm que ser discutidas para tornar o problema abordado completamente determinado.
 
+Os contornos são descritos como $\Gamma = \partial \Omega$ $= \Gamma_{I} \cup$ $\Gamma_{P} \cup$ $\Gamma_{D} \cup$ $\Gamma_{N}$%
+\nomenclature[e1g]{$\Gamma$}{Contorno do domínio $\Omega$}%
+\nomenclature[e1o]{$\Omega$}{Domínio espacial do problema}
+, onde \citep{Carvalho2005}:
+% Talvez mudar a ordem passando a descricao acima para junto da parte de discretizacao,
+% comecando portanto apenas com a parte referente a formulacao fraca 'analitica'
+\begin{itemize}
+\item $\Gamma_{I}$ = Poços injetores;
+\item $\Gamma_{P}$ = Poços produtores;
+\item $\Gamma_{D}$ = Condição de contorno de Dirichlet (Variável prescrita);
+\item $\Gamma_{N}$ = Condição de contorno de Neumman (Fluxo prescrito).
+\end{itemize}
+
+Usualmente, os poços são tratados como condições de contorno internas, sendo modelados através de métodos especiais para lidar com a velocidade alta nas adjacências de um poço \citep{Peaceman1977} comparada com o resto do domímio. Apesar disso, foi adotada neste trabalho uma hipótese simplificadora, considerando que os poços são termos fonte/sumidouros de produção ou injeção concentrados em um único nó da malha, isto é, uma função delta de Dirac neste ponto.
+
+Neste trabalho, foi feita a consideração usual adotada em problemas de reservatório de petróleo \citep{Peaceman1977, Ewing1983} de condição de fluxo zero em todas as fronteiras exteriores do domínio, isto é:
+\begin{equation} \label{eq:noflowbc}
+\lambda K \nabla p \cdot \mathbi{n} = 0 \quad \textrm{em $\Gamma_{N}$}
+\end{equation}
+onde $\lambda$ é a mobibilidade total, ou seja, $\lambda = \lambda_{w} + \lambda_{o}$, $p$ é a pressão média ($p = p_{avg}$) e $\mathbi{n}$%
+\nomenclature[bnv]{$\mathbi{n}$}{Vetor normal ao contorno}
+ é o vetor unitário normal aos contornos externos.
+ 
+Logo, assumindo que a transferência de massa entre o reservatório e o meio externo se dará apenas pelos poços injetores e produtores, temos:
+\begin{equation} \label{eq:wellbc}
+\left. \begin{array}{lll}
+\mathbi{v}_{\alpha} \cdot \mathbi{n} = q^{I}_{\alpha} \quad \textrm{ou} \quad p(\mathbi{x},t) = p^{I} \quad \textrm{em $\Gamma_{I}$} \\
+\mathbi{v}_{\alpha} \cdot \mathbi{n} = q^{P}_{\alpha} \quad \textrm{ou} \quad p(\mathbi{x},t) = p^{P} \quad \textrm{em $\Gamma_{P}$} \\
+\end{array} \right.
+\end{equation}
+onde $q_{I}_{\alpha}$ e $q_{P}_{\alpha}$ representam as vazões volumétricas da fase $\alpha$ nos poços injetores e produtores, respectivamente.
+
+
+As condições inicial e de contorno para a equação de saturação são:
+\begin{equation} \label{eq:satinibc}
+\left. \begin{array}{lll}
+S_{w}(\mathbi{x},0) = S^{t=0}_{w} \quad \textrm{em $\Omega$} \\
+S_{w}(\mathbi{x},t) = S^{I}_{w} \quad \textrm{em $\Gamma_{I}$} \\
+\mathbi{K} \nabla S_{w}(\mathbi{x},t) \cdot \mathbi{n} = 0 \quad \textrm{em $\Gamma_{N}$}\\
+\end{array} \right.
+\end{equation}

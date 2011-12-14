@@ -1,51 +1,22 @@
 \chapter{Formulação Numérica}
 \label{ch:form_num}
 
-% Short comparison FEM and FDM(Papasta)
-A ideia básica de praticamente todos os métodos numéricos para a solução de \ac{EDP} é a discretização de um problema contínuo com infinitos graus de liberdade (DOFs) e desse modo redução para um número finito de DOFs. Este problema discreto resulta em um sistema de equações com um número finito de variáveis, o qual normalmente pode ser resolvido utilizando um método adequado (ver seção \ref{sc:multigrid} para detalhes) \citep{Chen2006}.
+A ideia básica de praticamente todos os métodos numéricos para a solução de \ac{EDP}s é a discretização de um problema contínuo com infinitos graus de liberdade (DOFs) e desse modo redução para um número finito de DOFs. Este problema discreto resulta em um sistema de equações com um número finito de variáveis, o qual normalmente pode ser resolvido utilizando um método adequado (ver seção \ref{sc:multigrid} para detalhes) \citep{Chen2006}.
 
-No \ac{MDF}, o qual ainda é o padrão na simulação numérica de reservatórios, as derivadas das equações originais são simplesmente substituídas por quocientes de diferenças. Os valores das variáveis são definidos apenas por um número específico de pontos, os quais podem estar localizados tanto nos cantos quanto no interior das células \citep{Fortuna2000}.
+No \acf{MDF}, o qual ainda é o padrão na simulação numérica de reservatórios, as derivadas das equações originais são simplesmente substituídas por quocientes de diferenças. Os valores das variáveis são definidos apenas por um número específico de pontos, os quais podem estar localizados nos vértices ou no interior das células \citep{Fortuna2000}.
 
-O processo de discretização no caso do \ac{MEF} é diferente na medida em que ele requer a reformulação das \ac{EDP}s em uma forma variacional equivalente. As variáveis desconhecidas, neste caso a pressão e a saturação, são descritas em cada ponto da região usando uma função de interpolação. Os pontos de suporte para estas funções são os nós da malha, os quais são conectados para formar os elementos.
+O processo de discretização no caso do \ac{MEF} é diferente na medida em que ele requer a reformulação das \ac{EDP}s em uma forma variacional equivalente. As variáveis desconhecidas são a pressão e saturação (além da velocidade, para formulações mistas) são descritas em cada ponto da região usando uma função de interpolação. Os pontos de suporte para estas funções são os nós da malha, os quais são conectados para formar os elementos.
 
-Neste trabalho, foram experimentados tanto o clássico Método de Elementos Finitos de Galerkin quanto uma formulação dos Métodos dos Elementos Finitos Mistos para resolver a equação de pressão \ref{sc:press_eq}. Estas metodologias são discutidas nas seções subsequentes e referências são citadas para informações adicionais.
-% Add after the information that we are also going to have a formulation for the saturation equation (SUPG until now) and that these are a % coupled through a numerical methodology (the IMPES formulation)
+Neste trabalho, foram experimentados tanto o clássico Método de Elementos Finitos de Galerkin quanto uma formulação dos Métodos dos Elementos Finitos Mistos para resolver a equação da pressão descrita na seção \ref{sc:press_eq}. Para a resolução da equação da saturação (ver seção \ref{sc:eq_sat}) foi utilizado o \ac{MEF} acrescido de um termo de estabilização do tipo \ac{SUPG}. Os resultados destas equações foram acoplados através de um método Sequencial Implícito. Estas metodologias são discutidas nas seções subsequentes e referências são citadas para informações adicionais.
 
 \section{Método dos Elementos Finitos de Galerkin} \label{sc:fem}
-% Garcia / Chen / Shan / Comentarios Ewing
-Antes de especificar a formulação numérica utilizada, algumas definições a respeito das condições de contorno e hipóteses simplificadoras têm que ser discutidas.
-
-Neste trabalho, foi feita a consideração usual adotada em problemas de reservatório de petróleo \citep{Peaceman1977, Ewing1983} de condição de fluxo zero em todas as fronteiras exteriores do domínio, isto é:
-\begin{equation} \label{noflowbc}
-\lambda K \nabla p \cdot \mathbi{n} = 0 \quad \textrm{em $\Gamma_{N}$}
-\end{equation}
-
-Onde $\lambda$ é a mobibilidade total, ou seja, $\lambda = \lambda_{w} + \lambda_{o}$, $p$ é a pressão média ($p = p_{avg}$) e $\mathbi{n}$%
-\nomenclature[bnv]{$\mathbi{n}$}{Vetor normal ao contorno}
- é o vetor unitário normal aos contornos externos.
-
-Os contornos são descritos como $\Gamma = \partial \Omega$ $= \Gamma_{I} \cup$ $\Gamma_{P} \cup$ $\Gamma_{D} \cup$ $\Gamma_{N}$%
-\nomenclature[e1g]{$\Gamma$}{Contorno do domínio $\Omega$}%
-\nomenclature[e1o]{$\Omega$}{Domínio espacial do problema}
-, onde \citep{Carvalho2005}:
-% Talvez mudar a ordem passando a descricao acima para junto da parte de discretizacao,
-% comecando portanto apenas com a parte referente a formulacao fraca 'analitica'
-\begin{itemize}
-\item $\Gamma_{I}$ = Poços injetores;
-\item $\Gamma_{P}$ = Poços produtores;
-\item $\Gamma_{D}$ = Condição de contorno de Dirichlet (Variável prescrita);
-\item $\Gamma_{N}$ = Condição de contorno de Neumman (Fluxo prescrito).
-\end{itemize}
-
-Usualmente, os poços são tratados como condições de contorno internas, sendo modelados através de métodos especiais para lidar com a velocidade alta nas adjacências de um poço \citep{Peaceman1977} comparada com o resto do domímio. Apesar disso, foi adotada neste trabalho uma hipótese simplificador, considerando que os poços são termos fonte/sumidouros de produção ou injeção concentrados em um único nó da malha, isto é, uma função delta de Dirac neste ponto. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão.
-
-A fim de resolver o problema utilizando o \ac{MEF}, é necessário inicialmente expressar o mesmo na chamada \emph{forma fraca}. O primeiro passo para obter esta nova formulação (também chamada de problema variacional) é multiplicar a \ac{EDP} por uma função $w$%
+A fim de resolver o problema da equação da pressão utilizando o \ac{MEF}, é necessário inicialmente expressar o mesmo na chamada \emph{forma fraca}. O primeiro passo para obter esta nova formulação (também chamada de problema variacional) é multiplicar a \ac{EDP} por uma função $w$%
 \nomenclature[awf]{$w$}{Função de ponderação do \ac{MEF}}
-chamada de \emph{função de ponderação}, em seguida o resultado é integrado no domínio $\Omega$ e finalmento uma integração por partes é efetuada nos termos com derivadas de segunda ordem \citep{Hughes2000}. A função desconhecida (pressão $p$, por exemplo) é chamada de \emph{função tentativa}. Espaços de funções apropriados devem ser definidos tanto para função de ponderação quanto para a função tentativa.
+chamada de \emph{função de ponderação}, em seguida o resultado é integrado no domínio $\Omega$ e finalmente uma integração por partes é efetuada nos termos com derivadas de segunda ordem \citep{Hughes2000}. A função desconhecida (pressão $p$, por exemplo) é chamada de \emph{função tentativa}. Espaços de funções apropriados devem ser definidos tanto para função de ponderação quanto para a função tentativa.
 %Perform the steps above mentioned in a detailed step-by-step presenting the equations
 % See Fenics tutorial for reference on that
 
-O problema variacional para a Eq. (\ref{eq:pressure_eq_form2}) considerando todas as hipóteses mencionadas tem a seguinte forma:
+O problema variacional para a Eq. (\ref{eq:pressure_eq_form3}) considerando todas as hipóteses mencionadas tem a seguinte forma:
 \begin{problem} [Contínuo]
 Encontre $p$ $\in$ $P$%
 \nomenclature[ep]{$P$}{Espaço das funções tentativa para a formulação de Galerkin}
@@ -56,16 +27,16 @@ A(p,w) = f(w) \quad \forall w \in W
 \nomenclature[ew]{$W$}{Espaço das funções de ponderação para a formulação de Galerkin}%
 com
 \begin{equation} \label{eq:funcspace1}
-P = \{ p \in H^{1}(\Omega), \textrm{$p = p_{D}$ em $\Gamma$} \}  
+P = \{ p \in H^{1}(\Omega), \textrm{$p = p_{D}$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:funcspace2}
-W = \{ w \in H^{1}(\Omega), \textrm{$w = 0$ em $\Gamma$} \}  
+W = \{ w \in H^{1}(\Omega), \textrm{$w = 0$ em $\Gamma_{N}$} \}  
 \end{equation}
 \begin{equation} \label{eq:bilinearform}
 A(p,w) = \int_{\Omega} \lambda K \nabla p \cdot \nabla w d \Omega \quad \forall p,w \in P,W
 \end{equation}
 \begin{equation} \label{eq:linearform}
-f(w) = \int_{\Omega} Q_{t}w d \Omega \quad \forall w \in W
+f(w) = \int_{\Omega} q_{t}w d \Omega \quad \forall w \in W
 \end{equation}
 \end{problem}
 onde $p_{D}$ é o valor prescrito de $p$ nos contornos de Dirichlet e $H^{1}$%
@@ -75,7 +46,7 @@ onde $p_{D}$ é o valor prescrito de $p$ nos contornos de Dirichlet e $H^{1}$%
 A existência e unicidade da solução deste problema é dada pelo lema de Lax e seu detalhamento completo pode ser encontrado em \cite{Garcia1997}.
 
 % Verify the statement about the velocity on well region and the assumptions made for simplification.
-Para a análise via elementos finitos deste problema variacional, é necessário transformar este formulação contínua definida pela Eq. (\ref{eq:variational}) em um problema discreto. Considere o domínio $\Omega$, o qual é discretizado por $N$ elementos não sobrepostos $E_{i}$ de modo que $\Omega_{h} = \bigcup_{i=1}^{N}E_{i}$ e $E_{i} \cap E_{j} = \emptyset, i \not = j$, onde o subíndice $h$ denota um parâmetro de tamanho de malha que representa o problema discretizado.
+Para a análise via elementos finitos deste problema variacional, é necessário transformar esta formulação contínua definida pela Eq. (\ref{eq:variational}) em um problema discreto. Considere o domínio $\Omega$, o qual é discretizado por $N$ elementos não sobrepostos $E_{i}$ de modo que $\Omega_{h} = \bigcup_{i=1}^{N}E_{i}$ e $E_{i} \cap E_{j} = \emptyset, i \not = j$, onde o subíndice $h$ denota um parâmetro de tamanho característico de malha que representa o problema discretizado.
 
 O problema variacional discreto para a equação de pressão utilizando a abordagem clássica de Galerkin descrita em \citep{Hughes2000} e adotada em \citep{Wells2008, Barbosa2009} é:
 \begin{problem} [Discreto]
@@ -85,10 +56,10 @@ A(p_{h},w_{h}) = f(w_{h}) \quad \forall w_{h} \in W_{h}
 \end{equation}
 com
 \begin{equation} \label{eq:funcspace1h}
-P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}), p_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$p_{h} = p_{d}$ em $\Gamma$} \}  
+P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}), p_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$p_{h} = p_{D}$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:funcspace2h}
-W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}), w_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$w_{h} = 0$ em $\Gamma$} \}  
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}), w_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
 \end{equation}
 \begin{equation} \label{eq:bilinearformh}
 A(p_{h},w_{h}) = \int_{\Omega_{h}} \lambda K \nabla p_{h} \cdot \nabla w_{h} d \Omega \quad \forall p_{h},w_{h} \in P_{h},W_{h}
@@ -139,14 +110,14 @@ O termo $\delta$ é chamado de parâmetro de estabilização, sendo que existem dive
 
 \section{Multigrid} \label{sc:multigrid}
 % Relatorios de IC / Trottenberg/ Briggs / Mavriplis
-A ideia básica dos métodos Multigrid é acelerar a solução de sistemas de equações em uma malha fina usando correções caculadas em uma malha grosseira. A motivação para esta abordagem vem da observação de que o comportamento do erro da solução numérica no domínio da frequência. Erros de alta frequência, os quais estão associados à variações locais da solução, são bem resolvidos por métodos iterativos convencionais (Gauss-Seidel, Gradientes Conjugados, etc.). Entretanto, erros de baixa frequência, associados à variação global das soluções, são muito mais insensíveis a esses métodos.
+A ideia básica dos métodos Multigrid é acelerar a solução de sistemas de equações em uma malha fina usando correções caculadas em uma malha grosseira. A motivação para esta abordagem vem da observação do comportamento do erro da solução numérica no domínio da frequência. Erros de alta frequência, os quais estão associados à variações locais da solução, são bem resolvidos por métodos iterativos convencionais (Gauss-Seidel, Gradientes Conjugados, etc.). Entretanto, erros de baixa frequência, associados à variação global das soluções, são muito mais insensíveis a esses métodos.
 
-Um esquema Multigrid começa amortecendo os erros de alta frequência associados à solução inicial na malha fina, usando algum tipo de método de relaxação (usualmente um método iterativo que seria usado isoladamente). Uma vez atingido este objetivo inicial, efetuar mais iterações iria apenas resultas em uma pior convergência. Sendo assim, o resíduo é transferido para uma malha grosseira, onde os modos de baixa frequência da malha fina se comportam com de alta frequência, sendo portanto facilmente eliminados usando algum tipo de método direto, no caso da malha ser grosseira o suficiente, ou mesmo usando o mesmo método de relaxação aplicado na malha mais fina. As correções são então calculadas na malha grosseira e transferidos de volta para a malha fina de modo a atualizar a solução. Este procedimento pode ser aplicado recursivamente em uma sequência de malhas cada vez mais grosseiras, a fim de que cada nível nesta hierarquia seja responsável pela eliminação de uma faixa de frequência de erro \citep{Briggs2000}. 
+Um esquema Multigrid começa amortecendo os erros de alta frequência associados à solução inicial na malha fina, usando algum tipo de método de relaxação (usualmente um método iterativo que seria usado isoladamente). Uma vez atingido este objetivo inicial, efetuar mais iterações iria apenas resultar em uma pior convergência. Sendo assim, o resíduo é transferido para uma malha grosseira, onde os modos de baixa frequência da malha fina se comportam como de alta frequência, sendo, portanto, facilmente eliminados usando algum tipo de método direto, no caso da malha ser grosseira o suficiente, ou mesmo usando o mesmo método de relaxação aplicado na malha mais fina. As correções são então calculadas na malha grosseira e transferidos de volta para a malha fina de modo a atualizar a solução. Este procedimento pode ser aplicado recursivamente em uma sequência de malhas cada vez mais grosseiras, a fim de que cada nível nesta hierarquia seja responsável pela eliminação de uma faixa de frequência de erro \citep{Briggs2000}. 
 % 1- Explicar matematica do multigrid (Relatorio IC) 2 - Explicar GMGxAMG e AMG(Sorensen / Trottenberg)!!
 
 Existem dois tipos principais de método Multigrid: o \ac{GMG}, o qual trabalha diretamente nas malhas que representam o domínio discreto, e o Multigrid Algébrico (AMG), o qual opera apenas no sistema de equações lineares resultantes da aplicação de uma formulação numérica, não tendo portanto uma interpretação geométrica direta.
 
-A maior motivação para o desenvolvimento do \ac{AMG} foi a necessidade de métodos robustos e flexíveis para acelerar a convergência sem a exigência de calibração fina para cada problema, como é frequentemente o caso para métodos \ac{GMG}, o qual requer atenção especial na geração da sequência de malhas grosseiras, principalmente na presença de geometrias complexas \citep{Trottenberg2001}. Esta robustez é alcançada porque o \ac{AMG} conta com um processo totalmente automático de engrossamento que pode agir apenas nas direções nas quais a relaxação irá efetivamente suavizar o erro para o problema dado, enquanto o \ac{GMG} requer uma hierarquia fixa pré-determinada antes de começar o ciclo. A Fig. \ref{fig:gmgxamg} apresenta uma comparação gráfica destes dois métodos.
+A maior motivação para o desenvolvimento do \ac{AMG} foi a necessidade de métodos robustos e flexíveis para acelerar a convergência sem a exigência de calibração fina para cada problema, como é frequentemente o caso para métodos \ac{GMG}, o qual requer atenção especial na geração da sequência de malhas grosseiras, principalmente na presença de geometrias complexas \citep{Trottenberg2001}. Esta robustez é alcançada porque o \ac{AMG} conta com um processo totalmente automático para gerar os ``subproblemas'' mais grosseiros, o qual pode agir apenas nas direções nas quais a relaxação irá efetivamente suavizar o erro para o problema dado, enquanto o \ac{GMG} requer uma hierarquia fixa pré-determinada antes de começar o ciclo. A Fig. \ref{fig:gmgxamg} apresenta uma comparação gráfica destes dois métodos.
 
 \begin{figure} 
 \centering
@@ -165,7 +136,7 @@ onde $\mathbi{A}_{f}$%
 \nomenclature[cam]{$\mathbi{A}$}{Matriz resultante da discretização via \ac{MEF}}%
 \nomenclature[bfc]{$\mathbi{f}$}{Vetor de carregamentos}%
 \nomenclature[df]{$f$}{Relativo ao nível mais refinado}
- é a matriz resultante do procedimento descrito na seção \ref{sc:fem} e o subíndice $f$ representa valores no nível refinado. Depois de efetuadas algumas iterações com um método de relaxação, o erro estará suavizado e seu resíduo $r_{h}$ %
+ é a matriz resultante dos procedimentos descritos na seções \ref{sc:fem} a \ref{sc:supg} e o subíndice $f$ representa valores no nível refinado. Depois de efetuadas algumas iterações com um método de relaxação, o erro estará suavizado e seu resíduo $r_{h}$ %
 \nomenclature[are]{$r$}{Resíduo da solução aproximada}%
 será: 
 \begin{equation} \label{eq:mg2}
@@ -180,7 +151,7 @@ e se o operador $\mathbi{A}$ for linear, esta equação pode ser apresentada como 
 \mathbi{A}_{f}\Delta p_{f}= - r_{f}
 \end{equation}
 
-Assumindo, como já mencionado, que os modos de alta frequência do erro foram amortecidos depois da relaxação no nível mais refinado, o erro reminiscente irá conter basicamente modos de baixa frequência que devem ser resolvidos, mas de modo a alcançar tal objetivo é necessário restringir tais modos ao nível grosseiro, onde os mesmos irão se comportar como modos de alta frequência, ou seja:
+Assumindo, como já mencionado, que os modos de alta frequência do erro foram amortecidos depois da relaxação no nível mais refinado, o erro remanescente irá conter basicamente modos de baixa frequência que devem ser resolvidos, mas de modo a alcançar tal objetivo é necessário restringir tais modos ao nível grosseiro, onde os mesmos irão se comportar como modos de alta frequência, ou seja:
 \begin{equation} \label{eq:mg5}
 \mathbi{A}_{c}\Delta p_{c}= - \mathbi{I}_{f}^{c}r_{f}
 \end{equation}
@@ -188,11 +159,11 @@ Na Eq. (\ref{eq:mg5}) $\mathbi{I}_{f}^{c}$ %
 \nomenclature[cio]{$\mathbi{I}$}{Operador de transferência entre níveis}%
 representa o operador de restrição, o qual transfere valores do resíduo do nível refinado $f$ para o nível grosseiro $c$%
 \nomenclature[dc]{$c$}{Relativo ao nível menos refinado}
-. Uma vez que a Eq. \ref{eq:mg5} é resolvida adequadamente (frequentemente um resolvedor direto será suficiente, já que este nível apresenta menores exigência de processamento e armazenamento), sua solução pode ser interpolada de volta para o nível refinado usando um operador de prolongamento $\mathbi{I}_{c}^{f}$ e a aproximação original no nível refinado pode então ser corrigida:
+. Uma vez que a Eq. (\ref{eq:mg5}) é resolvida adequadamente (frequentemente, se o nível for muito grosseiro, um resolvedor direto será suficiente, já que este nível apresenta menores exigência de processamento e armazenamento), sua solução pode ser interpolada de volta para o nível refinado usando um operador de prolongamento $\mathbi{I}_{c}^{f}$ e a aproximação original no nível refinado pode então ser corrigida:
 \begin{equation} \label{eq:mg6}
 \hat{p_{f}^{\phantom{.}\ast}} = \hat{p_{f}} + \mathbi{I}_{c}^{f} \Delta p_{c}
 \end{equation}
-onde $\hat{p_{f}^{\phantom{.}\ast}}$ é a solução atualizada no nível refinado. É importante observar que este procedimento é intrinsecamente recursivo, podendo o sistema no nível grosseiro ser visto como um novo nível refinado, sendo suavizado novamente até que seja atingido um nível no qual as contribuições das correções nos níveis grosseiros seja trazidas de volta para os seus respectivos níveis refinados. Existem diversos tipos de esquemas para lidar com esta estratégia, entre eles estão os ciclos V, W e F. A Fig. \ref{fig:mgcycles} mostra uma representação gráfica destes ciclos em um esquema Multigrid de 4 níveis, ver \cite{Briggs2000} ou \cite{Trottenberg2001} para uma explicação mais detalhada de cada um destes ciclos.
+onde $\hat{p_{f}^{\phantom{.}\ast}}$ é a solução atualizada no nível refinado. É importante observar que este procedimento é intrinsecamente recursivo, podendo o sistema no nível grosseiro ser visto como um novo nível refinado, sendo suavizado novamente até que seja atingido um nível no qual as contribuições das correções nos níveis grosseiros sejam trazidas de volta para os seus respectivos níveis refinados. Existem diversos tipos de esquemas para lidar com esta estratégia, entre eles estão os ciclos V, W e F. A Fig. \ref{fig:mgcycles} mostra uma representação gráfica destes ciclos em um esquema Multigrid de 4 níveis, ver \cite{Briggs2000} ou \cite{Trottenberg2001} para uma explicação mais detalhada de cada um destes ciclos.
 % Keep the references, but explain in the thesis also much more about the cycles (see Sorensen for examples, has also some
 % estimation of computing and storage requirements for each cycle).
 

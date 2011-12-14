@@ -1,7 +1,7 @@
 \chapter{Implementação Computacional}
 \label{ch:implementacao}
 
-Todas as formulações, tanto matemática quanto numéricas, utilizadas neste trabalho apresentam grandes desafios, não apenas no que tange a compreensão teórica, mas também em relação ao desenvolvimento propriamente dito do software, já que é de fundamental importância uma implementação adequada destes métodos a fim de se atingir um compromisso vantajoso entre generalidade e performance computacional, pois este dois objetivos frequentemente tendem a conduzir as diretivas de codificação do programa para direções diferentes.
+Todas as formulações, tanto matemática quanto numéricas, utilizadas neste trabalho apresentam grandes desafios, não apenas no que tange à compreensão teórica, mas também em relação ao desenvolvimento propriamente dito do software, já que é de fundamental importância uma implementação adequada destes métodos a fim de se atingir um compromisso vantajoso entre generalidade e desempenho computacional, pois este dois objetivos frequentemente tendem a conduzir as diretivas de codificação do programa para direções diferentes.
 
 Este capítulo se propõe a apresentar o modo como o programa de computador resultante deste trabalho foi elaborado, sendo que para isto foi adotada uma descrição \emph{top-down}, ou seja, primeiramente são expostas as características gerais do programa e em seguida as divisões do mesmo em diferentes blocos que permitem uma melhor abordagem do problema. Cada um destes blocos é então subdivido em partes menores, as quais correspondem a tarefas específicas, que podem ter suas soluções diretamente codificadas utilizando uma linguagem de programação ou então serem resolvidas através de alguma biblioteca de software disponível na internet.
 
@@ -11,9 +11,9 @@ Outro aspecto a ser comentado a respeito da filosofia de desenvolvimento do prog
 \label{sc:est_prog}
 A resolução de um problema através de um método numérico pode normalmente ser dividida em três etapas distintas:
 \begin{itemize}
-\item \emph{Pré-processamento}: Definição de uma geometria que aproxime o domínio real e geração de uma malha de pontos discretos para a mesma. Além disso, nesta etapa são fornecidas as condições de contorno e propriedades que buscam representar o problema real. Também nesta fase são definidos os parâmetros da análise efetuada no passo a seguir.
+\item \emph{Pré-processamento}: Definição de uma geometria que aproxime o domínio real e geração de uma malha de pontos discretos para a mesma. Além disso, nesta etapa são fornecidas as condições iniciais, de contorno e propriedades que buscam representar o problema real. Também nesta fase são definidos os parâmetros da análise a ser efetuada no passo a seguir.
 \item \emph{Processamento}: Cálculo propriamente dito dos valores para as variáveis de interesse. Para isto, é utilizada alguma formulação numérica específica que trate adequadamente a descrição matemática do problema. Os resultados obtidos nesta etapa são analisados criticamente na fase seguinte.
-\item \emph{Pós-processamento}: Visualização e interpretação dos resultados fornecidos pela etapa de processamento. Caso a resposta obtida seja satisfatória, a resolução do problema é encerrada neste ponto. Caso contrário, alterações são feitas na etapa de pré-processamento e o ciclo é reiniciado até que se atinja o objetivo.
+\item \emph{Pós-processamento}: Visualização, cálculo de variáveis secundárias e interpretação dos resultados fornecidos pela etapa de processamento. Caso a resposta obtida seja satisfatória, a resolução do problema é encerrada neste ponto. Caso contrário, alterações são feitas na etapa de pré-processamento e o ciclo é reiniciado até que se atinja o objetivo.
 \end{itemize}
 
 Esta divisão também foi considerada no desenvolvimento do \emph{Delfine}, sendo este o nome do programa desenvolvido neste trabalho. Os blocos responsáveis por executar cada uma das tarefas descritas anteriormente serão apresentados na forma de fluxograma e detalhados nas seções seguintes. 
@@ -21,22 +21,22 @@ Esta divisão também foi considerada no desenvolvimento do \emph{Delfine}, sendo 
 \section{Pré-Processamento}
 \label{sc:pre-proc}
 
-Na Fig. \ref{fig:preprocessadorflux} pode ser visto um fluxograma representando os vários passo necessários para a obtenção, a partir de um problema real, de um problema discreto passível de ser analisado numericamente.
+Na Fig. \ref{fig:preprocessadorflux} pode ser visto um fluxograma representando os vários passos necessários para a obtenção, a partir de um problema real, de um problema discreto passível de ser analisado numericamente.
 
-Inicialmente, é necessário por parte do usuário ter uma descrição o mais precisa possível do problema de interesse. De posse da mesma, parte-se para as etapas de discretização da geometria (i.e., geração da malha) e de definição de uma arquivo de entrada de dados.
+Inicialmente, é necessário por parte do usuário ter uma descrição o mais precisa possível do problema de interesse, envolvendo a etapa da modelagem geométrica. De posse da mesma, parte-se para as etapas de discretização do domínio (i.e., geração da malha) e de definição de uma arquivo de entrada de dados.
 
-O \emph{Delfine} oferece três caminhos para a obtenção da malha: através de um gerador interno do \emph{FEniCS/Dolfin}, o qual é utilizado principalmente na parte de processamento, porém disponibiliza algumas rotinas básicas de geração de malhas, com a vantagem de tornar o programa independente de qualquer programa externo para este fim, já que os parâmetros para definição de malha são definidos no próprio arquivo de entrada de dados da simulação. Porém, como grande desvantagem podemos citar o fato da limitação quanto às geometrias disponíveis, pois apenas formas primitivas como linhas, retângulos, círculos, paralelepípedos e esferas podem ser descritos usando esta ferramenta.
+O \emph{Delfine} oferece três caminhos para a obtenção da malha. A primeira é através de um gerador interno do \emph{FEniCS/Dolfin}, o qual é utilizado principalmente na parte de processamento. Este disponibiliza algumas rotinas básicas de geração de malhas, com a vantagem de tornar o programa independente de qualquer programa externo para este fim, já que os parâmetros para definição de malha são definidos no próprio arquivo de entrada de dados da simulação. Porém, como grande desvantagem podemos citar o fato da limitação quanto às geometrias disponíveis, pois apenas formas primitivas como linhas, retângulos, círculos, paralelepípedos e esferas podem ser descritos usando esta ferramenta.
 
 Uma segunda alternativa é o uso da ferramenta \emph{Gmsh} \citep{Geuzaine2009}, a qual apresenta como vantagem uma maior flexibilidade na definição da geometria, pois este gerador disponibiliza várias operações que podem ser executadas em formas primitivas para a obtenção de outras mais complexas. Entre estas operações podemos citar adição, subtração, extrusão, escalonamento, divisão, entre outras. Além disso, o \emph{Gmsh} dispõe de uma meta-linguagem própria que possibilita a escrita de scripts para a automatização e parametrização da geração de malhas. Como desvantagem, temos a necessidade de conversão do arquivo no formato *.msh gerado pelo \emph{Gmsh} para o padrão utilizado pelo \emph{Delfine}, o qual é derivado diretamente do formato utilizado pelo \emph{FEniCS/Dolfin}. Esta conversão é feita utilizando o script \emph{delfine-convert}.
 
 % Arrumar citacao para todos os programas abaixo.
-Como terceira e última alternativa temos o uso de outros gerador de malhas disponíveis publicamente ou não, como por exemplo o \emph{Triangle}, o \emph{Medit}, o \emph{ExodusII} ou o pré-processador do \emph{Abaqus}. Como vantagem desta alternativa podemos citar a liberdade em relação ao tipo de gerador de malhas a ser utilizado, já que o usuário pode escolher aquele com o qual tem mais familiaridade. Porém, os arquivos nos formatos de saída de qualquer um dos programas citados terá que ser convertido para o formato padrão do \emph{Delfine} utilizando o script \emph{dolfin-convert} \citep{Logg2010}.
+Como terceira e última alternativa temos o uso de outros geradores de malhas disponíveis publicamente ou não, como por exemplo o \emph{Triangle}, o \emph{Medit}, o \emph{ExodusII} ou o pré-processador do \emph{Abaqus}. Como vantagem desta alternativa podemos citar a liberdade em relação ao tipo de gerador de malhas a ser utilizado, já que o usuário pode escolher aquele com o qual tem mais familiaridade. Porém, os arquivos nos formatos de saída de qualquer um dos programas citados terá que ser convertido para o formato padrão do \emph{Delfine} utilizando o script \emph{dolfin-convert} \citep{Logg2010}.
 
-A diferença básica entre a segunda e a terceira alternativas reside exatamente no tipo de script utilizado para a conversão dos arquivos de malha. O \emph{dolfin-convert} é disponibilizado como parte da família de pacotes \emph{FEniCS/Dolfin}, porém o mesmo faz apenas uma conversão das informações geométricas e topológicas da malha, ignorando às informações extras eventualmente presentes nos arquivos. Logo, não é possível importar \emph{flags} de condições de contorno definidos no \emph{Triangle} diretamente no \emph{Delfine}, por exemplo. Sendo assim, tais informações têm que ser adicionadas manualmente aos arquivos de entrada do \emph{Delfine}.
+A diferença básica entre a segunda e a terceira alternativa reside exatamente no tipo de script utilizado para a conversão dos arquivos de malha. O \emph{dolfin-convert} é disponibilizado como parte da família de pacotes \emph{FEniCS/Dolfin}, porém o mesmo faz apenas uma conversão das informações geométricas e topológicas da malha, ignorando as informações extras eventualmente presentes nos arquivos. Logo, não é possível importar \emph{flags} de condições de contorno definidos no \emph{Triangle} diretamente no \emph{Delfine}, por exemplo. Sendo assim, tais informações têm que ser adicionadas manualmente aos arquivos de entrada do \emph{Delfine}.
 
 Já o \emph{delfine-convert} é uma adaptação do \emph{dolfin-convert} realizada durante este trabalho com o objetivo de importar todas as indicações de condições de contorno definidas no \emph{Gmsh} e exportá-las no formato lido pelo \emph{Delfine}. Esta funcionalidade é de fundamental importância para problemas de maior complexidade, pois permite agilizar bastante a etapa de pré-processamento. Por isto, dentre toda as citadas, a segunda alternativa foi a mais utilizada ao longo deste trabalho.
 
-Uma vez obtida a geometria discretizada, é necessário ler o arquivo de entrada de dados, o qual contém informações a respeito das condições de contorno, propriedades de rochas e fluidos, parâmetros numéricos, etc. De um modo geral, tais informações podem ser fornecidas através de um arquivo de texto comum, desde que as mesmas estejam ordenadas de modo estruturado para serem processadas pelo programa.
+Uma vez obtida a geometria discretizada, é necessário ler o arquivo de entrada de dados, o qual contém informações a respeito das condições iniciais, de contorno, propriedades de rochas e fluidos, parâmetros numéricos, etc. De um modo geral, tais informações podem ser fornecidas através de um arquivo de texto comum, desde que as mesmas estejam ordenadas de modo estruturado para serem processadas pelo programa.
 
 Entretanto, tal abordagem não apresenta uma robustez adequada, pois permite que pequenos erros do usuário na confecção do arquivo de dados passem desapercebidos, o que pode acarretar tanto em demora para executar uma análise inicial, pois se torna necessário uma checagem manual de todos os parâmetros fornecidos até se encontrar a fonte de erro, como também se permite executar análises com valores não consistentes, os quais podem vir a gerar resultados totalmente não-físicos, podendo inclusivo levar o usuário a interpretar o fenômeno de interesse de maneira errônea.
 
@@ -81,7 +81,7 @@ Sendo assim, de modo a aumentar a robustez da entrada de dados se optou pelo uso
 \section{Processamento}
 \label{sc:proc}
 
-Uma vez lidos na etapa de pré-processamento os arquivos necessário para a execução da análise, tem início a etapa de processamento, a qual foi implementada neste trabalho de acordo com os fluxogramas apresentados nas Figs. \ref{fig:ellipticflux} e \ref{fig:hyperbolicflux}.
+Uma vez lidos na etapa de pré-processamento os arquivos necessários para a execução da análise, tem início a etapa de processamento, a qual foi implementada neste trabalho de acordo com os fluxogramas apresentados nas Figs. \ref{fig:ellipticflux} e \ref{fig:hyperbolicflux}.
 
 O fluxograma da Fig. \ref{fig:ellipticflux} representa os passos necessário para resolver a parte elíptica do problema de escoamentos multifásicos em meios porosos. As formulações matemática e numérica deste problema adotadas neste trabalho podem ser consultadas nas seções \ref{sc:press_eq} e \ref{sc:fem}, respectivamente.
 
@@ -113,7 +113,7 @@ Inicialmente, o problema tem que ser descrito matematicamente na sua forma varia
 
 Em seguida, tais formas são compiladas utilizando o \ac{FFC} \citep{Logg2011}, o qual é o responsável de fato pela geração automática do código otimizado em linguagem de baixo-nível. Este código estará automaticamente conforme o padrão do \ac{UFC} e pode ser acessado de modo transparente através de classes da biblioteca \emph{DOLFIN}, a qual será responsável pela montagem de todos os tensores necessários para a resolução numérica do problema dentro do programa definido pelo usuário (\emph{Delfine} no caso deste trabalho, como representado na Fig. \ref{fig:sequencefenics}).
 
-\begin{figure} 
+\begin{figure}[hbp]
 \centering
 \includegraphics[width=0.1\textwidth, angle=270]{chapters/ch04/SequenceFenics}
 \caption{Interação entre os diversos componentes do projeto \emph{FEniCS} para definição do problema, seguidos pela resolução no \emph{Delfine} (adaptado de \cite{Rathgeber2010}).}
@@ -121,7 +121,7 @@ Em seguida, tais formas são compiladas utilizando o \ac{FFC} \citep{Logg2011}, o
 \end{figure}
 
 O \emph{DOLFIN} \citep{Logg2010} automatiza a montagem dos sistemas lineares ou não-lineares provenientes da discretização via \ac{MEF} de \ac{EDP}s expressas na forma variacional.
-Na Fig. \ref{fig:moduledolfin} é apresentada a estrutura modular da biblioteca, onde os dados de entrada fornecidos pelo usuário para um problema específico são a malha, a forma variacional e os tipos de elementos finitos adotados. De posse destes dados, o \emph{DOLFIN} gera uma as matrizes e vetores necessários para resolução do sistema de equações provenientes da discretização. Como mostrado na figura, o \emph{DOLFIN} contém interfaces para as bibliotecas de álgebra linear computacional \emph{PETSc}, \emph{Epetra}, \emph{uBLAS} e \emph{MTL4}, além de permitir que o usuário utilize um outro programa qualquer, desde que o mesmo tenha suporte para matrizes no formato do \emph{SciPy} \citep{Jones2001}, como é o caso do \emph{PyAMG} usado neste trabalho.
+Na Fig. \ref{fig:moduledolfin} é apresentada a estrutura modular da biblioteca, onde os dados de entrada fornecidos pelo usuário para um problema específico são a malha, a forma variacional e os tipos de elementos finitos adotados. De posse destes dados, o \emph{DOLFIN} gera as matrizes e vetores necessários para resolução do sistema de equações provenientes da discretização. Como mostrado na figura, o \emph{DOLFIN} contém interfaces para as bibliotecas de álgebra linear computacional \emph{PETSc}, \emph{Epetra}, \emph{uBLAS} e \emph{MTL4}, além de permitir que o usuário utilize um outro programa qualquer, desde que o mesmo tenha suporte para matrizes no formato do \emph{SciPy} \citep{Jones2001}, como é o caso do \emph{PyAMG} usado neste trabalho.
 
 \begin{figure} 
 \centering
@@ -134,23 +134,29 @@ O \emph{DOLFIN} permite a utilização de alguns operadores básicos na definição d
 
 Portanto, um dos grandes atrativos do \emph{DOLFIN} é a possibilidade de utilizar uma notação muito próxima da matemática para a escrita do código. De modo a exemplificar isto, serão apresentados a seguir os trechos de código correspondentes às formulações do \ac{MEF} de Galerkin, do \ac{MEFM} e do \ac{MEF} com estabilização via \ac{SUPG} discutidos nas seções \ref{sc:fem}, \ref{sc:mfem} e \ref{sc:supg}, respectivamente.
 
-\begin{listing}[H]
+A formulação variacional da equação da pressão utilizando o \ac{MEF} de Galerkin é dada por:
+\begin{equation} \label{eq:variational_capImp}
+A(p,w) = f(w) \quad \forall w \in W
+\end{equation}%
+onde as formas bilinear e linear, respectivamente, são:
 \begin{equation} \label{eq:bilinearformh2}
-A(p,v) = \int_{\Omega} \nabla v \cdot \lambda K \nabla p d \Omega \nonumber
+A(p,w) = \int_{\Omega} \nabla w \cdot \lambda K \nabla p d \Omega
 \end{equation}
 \begin{equation} \label{eq:linearformh2}
-f(v) = \int_{\Omega} vf d \Omega - \int_{\Gamma} gv d \Gamma \nonumber
+f(w) = \int_{\Omega} wf d \Omega - \int_{\Gamma} gw d \Gamma
 \end{equation}
+que representam a notação matemática cuja codificação em \emph{Python} pode ser vista na Listagem \ref{lst:arqpyfem}.
+\begin{listing}[H]
 \begin{pythoncode}
 def Galerkin(self, delfineVar, parameter):
 	.
 	.      
     # Define variational form
-    a = inner(grad(v), K*mob*grad(u))*dx
-    L = v*f*dx - g*v*ds
+    a = inner(grad(w), K*mob*grad(u))*dx
+    L = w*f*dx - g*w*ds
 \end{pythoncode}
-\caption{Comparação entre a notação matemática e a codificação em \emph{Python} da montagem do operador elíptico via \ac{MEF} de Galerkin usando o \emph{FEniCS/DOLFIN}.}
-\label{lst:arqpymfem}
+\caption{Codificação em \emph{Python} da montagem do operador elíptico via \ac{MEF} de Galerkin usando o \emph{FEniCS/DOLFIN}.}
+\label{lst:arqpyfem}
 \end{listing}
 
 \begin{listing}[H]
@@ -170,7 +176,7 @@ def MixedFEM(self, delfineVar, parameter):
     L = - f*v*dx
 \end{pythoncode}
 \caption{Comparação entre a notação matemática e a codificação em \emph{Python} da montagem do operador elíptico via \ac{MEFM} usando o \emph{FEniCS/DOLFIN}.}
-\label{lst:arqpymmfem}
+\label{lst:arqpymfem}
 \end{listing}
 
 \begin{listing}[H]
@@ -203,7 +209,7 @@ def SUPG(self, delfineVar, parameter):
     L = rhs(F)
 \end{pythoncode}
 \caption{Comparação entre a notação matemática e a codificação em \emph{Python} da montagem do operador hiperbólico via \ac{MEF} com estabilização via \ac{SUPG} usando o \emph{FEniCS/DOLFIN}.}
-\label{lst:arqpymfemsupg}
+\label{lst:arqpysupg}
 \end{listing}
 
 Como pôde ser visto, o \emph{DOLFIN} permite tanto a definição diretamente das formas bilineares e lineares, quanto a definição de um funcional e posterior subdivisão do mesmo através dos comandos \verb|rhs()| e \verb|lhs()|. Uma vez obtidas as formas que descrevem o problema, o sistema de equações é montado através de um simples comando, como exemplificado na listagem de código \ref{lst:assembly}.
