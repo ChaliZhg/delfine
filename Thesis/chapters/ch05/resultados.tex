@@ -5,19 +5,19 @@ Neste capítulo serão apresentados exemplos e resultados obtidos utilizando a met
 
 \section{Problemas Elípticos}
 \label{sc:elipticos}
-Esta seção tem por objetivo avaliar os métodos utilizados para a resolução da equação de pressão em meios porosos, a qual para o estado estacionário pode ser considerada uma típica equação elíptica. Devido a essa característica, a metodologia utilizada pode ser analisada utilizando-se de problemas modelos que compartilham das mesmas propriedades matemáticas. Uma particularidade comum aos problemas regidos por equações elípticas é que todo o domínio de interesse $\Omega$ é afetado por qualquer mudança no valor da variável em um ponto qualquer no interior de $\Omega$, ou em sua fronteira $\delta\Omega$ \citep{Fortuna2000}. Isto significa que uma perturbação em um ponto irá ter influência sobre todo o domínio, sendo que a mesma diminui com o aumento da distância em relação ao ponto originador de tal perturbação. Sendo assim, tais problemas tendem em geral a apresentar soluções suaves ao longo do domínio (como contra-exemplo poderíamos citar casos com alta anisotropia). Além da equação de pressão, outros exemplos de aplicação deste tipo de equação são o cálculo do potencial elétrico, da difusão de calor em uma chapa metálica e de escoamentos incompressíveis, invíscidos e irrotacionais (também conhecidos como escoamentos potenciais).
+Esta seção tem por objetivo avaliar os métodos utilizados para a resolução da equação da pressão em meios porosos, a qual para o estado estacionário pode ser considerada uma típica equação elíptica. Devido a essa característica, a metodologia utilizada pode ser analisada utilizando-se de problemas modelos que compartilham das mesmas propriedades matemáticas. Uma particularidade comum aos problemas regidos por equações elípticas é que todo o domínio de interesse $\Omega$ é afetado por qualquer mudança no valor da variável em um ponto qualquer no interior de $\Omega$, ou em sua fronteira $\Gamma$ \citep{Fortuna2000}. Isto significa que uma perturbação em um ponto irá ter influência sobre todo o domínio, sendo que a mesma diminui com o aumento da distância em relação ao ponto originador de tal perturbação. Sendo assim, tais problemas tendem em geral a apresentar soluções suaves ao longo do domínio. Além da equação de pressão, outros exemplos de aplicação deste tipo de equação são o cálculo do potencial elétrico, da difusão de calor em uma chapa metálica e de escoamentos incompressíveis, invíscidos e irrotacionais (também conhecidos como escoamentos potenciais).
 
 A equação normalmente utilizada como modelo para testar metodologias de resolução de equações elípticas pode ser descrita como:
 \begin{equation} \label{eq:poi}
-\nabla(\mathbf{K} \nabla u) = f
+\nabla(\mathbi{K} \nabla u) = f
 \end{equation}
 
-Em coordenadas cartesianas e considerando um coeficiente anisotrópico e variável no espaço $\mathbf{K}(x,y,z)$, esta equação pode ser representada por:
+Em coordenadas cartesianas e considerando um coeficiente anisotrópico e variável no espaço $\mathbi{K}(x,y,z)$, esta equação pode ser representada por:
 \begin{equation} \label{eq:poicart}
-\frac{\partial }{\partial x}\left(\mathbf{K}\frac{\partial u}{\partial x}\right) + \frac{\partial }{\partial y}\left(\mathbf{K}\frac{\partial u}{\partial y}\right) + \frac{\partial }{\partial z}\left(\mathbf{K}\frac{\partial u}{\partial z}\right) = f(x,y,z)
+\frac{\partial }{\partial x}\left(\mathbi{K}\frac{\partial u}{\partial x}\right) + \frac{\partial }{\partial y}\left(\mathbi{K}\frac{\partial u}{\partial y}\right) + \frac{\partial }{\partial z}\left(\mathbi{K}\frac{\partial u}{\partial z}\right) = f(x,y,z)
 \end{equation}
 
-Nas seções seguintes, iremos resolver equações do tipo (\ref{eq:poicart}) considerando diversas possibilidades para o coeficiente $\mathbf{K}$ de modo a demonstrar a flexibilidade da metodologia utilizada para lidar com meios homogêneos, heterogêneos, iso- e anisotrópicos. Vários parâmetros de interesse serão avaliados a partir dos resultados obtidos, entre eles:
+Nas seções seguintes, iremos resolver equações do tipo (\ref{eq:poicart}) considerando diversas possibilidades para o coeficiente $\mathbi{K}$ de modo a demonstrar a flexibilidade da metodologia utilizada para lidar com meios homogêneos, heterogêneos, iso- e anisotrópicos. Vários parâmetros de interesse serão avaliados a partir dos resultados obtidos, entre eles:
 \begin{itemize}
 \item Erro da solução numérica quando comparada com a solução analítica, a qual para problemas simples é facilmente encontrada.
 \item Taxas de convergências para uma sequência de malhas sucessivamente refinadas.
@@ -28,12 +28,11 @@ Nas seções seguintes, iremos resolver equações do tipo (\ref{eq:poicart}) consid
 \label{sc:homogeneoiso}
 Este primeiro exemplo foi originalmente proposto em \citep{Chen2006}, sendo resolvido utilizando dois métodos diferentes, o CVFA (\emph{Control Volume Function Approximation}) e o CVFE (\emph{Control Volume Finite Element}). Este problema também foi explorado em \citep{Silva2008} utilizando duas variações do Método dos Volumes Finitos baseado em Arestas (EBFV1 e EBFV2). Este exemplo é um problema de valor de contorno que pode ser representado do modo a seguir:
 \begin{equation} \label{eq:homogeneoiso}
-\nabla(\mathbf{K} \nabla u) = 2 \pi^{2} \cos (\pi x) \cos(\pi y) \quad \textrm{em  } \quad \Omega = \{(x,y) \ \vert \ 0 < x < 1 \textrm{ e } 0 < y < 1\}
+\nabla(\mathbi{K} \nabla u) = 2 \pi^{2} \cos (\pi x) \cos(\pi y) \quad \textrm{em  } \quad \Omega = \{(x,y) \ \vert \ 0 < x < 1 \textrm{ e } 0 < y < 1\}
 \end{equation}
-
-Onde $\mathbf{K}$ é uma matriz simétrica e diagonal representada por:
+onde $\mathbi{K}$ é uma matriz simétrica e diagonal representada por:
 \begin{equation} \label{eq:coeffhomoiso}
-\mathbf{K} = \left( \begin{array}{cc}
+\mathbi{K} = \left( \begin{array}{cc}
 1 & 0 \\
 0 & 1
 \end{array} \right)
@@ -48,7 +47,7 @@ u = -\cos(\pi x) & \textrm{para } 0<x<1 \textrm{ e } y=1}  \\
 \end{array} \right.
 \end{equation}
 
-Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas estruturadas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. O uso de malhas estruturadas se deu apenas para fins de comparação de erros e obtenção de ordens de convergência, já que a metodologia utilizada é perfeitamente capaz de lidar com malhas não-estruturadas bi- e tridimensionais. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema,a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A Fig. \ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de 64x64 elementos triangulares lineares, a qual já permite obter uma excelente concordância com a solução analítica.
+Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas estruturadas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. O uso de malhas estruturadas se deu apenas para fins de comparação de erros e obtenção de ordens de convergência, já que a metodologia utilizada é perfeitamente capaz de lidar com malhas não-estruturadas bi- e tridimensionais. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema, a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A Fig. \ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de 64x64 elementos triangulares lineares, a qual já permite obter uma excelente concordância com a solução analítica.
 
 \begin{figure}
 \centering
@@ -57,7 +56,7 @@ Resolvemos o problema elíptico descrito utilizando a formulação detalhada no cap
 \label{fig:HomogeneoIsotropico_N=64}
 \end{figure}
 
-Para uma sequência de malhas formadas por triângulos lineares, se espera uma taxa de convergência de segunda ordem, enquanto para uma sequência formada por triângulos quadráticos espera-se uma convergência de terceira ordem \citep{Hughes2000}. De modo a verificar o comportamento do método utilizado, resolvemos o problema proposto utilizando elementos de 1ª (tabela \ref{tab:homoisolinear}) e 2º ordem (tabela \ref{tab:homoisoquad}), comparando entre si os resultados obtidos e também com outros disponíveis na literatura para elementos lineares utilizando outros tipos de formulação (tabelas \ref{tab:homoisoCVFA} e \ref{tab:homoisoEBFV1}) \citep{Chen2006,Silva2008}. De um modo geral, as taxas de convergências obtidas se aproximaram bastante das taxas teóricas tanto para o caso de elementos triangulares quanto quadráticos. A comparação com os resultados da literatura ficam um pouco prejudicadas por terem os erros sido calculados através de normas diferentes (norma do máximo neste trabalho, e RMS na literatura citada). Porém, é possível observar um comportamento coerente do erro obtido, pois com elementos quadráticos foram obtidos erros consideravelmente menores do que com os métodos de segunda ordem CVFA e EBFV1. Por outro lado, ao utilizar-se elementos lineares foram obtidos erros maiores porém na mesma ordem de grandeza daqueles obtidos na literatura.
+Para uma sequência de malhas formadas por triângulos lineares, se espera uma taxa de convergência de segunda ordem, enquanto para uma sequência formada por triângulos quadráticos espera-se uma convergência de terceira ordem \citep{Hughes2000}. De modo a verificar o comportamento do método utilizado, resolvemos o problema proposto utilizando elementos de 1ª (tabela \ref{tab:homoisolinear}) e 2ª ordem (tabela \ref{tab:homoisoquad}), comparando entre si os resultados obtidos e também com outros disponíveis na literatura para elementos lineares utilizando outros tipos de formulação (tabelas \ref{tab:homoisoCVFA} e \ref{tab:homoisoEBFV1}) \citep{Chen2006,Silva2008}. De um modo geral, as taxas de convergências obtidas se aproximaram bastante das taxas teóricas tanto para o caso de elementos triangulares lineares quanto quadráticos. A comparação com os resultados da literatura ficam um pouco prejudicadas por terem os erros sido calculados através de normas diferentes (norma do máximo neste trabalho, e RMS na literatura citada). Porém, é possível observar um comportamento coerente do erro obtido, pois com elementos quadráticos foram obtidos erros consideravelmente menores do que com os métodos de segunda ordem CVFA e EBFV1. Por outro lado, ao utilizar-se elementos lineares foram obtidos erros maiores porém na mesma ordem de grandeza daqueles obtidos na literatura.
 
 \begin{table}
 \caption[Erro e taxa de convergência para problema homogêneo e isotrópico]{Erro e taxa de convergência obtidos neste trabalho para a solução da equação elíptica em meio homogêneo e isotrópico.} 
@@ -130,11 +129,11 @@ Para a resolução do sistema de equações lineares provenientes da discretização d
 \item Multigrid Algébrico aplicado como pré-condicionador para o método dos Gradientes Conjugados (AMG+CG).
 \end{itemize}
 
-Para a realização dos testes, foi utilizada uma malha de 32x32 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
+Para a realização dos testes, foi utilizada uma malha de 32x32 elementos triangulares de 1ª ordem. Para todos os casos foi considerado como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
 
 Como pode ser observado na Fig. \ref{fig:residualHomogeneoIsotropico_N=32}, os esquemas utilizando o método multigrid (AMG e AMG+CG) apresentaram resultados bastante superiores em relação ao método CG, o qual utiliza apenas um único sistema de equações lineares (ou seja, uma única ``malha''). Enquanto o método AMG+CG reduz o resíduo em aproximadamente uma ordem de grandeza por iteração, o método CG necessita de aproximadamente 10 vezes mais iterações para reduzir o resíduo na mesma proporção. É interessante comparar também os resultados obtidos ao utilizar-se o AMG isoladamente e ao usá-lo como um pré-condicionador para o método dos Gradientes Conjugados. Percebe-se que nas primeiras iterações os dois métodos apresentam fatores de convergência para o resíduo praticamente idênticos, porém a medida que se prossegue com as iterações, o AMG usado isoladamente tende a apresentar uma piora na taxa de convergência, enquanto o método que utiliza a combinação AMG+CG mantém o excelente fator de convergência obtido inicialmente.
 
-Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg2001,Oosterlee1998,Mavriplis2001} no qual um único ou poucos autovalores da matriz representante do operador de iteração Multigrid estão com um valor muito acima daquele obtido para os demais autovalores. Sendo que o autovalor máximo (também chamados de raio espectral) do operador de iteração indicam em última análise o fator de convergência assimptótica para o problema \citep{Briggs2000}, limitando portanto a taxa de convergência possível de ser obtida. Um modo de contornar tal problema é justamento utilizar algum método de subespaço de Krylov, como é o caso do método CG, os quais têm a característica de em poucas iterações amortecer os autovetores relacionados aos poucos autovalores elevados \citep{Trottenberg2001}.
+Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg2001,Oosterlee1998,Mavriplis2001} no qual um único ou poucos autovalores da matriz representante do operador de iteração Multigrid estão com um valor muito acima daquele obtido para os demais autovalores. Sendo que o autovalor máximo (também chamado de raio espectral) do operador de iteração indica em última análise o fator de convergência assimptótica para o problema \citep{Briggs2000}, limitando portanto a taxa de convergência possível de ser obtida. Um modo de contornar tal problema é justamento utilizar algum dos métodos de subespaço de Krylov, como é o caso do método CG, os quais têm a característica de em poucas iterações amortecer os autovetores relacionados aos poucos autovalores elevados \citep{Trottenberg2001}.
 
 \begin{figure}
 \centering
@@ -147,19 +146,19 @@ Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg200
 \label{sc:homogeneoaniso}
 Este problema foi originalmente proposto em \cite{Crumpton1995}, onde foi resolvido utilizando um método de volumes finitos centrado na célula (FCFV), tendo também sido estudado em \cite{Carvalho2005} e \cite{Silva2008} utilizando o já mencionado método dos volumes finitos baseado em arestas (EBFV).
 
-Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores diagonais ou cheios para representar o coeficiente $\mathbf{K}$. O problema proposto pode ser descrito através da equação (\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
+Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores diagonais ou cheios para representar o parâmetro $\mathbi{K}$. O problema proposto pode ser descrito através da equação (\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
 \begin{equation} \label{eq:homogeneoaniso}
-\nabla(\mathbf{K} \nabla u) = -2(1 + x^2 + xy + y^2)e^{xy}
+\nabla(\mathbi{K} \nabla u) = -2(1 + x^2 + xy + y^2)e^{xy}
 \end{equation}
-Onde $\mathbf{K}$ é uma matriz simétrica e não-diagonal representada por:
+onde $\mathbi{K}$ é uma matriz simétrica e não-diagonal representada por:
 \begin{equation} \label{eq:coeffhomoaniso}
-\mathbf{K} = \left( \begin{array}{cc}
+\mathbi{K} = \left( \begin{array}{cc}
 2 & 1 \\
 1 & 2
 \end{array} \right)
 \end{equation}
 
-A definição deste problema está completa ao definir-se a condição de fronteira em todo o contorno $\delta\Omega$ como $u(x,y)=e^{xy}$.
+A descrição deste problema está completa ao definir-se a condição de fronteira em todo o contorno $\Gamma$ como $u(x,y)=e^{xy}$.
 
 Na Fig. \ref{fig:HomogeneoAnisotropico_N=64} pode ser observado o campo escalar para a variável $u$, considerando uma discretização do domínio $\Omega$ com uma malha de 64x64 elementos triangulares de 1ª ordem.
 
@@ -221,9 +220,9 @@ De modo a comparar os resultados obtidos com aqueles da literatura, calculamos o
 }
 \end{table}
 
-Pode-se observar pelo resultados obtidos que novamente o MEF se comportou como esperado, apresentado uma taxa de convergência de ordem 2 para os elementos lineares. Os valores absolutos do erro na norma do máximo se comparam de maneira ligeiramente favorável aqueles apresentado em \cite{Carvalho2005}.
+Pode-se observar pelos resultados obtidos que novamente o MEF se comportou como esperado, apresentado uma taxa de convergência de ordem 2 para os elementos lineares. Os valores absolutos do erro na norma do máximo se comparam de maneira ligeiramente favorável àqueles apresentados em \cite{Carvalho2005}.
 
-Assim como para o primeiro exemplo, também neste fizemos um estudo a respeito da performance de diferentes métodos iterativos para a resolução do sistema de equações lineares provenientes da discretização do problema. Cinco diferentes alternativas foram testadas:
+Assim como para o primeiro exemplo, também neste fizemos um estudo a respeito do desempenho de diferentes métodos iterativos para a resolução do sistema de equações lineares provenientes da discretização do problema. Cinco diferentes alternativas foram testadas:
 \begin{itemize}
 \item Métodos dos Gradientes Conjugados (CG) aplicado isoladamente.
 \item Métodos do Resíduo Mínimo Generalizado (GMRES) aplicado isoladamente.
@@ -247,28 +246,30 @@ Para a realização dos testes, foi utilizada uma malha de 64x64 elementos triangu
 
 \subsection{Meio Heterogêneo e Anisotrópico}
 \label{sc:heterogeneoaniso}
-Neste exemplo foi considerado um meio heterogêneo e anisotrópico. Este caso foi proposto em \citep{Crumpton1995}, tendo sido também analisado em vários outros trabalhos \citep{Hyman1997, Carvalho2005, Silva2008}. O domínio $\Omega$ é um quadrado $[-1,1]x[-1,1]$ com condições de contornos de Dirichlet dadas pela solução exata. O coeficiente $\mathbf{K}$ é definido por:
+Neste exemplo foi considerado um meio heterogêneo e anisotrópico. Este caso foi proposto em \citep{Crumpton1995}, tendo sido também analisado em vários outros trabalhos \citep{Hyman1997, Carvalho2005, Silva2008}. O domínio $\Omega$ é um quadrado $[-1,1]x[-1,1]$ com condições de contornos de Dirichlet dadas pela solução exata. O parâmetro $\mathbi{K}$ é definido por:
 
 \begin{equation} \label{eq:coeffheteroaniso}
-\mathbf{K} = \left\{ \begin{array}{cc}
-  \phantom{\alpha}\left( \begin{array}{cc}
+\mathbi{K} = \left\{ \begin{array}{cc}
+  \phantom{\psi}\left( \begin{array}{cc}
 1 & 0 \\
 0 & 1
 \end{array} \right) & \textrm{se $x \leq 0$}\\
-  \alpha\left( \begin{array}{ll}
+  \psi\left( \begin{array}{ll}
 2 & 1 \\
 1 & 2
 \end{array} \right) & \textrm{se $x > 0$}
   \end{array} \right.
 \end{equation}
-onde o fator $\alpha$ é um parâmetro utilizado para definir a intensidade de descontinuidade em $x = 0$.
+onde o fator $\psi$%
+\nomenclature[a1fd]{$\psi$}{Fator de descontinuidade no domínio}
+é um parâmetro utilizado para definir a intensidade de descontinuidade em $x = 0$.
 
 A solução analítica (e condição de Dirichlet para os contornos) é dada por:
 
 \begin{equation} \label{eq:heteroaniso}
 u(x,y) = \left\{ \begin{array}{ll}
-  [2\sin(y)+\cos(y)]\alpha x + \sin(y) & \textrm{se $x \leq 0$}\\
-  \alpha\exp(x)\sin(y) & \textrm{se $x > 0$}
+  [2\sin(y)+\cos(y)]\psi x + \sin(y) & \textrm{se $x \leq 0$}\\
+  \psi\exp(x)\sin(y) & \textrm{se $x > 0$}
   \end{array} \right.
 \end{equation}
  
@@ -276,48 +277,48 @@ Por fim, podemos definir o também descontínuo termo fonte como:
 
 \begin{equation} \label{eq:bcheteroaniso}
 f(x,y) = \left\{ \begin{array}{ll}
-  [-2\sin(y)-\cos(y)]\alpha x - \sin(y) & \textrm{se $x \leq 0$}\\
-  2\alpha\exp(x)\cos(y) & \textrm{se $x > 0$}
+  [-2\sin(y)-\cos(y)]\psi x - \sin(y) & \textrm{se $x \leq 0$}\\
+  2\psi\exp(x)\cos(y) & \textrm{se $x > 0$}
   \end{array} \right.
 \end{equation}
 
 Para a resolução deste problema e obtenção de taxas de convergência, consideramos uma sequência de malhas sucessivamente refinadas com dimensões aproximadas de $(8x8), (16x16), (32x32), (64x64)$ e $(128x128)$.
-A malha não-estruturada utilizada para $N \simeq 8$ e a divisão dos subdomínios em $x=0$ pode ser observada na Fig. \ref{fig:HeterogeneoAnisoMaterials_N=8}.
+A malha não-estruturada utilizada com aproximadamente $(8x8)$ elementos e a divisão dos subdomínios em $x=0$ pode ser observada na Fig. \ref{fig:HeterogeneoAnisoMaterials_N=8}.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.6\textwidth]{chapters/ch05/HeterogeneoAnisoMaterials_N=8}
-\caption[Caso heterogêneo e anisotrópico. Malha não-estruturada e heterogeneidade]{Domínio utilizado e malha não-estruturada com $N \simeq 8$ e heterogeneidade em $x=0$.}
+\caption[Caso heterogêneo e anisotrópico. Malha não-estruturada e heterogeneidade]{Domínio utilizado e malha não-estruturada com aproximadamente $(8x8)$ elementos e heterogeneidade em $x=0$.}
 \label{fig:HeterogeneoAnisoMaterials_N=8}
 \end{figure}
 
-Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da descontinuidade na linha $x=0$, efeito este que se torna mais pronunciado ao aumentarmos o valor do parâmetro $\alpha$. Os valores para os erros da solução numérica quando comparada com a analítica para as normas do máximo e $L2$ são apresentados na tabela \ref{tab:heteroiso}, onde pode ser visto que um aumento na descontinuidade do tensor $\mathbf{K}$ para os diferentes sub-domínios causa um aumento nos valores absolutos dos erros obtidos.
+Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da descontinuidade na linha $x=0$, efeito este que se torna mais pronunciado ao aumentarmos o valor do parâmetro $\psi$. Os valores para os erros da solução numérica quando comparada com a analítica para as normas do máximo e $L2$ são apresentados na tabela \ref{tab:heteroiso}, onde pode ser visto que um aumento na descontinuidade do tensor $\mathbi{K}$ para os diferentes sub-domínios causa um aumento nos valores absolutos dos erros obtidos.
 
 \begin{figure}
 \centering
-\subfigure[$\alpha=1$]{
+\subfigure[$\psi=1$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoContour_N=64_alpha=1}
 }
 \quad
-\subfigure[$\alpha=10$]{
+\subfigure[$\psi=10$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoContour_N=64_alpha=10}
 }
 \quad
-\subfigure[$\alpha=100$]{
+\subfigure[$\psi=100$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoContour_N=64_alpha=100}
 }
 \quad
-\subfigure[$\alpha=1000$]{
+\subfigure[$\psi=1000$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoContour_N=64_alpha=1000}
 }
-\caption[Caso heterogêneo e anisotrópico. Campo escalar para malha de 64x64.]{Campo escalar obtido para diferentes fatores de descontinuidade $\alpha$ utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
+\caption[Caso heterogêneo e anisotrópico. Campo escalar para malha de 64x64.]{Campo escalar obtido para diferentes fatores de descontinuidade $\psi$ utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
 \label{fig:HeterogeneoAnisoContour_N=64}
 \end{figure}
 
 \begin{table}
 \caption[Erro e taxa de convergência para problema heterogêneo e anisotrópico]{Erro e taxa de convergência obtidos neste trabalho para a solução da equação elíptica em meio heterogêneo e anisotrópico.} 
 \centering
-\subtable[$\alpha=1$]{
+\subtable[$\psi=1$]{
 	\begin{tabular}{|c|c|c|c|c|}
 	\hline N & \vert\vert E_{max}\vert\vert & q_{max} & \vert\vert E_{L2}\vert\vert & q_{L2} \\
 	\hline
@@ -331,7 +332,7 @@ Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da de
 	\label{tab:heteroiso1}
 }
 \qquad\qquad
-\subtable[$\alpha=10$]{
+\subtable[$\psi=10$]{
 	\begin{tabular}{|c|c|c|c|c|}
 	\hline N & \vert\vert E_{max}\vert\vert & q_{max} & \vert\vert E_{L2}\vert\vert & q_{L2} \\
 	\hline
@@ -345,7 +346,7 @@ Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da de
 	\label{tab:heteroiso10}
 }
 \qquad\qquad
-\subtable[$\alpha=100$]{
+\subtable[$\psi=100$]{
 	\begin{tabular}{|c|c|c|c|c|}
 	\hline N & \vert\vert E_{max}\vert\vert & q_{max} & \vert\vert E_{L2}\vert\vert & q_{L2} \\
 	\hline
@@ -359,7 +360,7 @@ Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da de
 	\label{tab:heteroiso1000}
 }
 \qquad\qquad
-\subtable[$\alpha=1000$]{
+\subtable[$\psi=1000$]{
 	\begin{tabular}{|c|c|c|c|c|}
 	\hline N & \vert\vert E_{max}\vert\vert & q_{max} & \vert\vert E_{L2}\vert\vert & q_{L2} \\
 	\hline
@@ -375,28 +376,28 @@ Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da de
 \label{tab:heteroiso}
 \end{table}
 
-Um fato interessante que pode ser constatado a partir dos valores obtidos para os erros da solução numérica obtida é que os mesmos apresentam uma taxa de convergência em torno de 1 para $\alpha = 1$ e $10$, sendo que esta taxa se aproxima de 2 quando aumentamos o fator de descontinuidade ($\alpha = 100$ e $1000$).
+Um fato interessante que pode ser constatado a partir dos valores obtidos para os erros da solução numérica obtida é que os mesmos apresentam uma taxa de convergência na norma $L2$ em torno de 1 para $\psi = 1$ e $10$, sendo que esta taxa se aproxima de 2 quando aumentamos o fator de descontinuidade ($\psi = 100$ e $1000$).
 Ao compararmos tais resultados com a literatura \citep{Crumpton1995,Hyman1997,Carvalho2005,Silva2008} percebemos que os métodos apresentados nos referidos trabalhos que fazem uma avaliação local dos fluxos tendem a obter uma convergência de ordem 2, enquanto métodos que trabalham apenas com a variável nodal (neste caso, $u(x,y)$) apresentam ordem 1 para o erro, tanto na norma do máximo quanto para a $L2$.
 
-Um aspecto a ser notado que pode contribuir para a compreensão deste comportamento é a distribuição do erro ao longo do domínio para diferentes valores de $\alpha$. Na Fig. \ref{fig:HeterogeneoAnisoError_N=64} pode ser visto que o erro varia suavemente para $\alpha = 1$ e $\alpha = 10$, sendo que o mesmo está concentrado na região de descontinuidade em $x=0$. Já para $\alpha = 100$ e $\alpha = 1000$, o erro para a malha de $N \simeq 64$ apresenta modos de frequência muito mais alta, estando também concentrado em um dos lados do domínio.
+Um aspecto a ser notado que pode contribuir para a compreensão deste comportamento é a distribuição do erro ao longo do domínio para diferentes valores de $\psi$. Na Fig. \ref{fig:HeterogeneoAnisoError_N=64} pode ser visto que o erro varia suavemente para $\psi = 1$ e $\psi = 10$, sendo que o mesmo está concentrado na região de descontinuidade em $x=0$. Já para $\psi = 100$ e $\psi = 1000$, o erro para a malha de $N \simeq 64$ apresenta modos de frequência muito mais alta, estando também concentrado em um dos lados do domínio.
 
-Este comportamento pode ser explicado pelo fato de que para maiores valores de $\alpha$ temos uma intensidade maior de descontinuidade para o mesmo tamanho de malha, o que pode ser visto como equivalente a manter o valor do coeficiente de descontinuidade e engrossar a malha, levando portanto os componentes do erro a se apresentarem como de mais alta frequência, independente da magnitude dos mesmos \citep{Trottenberg2001}.
+Este comportamento pode ser explicado pelo fato de que para maiores valores de $\psi$ temos uma intensidade maior de descontinuidade para o mesmo tamanho de malha, o que pode ser visto como equivalente a manter o valor do coeficiente de descontinuidade e engrossar a malha, levando portanto os componentes do erro a se apresentarem como de mais alta frequência, independente da magnitude dos mesmos \citep{Trottenberg2001}.
 
 \begin{figure}
 \centering
-\subfigure[$\alpha=1$]{
+\subfigure[$\psi=1$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoError_N=64_alpha=1}
 }
 \quad
-\subfigure[$\alpha=10$]{
+\subfigure[$\psi=10$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoError_N=64_alpha=10}
 }
 \quad
-\subfigure[$\alpha=100$]{
+\subfigure[$\psi=100$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoError_N=64_alpha=100}
 }
 \quad
-\subfigure[$\alpha=1000$]{
+\subfigure[$\psi=1000$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoError_N=64_alpha=1000}
 }
 \caption[Caso heterogêneo e anisotrópico. Erro obtido para malha 64x64.]{Caso heterogêneo e anisotrópico. Distribuição do erro obtido para malha com $N \simeq 64$ discretizada por triângulos lineares.}
@@ -410,7 +411,7 @@ Os resultados obtidos para a evolução dos resíduos podem ser verificados na Fig.
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch05/residualHeterogeneoAniso_N=64_alpha=1}
-\caption[Caso heterogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64.]{Caso heterogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64 discretizada por triângulos lineares e com $\alpha = 1$.}
+\caption[Caso heterogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64.]{Caso heterogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64 discretizada por triângulos lineares e com $\psi = 1$.}
 \label{fig:residualHeterogeneoAniso_N=64_alpha=1}
 \end{figure}
 

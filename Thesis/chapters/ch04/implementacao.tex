@@ -159,13 +159,15 @@ def Galerkin(self, delfineVar, parameter):
 \label{lst:arqpyfem}
 \end{listing}
 
-\begin{listing}[H]
+Já a formulação variacional para a equação que resolve simultaneamente a pressão e a velocidade utilizando o \ac{MEFM} é representada pelas seguintes formas bilinear e linear, respectivamente:
 \begin{equation} \label{eq:bilinearformhmfem2}
-A(p,v) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \sigma \cdot \tau - \nabla \cdot \tau u - \nabla \sigma v \right) d \Omega \nonumber
+A(p,v,\sigma,\tau) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \sigma \cdot \tau - \nabla \cdot \tau u - \nabla \sigma v \right) d \Omega
 \end{equation}
 \begin{equation} \label{eq:linearformhmfem2}
-f(v) = - \int_{\Omega} fv d \Omega \nonumber
+f(v) = - \int_{\Omega} fv d \Omega
 \end{equation}
+que representam a notação matemática cuja codificação em \emph{Python} pode ser vista na Listagem \ref{lst:arqpymfem}.
+\begin{listing}[H]
 \begin{pythoncode}
 def MixedFEM(self, delfineVar, parameter):
 	.
@@ -175,40 +177,44 @@ def MixedFEM(self, delfineVar, parameter):
         - div(tau)*u - div(sigma)*v)*dx
     L = - f*v*dx
 \end{pythoncode}
-\caption{Comparação entre a notação matemática e a codificação em \emph{Python} da montagem do operador elíptico via \ac{MEFM} usando o \emph{FEniCS/DOLFIN}.}
+\caption{Codificação em \emph{Python} da montagem do operador elíptico via \ac{MEFM} usando o \emph{FEniCS/DOLFIN}.}
 \label{lst:arqpymfem}
 \end{listing}
 
-\begin{listing}[H]
+A formulação variacional para a equação da saturação utilizando o \ac{MEF} com estabilização via \ac{SUPG} é representada matematicamente da seguinte forma:
 \begin{equation} \label{eq:bilinearformhsupg2}
 F(S,v) = \int_{\Omega} \left( v \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
 \int_{\Omega} vf_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1} d \Omega +
-\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{u}^{n+1} \cdot \nabla v \right) \tau_{s} r^{n+1} d \Omega \nonumber
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{u}^{n+1} \cdot \nabla v \right) \tau_{s} r^{n+1} d \Omega
 \end{equation}
+onde
 \begin{equation} \label{eq:residuumsupg2}
 r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+ 
-          f_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1} \nonumber
+          f_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1}
 \end{equation}
+com
 \begin{equation} \label{eq:stabtermsupg2}
-\tau_{s} = \frac{h}{2 \left| \left| \mathbf{u}^{n+1} \right| \right| }\nonumber
+\tau_{s} = \frac{h}{2 \left| \left| \mathbf{u}^{n+1} \right| \right| }
 \end{equation}
+A codificação em \emph{Python} deste método pode ser vista na Listagem \ref{lst:arqpysupg}.
+\begin{listing}[H]
 \begin{pythoncode}
 def SUPG(self, delfineVar, parameter):
 	.
 	.      
     # Galerkin variational problem
     F = v*phi*((S-S0)/dt)*dx +
-        (v*dot(velocity, grad(S))*dx
+        (v*fs*dot(velocity, grad(S))*dx
     # Residual
-    r = phi*((S-S0)/dt) + (dot(velocity, grad(S)))
-    # SUPG stabilisation terms
+    r = phi*((S-S0)/dt) + fs*(dot(velocity, grad(S)))
+    # SUPG stabilization terms
     tau = h/(2.0*sqrt(dot(velocity, velocity)))
     F += tau*dot(velocity, grad(v))*r*dx
     # Create bilinear and linear forms
     a = lhs(F)
     L = rhs(F)
 \end{pythoncode}
-\caption{Comparação entre a notação matemática e a codificação em \emph{Python} da montagem do operador hiperbólico via \ac{MEF} com estabilização via \ac{SUPG} usando o \emph{FEniCS/DOLFIN}.}
+\caption{Codificação em \emph{Python} da montagem do operador hiperbólico via \ac{MEF} com estabilização via \ac{SUPG} usando o \emph{FEniCS/DOLFIN}.}
 \label{lst:arqpysupg}
 \end{listing}
 
@@ -224,7 +230,7 @@ Como pôde ser visto, o \emph{DOLFIN} permite tanto a definição diretamente das f
 \label{lst:assembly}
 \end{listing}
 
-Para a resolução do sistema de equações provenientes das matrizes e vetores resultantes da discretização foram utilizadas as bibliotecas de álgebra linear \emph{PyAMG} (prioritariamente) e \emph{uBLAS} (para matrizes provenientes do \ac{MEFM}). Como já mencionado, a interface desta última biblioteca com o \emph{DOLFIN} é implementada por default, logo o foco neste capítulo será na interface com o \emph{PyAMG}, o qual é descrito com mais detalhes na seção a seguir.
+Para a resolução do sistema de equações proveniente das matrizes e vetores resultantes da discretização foram utilizadas as bibliotecas de álgebra linear \emph{PyAMG} (prioritariamente) e \emph{uBLAS} (para matrizes provenientes do \ac{MEFM}). Como já mencionado, a interface desta última biblioteca com o \emph{DOLFIN} é implementada por default, logo o foco neste capítulo será na interface com o \emph{PyAMG}, o qual é descrito com mais detalhes na seção a seguir.
 
 \subsection{PyAMG}
 \label{sc:pyamg}
@@ -251,7 +257,7 @@ def solve_withPyAMG(self, delfineVar, parameter):
     ml = smoothed_aggregation_solver(Asp,max_coarse=10)
     x = ml.solve(b,tol=1e-10,accel='cg',residuals=res)
 \end{pythoncode}
-\caption{Leitura da matriz que representa o sistema de equações e resolução do mesmo utilizando o \emph{PyAMG}.}
+\caption{Leitura da matriz e vetor que representam o sistema de equações e resolução do mesmo utilizando o \emph{PyAMG}.}
 \label{lst:pyamg}
 \end{listing}
 
