@@ -56,7 +56,7 @@ Resolvemos o problema elíptico descrito utilizando a formulação detalhada no cap
 \label{fig:HomogeneoIsotropico_N=64}
 \end{figure}
 
-Para uma sequência de malhas formadas por triângulos lineares, se espera uma taxa de convergência de segunda ordem, enquanto para uma sequência formada por triângulos quadráticos espera-se uma convergência de terceira ordem \citep{Hughes2000}. De modo a verificar o comportamento do método utilizado, resolvemos o problema proposto utilizando elementos de 1ª (tabela \ref{tab:homoisolinear}) e 2ª ordem (tabela \ref{tab:homoisoquad}), comparando entre si os resultados obtidos e também com outros disponíveis na literatura para elementos lineares utilizando outros tipos de formulação (tabelas \ref{tab:homoisoCVFA} e \ref{tab:homoisoEBFV1}) \citep{Chen2006,Silva2008}. De um modo geral, as taxas de convergências obtidas se aproximaram bastante das taxas teóricas tanto para o caso de elementos triangulares lineares quanto quadráticos. A comparação com os resultados da literatura ficam um pouco prejudicadas por terem os erros sido calculados através de normas diferentes (norma do máximo neste trabalho, e RMS na literatura citada). Porém, é possível observar um comportamento coerente do erro obtido, pois com elementos quadráticos foram obtidos erros consideravelmente menores do que com os métodos de segunda ordem CVFA e EBFV1. Por outro lado, ao utilizar-se elementos lineares foram obtidos erros maiores porém na mesma ordem de grandeza daqueles obtidos na literatura.
+Para uma sequência de malhas formadas por triângulos lineares, se espera uma taxa de convergência de segunda ordem, enquanto para uma sequência formada por triângulos quadráticos espera-se uma convergência de terceira ordem \citep{Hughes2000}. De modo a verificar o comportamento do método utilizado, resolvemos o problema proposto utilizando elementos de 1ª (Tabela \ref{tab:homoisolinear}) e 2ª ordem (Tabela \ref{tab:homoisoquad}), comparando entre si os resultados obtidos e também com outros disponíveis na literatura para elementos lineares utilizando outros tipos de formulação (Tabelas \ref{tab:homoisoCVFA} e \ref{tab:homoisoEBFV1}) \citep{Chen2006,Silva2008}. De um modo geral, as taxas de convergências obtidas se aproximaram bastante das taxas teóricas tanto para o caso de elementos triangulares lineares quanto quadráticos. A comparação com os resultados da literatura ficam um pouco prejudicadas por terem os erros sido calculados através de normas diferentes (norma do máximo neste trabalho, e RMS na literatura citada). Porém, é possível observar um comportamento coerente do erro obtido, pois com elementos quadráticos foram obtidos erros consideravelmente menores do que com os métodos de segunda ordem CVFA e EBFV1. Por outro lado, ao utilizar-se elementos lineares foram obtidos erros maiores porém na mesma ordem de grandeza daqueles obtidos na literatura.
 
 \begin{table}
 \caption[Erro e taxa de convergência para problema homogêneo e isotrópico]{Erro e taxa de convergência obtidos neste trabalho para a solução da equação elíptica em meio homogêneo e isotrópico.} 
@@ -146,7 +146,7 @@ Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg200
 \label{sc:homogeneoaniso}
 Este problema foi originalmente proposto em \cite{Crumpton1995}, onde foi resolvido utilizando um método de volumes finitos centrado na célula (FCFV), tendo também sido estudado em \cite{Carvalho2005} e \cite{Silva2008} utilizando o já mencionado método dos volumes finitos baseado em arestas (EBFV).
 
-Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores diagonais ou cheios para representar o parâmetro $\mathbi{K}$. O problema proposto pode ser descrito através da equação (\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
+Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores diagonais ou cheios para representar o parâmetro $\mathbi{K}$. O problema proposto pode ser descrito através da Eq. (\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
 \begin{equation} \label{eq:homogeneoaniso}
 \nabla(\mathbi{K} \nabla u) = -2(1 + x^2 + xy + y^2)e^{xy}
 \end{equation}
@@ -169,7 +169,7 @@ Na Fig. \ref{fig:HomogeneoAnisotropico_N=64} pode ser observado o campo escalar 
 \label{fig:HomogeneoAnisotropico_N=64}
 \end{figure}
 
-De modo a comparar os resultados obtidos com aqueles da literatura, calculamos o erro segundo a norma do máximo e as taxas de convergências para o mesmo considerando uma sequência de malhas sucessivamente refinadas (ver tabela \ref{tab:homoanisolinear}). Tais resultados foram comparados com aqueles obtidos tanto pelo FCFV quanto pelo EBFV (ver tabelas \ref{tab:homoanisocrump} e \ref{tab:homoanisocarvalho}).
+De modo a comparar os resultados obtidos com aqueles da literatura, calculamos o erro segundo a norma do máximo e as taxas de convergências para o mesmo considerando uma sequência de malhas sucessivamente refinadas (ver Tabela \ref{tab:homoanisolinear}). Tais resultados foram comparados com aqueles obtidos tanto pelo FCFV quanto pelo EBFV (ver Tabelas \ref{tab:homoanisocrump} e \ref{tab:homoanisocarvalho}).
 
 \begin{table}
 \caption[Erro e taxa de convergência para problema homogêneo e anisotrópico]{Erro e taxa de convergência obtidos neste trabalho para a solução da equação elíptica em meio homogêneo e anisotrópico.} 
@@ -292,7 +292,7 @@ A malha não-estruturada utilizada com aproximadamente $(8x8)$ elementos e a divi
 \label{fig:HeterogeneoAnisoMaterials_N=8}
 \end{figure}
 
-Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da descontinuidade na linha $x=0$, efeito este que se torna mais pronunciado ao aumentarmos o valor do parâmetro $\psi$. Os valores para os erros da solução numérica quando comparada com a analítica para as normas do máximo e $L2$ são apresentados na tabela \ref{tab:heteroiso}, onde pode ser visto que um aumento na descontinuidade do tensor $\mathbi{K}$ para os diferentes sub-domínios causa um aumento nos valores absolutos dos erros obtidos.
+Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da descontinuidade na linha $x=0$, efeito este que se torna mais pronunciado ao aumentarmos o valor do parâmetro $\psi$. Os valores para os erros da solução numérica quando comparada com a analítica para as normas do máximo e $L2$ são apresentados na Tabela \ref{tab:heteroiso}, onde pode ser visto que um aumento na descontinuidade do tensor $\mathbi{K}$ para os diferentes sub-domínios causa um aumento nos valores absolutos dos erros obtidos.
 
 \begin{figure}
 \centering
