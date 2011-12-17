@@ -95,7 +95,7 @@ Dada a complexidade envolvida na interação entre a rocha e as diferentes fases n
 \begin{figure} 
 \centering
 \includegraphics[width=0.6\textwidth]{chapters/ch02/relat_perm}
-\caption{Exemplo de modelo de permeabilidade relativa para escoamentos bifásicos em meios porosos.}
+\caption{Exemplo de modelo de permeabilidade relativa para escoamentos bifásicos em meios porosos (retirado de \cite{wikiRelatPerm2011}).}
 \label{fig:relat_perm}
 \end{figure}
 
@@ -114,7 +114,7 @@ onde $\alpha$ representa cada fase (neste trabalho, $\alpha = w$ e $o$ para água
 
 A lei de Darcy generalizada para a velocidade de cada fase é expressa através da seguinte equação:
 \begin{equation} \label{eq:eq_darcy_general}
-\mathbi{v}_{\alpha} = - \frac{K_{\alpha}}{\mu_{\alpha}} \nabla\left(p_{\alpha} - \rho_{\alpha}g\nabla z \right)
+\mathbi{v}_{\alpha} = - \frac{\mathbi{K}_{\alpha}}{\mu_{\alpha}} \nabla\left(p_{\alpha} - \rho_{\alpha}g\nabla z \right)
 \end{equation}%
 \nomenclature[bv]{$\mathbi{v}$}{Velocidade}%
 \nomenclature[a1vi]{$\mu$}{Viscosidade}%
@@ -134,11 +134,11 @@ A equação de conservação para cada fase é descrita como em \cite{Peaceman1977}:
 Os termos $q_{\alpha}$, $\phi$ e $t$ representam termos fontes/sumidores da fase $\alpha$ (por exemplo, poços), porosidade efetiva da rocha e o tempo, respectivamente. Além disso, se forem consideradas duas fases, uma molhante (água) e uma não-molhante (óleo), combinando as Eqs. (\ref{eq:eq_darcy_general}) e (\ref{eq:cons_eq}), e usando a definição dada na Eq. (\ref{eq:relat_perm}), é obtido o seguinte sistema de equações diferenciais parciais que resolve o problem do escoamento bifásico dadas as hipóteses já mencionadas:
 \begin{subequations} \label{eq:twophase_system}
   \begin{equation} \label{eq:twophase_systema}
-\nabla \cdot \left(\frac{\rho_{w}Kk_{rw}}{\mu_{w}} \nabla\left(p_{w} - \rho_{w}g\nabla z \right)\right) + q_{w} =
+\nabla \cdot \left(\frac{\rho_{w}\mathbi{K}k_{rw}}{\mu_{w}} \nabla\left(p_{w} - \rho_{w}g\nabla z \right)\right) + q_{w} =
 \frac{\partial \left(\phi \rho_{w} S_{w}\right)}{\partial t} 
   \end{equation}
   \begin{equation} \label{eq:twophase_systemb}
-\nabla \cdot \left(\frac{\rho_{o}Kk_{ro}}{\mu_{o}} \nabla\left(p_{o} - \rho_{o}g\nabla z \right)\right) + q_{o} =
+\nabla \cdot \left(\frac{\rho_{o}\mathbi{K}k_{ro}}{\mu_{o}} \nabla\left(p_{o} - \rho_{o}g\nabla z \right)\right) + q_{o} =
 \frac{\partial \left(\phi \rho_{o} S_{o}\right)}{\partial t} 
   \end{equation}
 \end{subequations}
