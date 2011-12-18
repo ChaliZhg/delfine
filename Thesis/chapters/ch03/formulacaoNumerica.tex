@@ -71,6 +71,23 @@ f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$. A Eq. (\ref{eq:galerkin}) aplicada a uma malha resulta em um conjunto de equações discretas na variável $p$, cuja solução é obtida usando os métodos descritos na seção \ref{sc:multigrid}.
 % Colocar figuras dos elementos triangulares 1st,2nd e 3rd ordem do dolfin-plot
 
+\begin{figure}
+\centering
+\subfigure[Triângulo Linear]{
+\includegraphics[width=0.35\textwidth]{chapters/ch03/LagTri1}
+}
+\quad
+\subfigure[Triângulo Quadrático]{
+\includegraphics[width=0.35\textwidth]{chapters/ch03/LagTri2}
+}
+\quad
+\subfigure[Triângulo Cúbico]{
+\includegraphics[width=0.35\textwidth]{chapters/ch03/LagTri3}
+}
+\caption{Exemplo de elementos triângulares para análise via \ac{MEF}.}
+\label{fig:HeterogeneoAnisoError_N=64}
+\end{figure}
+
 \section{Método dos Elementos Finitos Mistos} \label{sc:mfem}
 Na simulação de escoamentos em meios porosos é fundamental se obter uma boa aproximação para a variável de velocidade, pois esta será utilizada para o acoplamento entre as equações de pressão e saturação. Após a utilização de um método numérico como o descrito na seção anterior apenas a variável de pressão estará definida, sendo que esta aproximação será de segunda ordem para elementos triangulares lineares, como os que foram usados na maior parte deste trabalho. Portanto, seria necessário calcular em uma etapa seguinte a velocidade a partir da pressão calculada. 
 
@@ -78,6 +95,23 @@ O modo mais direto de fazer isto seria usar diretamente a equação de Darcy que p
 
 Uma outra alternativa, a qual é apresentada nesta seção, é o uso de uma formulação mista na qual as variáveis de pressão e velocidade são resolvidas simultaneamente. Para isto, é necessário reescrever a  descrição matemática da equação de pressão, subdivindo a mesma em dois problemas, como pode ser visto na Eq. (CITAR EQ. ABAIXO).
 % EQs. DE PRESSÂO E VELOCIDADE SEGREGADAS.
+
+\begin{figure}
+\centering
+\subfigure[Triângulo Linear]{
+\includegraphics[width=0.35\textwidth]{chapters/ch03/BDMTri1}
+}
+\quad
+\subfigure[Triângulo Quadrático]{
+\includegraphics[width=0.35\textwidth]{chapters/ch03/BDMTri2}
+}
+\quad
+\subfigure[Triângulo Cúbico]{
+\includegraphics[width=0.35\textwidth]{chapters/ch03/BDMTri3}
+}
+\caption[Exemplo de elementos triângulares para análise via MEFM.]{Exemplo de elementos triângulares para análise via \ac{MEFM}.}
+\label{fig:HeterogeneoAnisoError_N=64}
+\end{figure}
 
 % DECRICAO DA DESCRITAZACAO SEGUNDO MFEM. REFERENCIAS EM AARNES, BREZZI e OUTROS.
 \section{Estabilização do \ac{MEF} via \ac{SUPG}} \label{sc:supg}
