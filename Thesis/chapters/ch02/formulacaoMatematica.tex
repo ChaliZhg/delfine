@@ -114,7 +114,7 @@ onde $\alpha$ representa cada fase (neste trabalho, $\alpha = w$ e $o$ para água
 
 A lei de Darcy generalizada para a velocidade de cada fase é expressa através da seguinte equação:
 \begin{equation} \label{eq:eq_darcy_general}
-\mathbi{v}_{\alpha} = - \frac{\mathbi{K}_{\alpha}}{\mu_{\alpha}} \nabla\left(p_{\alpha} - \rho_{\alpha}g\nabla z \right)
+\mathbi{v}_{\alpha} = - \frac{\mathbi{K}_{\alpha}}{\mu_{\alpha}} \left(\nabla p_{\alpha} - \rho_{\alpha}g\nabla z \right)
 \end{equation}%
 \nomenclature[bv]{$\mathbi{v}$}{Velocidade}%
 \nomenclature[a1vi]{$\mu$}{Viscosidade}%
@@ -164,9 +164,9 @@ Então, dividindo a primeira equação por $\rho_{w}$, a segunda por $\rho_{o}$ e l
 \begin{equation} \label{eq:twophase_oneequation}
 -\nabla \cdot \mathbi{v}_{t} + q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
 \end{equation}
-onde $\mathbi{v}_{t} = \mathbi{v}_{w} + \mathbi{v}_{o}$ é a velocidade total do fluido e $q_{t} = (q_{w}/\rho_{w}) + (q_{o}/\rho_{o})$ é a taxa volumétrica total. Além disso, considerando a Eq. (\ref{eq:eq_const_sat}) e rearranjando os termos, nós obtemos a equação de pressão para o escoamento bifásico em meios porosos:
+onde $\mathbi{v}_{t} = \mathbi{v}_{w} + \mathbi{v}_{o}$ é a velocidade total do fluido e $Q_{t} = (q_{w}/\rho_{w}) + (q_{o}/\rho_{o})$ é a taxa volumétrica total. Além disso, considerando a Eq. (\ref{eq:eq_const_sat}) e rearranjando os termos, nós obtemos a equação de pressão para o escoamento bifásico em meios porosos:
 \begin{equation} \label{eq:pressure_eq_form1}
-\nabla \cdot \mathbi{v}_{t} = q_{t}
+\nabla \cdot \mathbi{v}_{t} = Q_{t}
 \end{equation}
 
 De modo a apresentar a Eq. (\ref{eq:pressure_eq_form1}) em relação a apenas uma única variável de pressão, pode-se definir uma pressão média por:
@@ -193,29 +193,68 @@ As mobilidades das fases são definidas como a relação entre a permeabilidade rel
 Finalmente, reescrevendo a Eq. (\ref{eq:pressure_eq_form1}) utilizando pressões médias e capilares pode-se obter depois de um rearranjo dos termos a seguinte expressão:
 \begin{equation} \label{eq:pressure_eq_form2}
 \nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
-\left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = q_{t}
+\left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = Q_{t}
 \end{equation}
 
-Logo, pode ser claramente observado que a Eq. (\ref{eq:pressure_eq_form2}), considerando as hipóteses feitas, tem uma natureza elíptica. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão. A forma simplificada da equação de pressão pode ser apresentada como:
+Logo, pode ser claramente observado que a Eq. (\ref{eq:pressure_eq_form2}), considerando as hipóteses feitas, tem uma natureza elíptica. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão. Definindo-se a mobilidade total como $\lambda_{t} = \lambda_{w} + \lambda_{o}$, a forma simplificada da equação de pressão pode ser apresentada como:
 \begin{equation} \label{eq:pressure_eq_form3}
-\nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} \right) \right) = q_{t}
+- \nabla \cdot \left(\mathbi{K} \lambda_{t} \nabla p_{avg} \right) = Q_{t}
 \end{equation}
-
-A equação de saturação pode ser deduzida usando uma manipulação algébrica similar para completar o modelo acoplado de pressão-saturação para um escoamento bifásico água-óleo em meios porosos conforme mostraremos nas próximas sessões.
 
 \section{Equação da Saturação}
 \label{sc:eq_sat}
-Calculando a velocidade a partir do grandiente de pressão obtido no passo anterior, podemos então definir de modo explícito uma equação para a saturação.
-\begin{equation} \label{eq:sat}
-\phi \frac{\partial S}{\partial t} + f_{,S} \mathbf{u} \cdot \nabla S + \nabla \cdot 
-(\mathbf{\kappa}\lambda_{o}f(\rho_{w} - \rho_{o})\mathbf{g})=0
+A equação de saturação pode ser deduzida usando uma manipulação algébrica similar à utilizada na seção anterior de modo a completar o modelo de pressão-saturação para um escoamento bifásico água-óleo em meios porosos. Para a derivação desta equação faz-se necessário definir qual das fases (molhante ou não-molhante) servirá de referência. Neste trabalho foi escolhida a fase água, sendo tal escolha absolutamente arbitrária, tendo apenas seguido a prática usual da literatura \citep{Peaceman1977, Ewing1983, Carvalho2005, Silva2008}.
+
+Consideraremos a princípio que tenha sido obtida uma solução para um caso mais geral representado pela Eq. (\ref{eq:pressure_eq_form2}), sendo portanto conhecida $p_{avg}$. Logo, as pressões das fases água $(p_{w})$ e óleo $(p_{o})$ podem ser calculadas a partir da Eq. (\ref{eq:phase_pressures_cap}) e utilizando a Eq. (\ref{eq:eq_darcy_general}) podemos calcular as velocidades das duas fases, obtendo:
+\begin{subequations} \label{eq:phase_velocities}
+  \begin{equation} \label{eq:phase_velocitiesa}
+\mathbi{v}_{w} = - \mathbi{K}\lambda_{w} \left(\nabla p_{w} - \rho_{w}g\nabla z \right)
+  \end{equation}
+  \begin{equation} \label{eq:phase_velocitiesb}
+\mathbi{v}_{o} = - \mathbi{K}\lambda_{o} \left(\nabla p_{o} - \rho_{o}g\nabla z \right)
+  \end{equation}
+\end{subequations}
+
+Multiplicando a Eq. (\ref{eq:phase_velocitiesa}) por $\lambda_{o}$, a Eq. (\ref{eq:phase_velocitiesb}) por $\lambda_{w}$, subtraindo uma da outra e utilizando a definição de pressão capilar, pode-se obter:
+\begin{equation} \label{eq:phase_velocities2}
+- \lambda_{w}\mathbi{v}_{o} + \lambda_{o}\mathbi{v}_{w} = \mathbi{K}\lambda_{o}\lambda_{w}\nabla p_{c} - \mathbi{K}\lambda_{o}\lambda_{w}\left(\rho_{o} - \rho_{w}\right)g\nabla z
+\end{equation}
+
+Considerando-se ainda as definições de velocidade e mobilidade total, podemos reescrever a equação anterior como:
+\begin{equation} \label{eq:phase_velocities3}
+\lambda_{t}\mathbi{v}_{w} = \lambda_{w}\mathbi{v}_{t} + \mathbi{K}\lambda_{o}\lambda_{w}\left(\nabla p_{c} + \left(\rho_{w} - \rho_{o}\right)g\nabla z\right)
+\end{equation}
+
+Definindo ainda o fluxo fracional da fase $\alpha$ como:
+\begin{equation} \label{eq:fracflux}
+f_{\alpha} = \frac{\lambda_{\alpha}}{\lambda_{t}}
 \end{equation}%
 \nomenclature[aff]{$f$}{Fluxo fracional}%
-\nomenclature[afs]{$f_{,S}$}{Derivada do fluxo fracional em relação à saturação}%
-a partir de (\ref{eq:sat}) podemos derivar...
+e utilizando-se a seguinte função da saturação para simplificar a notação:
+\begin{equation} \label{eq:derivcapsat}
+h_{w} = - \frac{\lambda_{o}\lambda_{w}}{\lambda_{t}} \frac{d p_{c}}{d S_{w}}
+\end{equation}
+podemos obter uma expressão na qual a velocidade da fase água é expressa em função da velocidade total. Substituindo as Eqs. (\ref{eq:fracflux}) e (\ref{eq:derivcapsat}) na Eq. (\ref{eq:phase_velocities3}) e inserindo esta na Eq. (\ref{eq:cons_eq}), podemos escrever a seguinte expressão para a saturação da fase água:
+\begin{equation} \label{eq:sateq}
+\frac{\partial (\phi\rho_{w}S_{w})}{\partial t} = - \nabla\cdot\left(\rho_{w}\left(f_{w}\mathbi{v}_{t} - \mathbi{K}h_{w}\nabla S_{w} + \mathbi{K}\lambda_{o}f_{w}\left(\rho_{w} - \rho_{o}\right)g\nabla z\right)\right) + q_{w}
+\end{equation}
 
-O capítulo \ref{ch:form_num} apresenta métodos para resolver de forma aproximada este tipo de equação.
-\section{Sistema de Equações para Escoamento Bifásico}
+Assumindo as hipóteses já mencionadas de rochas e fluidos incompressíveis podemos representar a expressão anterior por:
+\begin{equation} \label{eq:sateq2}
+\phi\rho_{w}\frac{\partial S_{w}}{\partial t} = - \rho_{w}\nabla\cdot\left(\left(f_{w}\mathbi{v}_{t} - \mathbi{K}h_{w}\nabla S_{w} + \mathbi{K}\lambda_{o}f_{w}\left(\rho_{w} - \rho_{o}\right)g\nabla z\right)\right) + q_{w}
+\end{equation}
+
+Além disso, dividindo a Eq. \ref{eq:sateq2} por $\rho_{w}$ e considerando a definição do termo de taxa volumétrica de injeção/produção da fase água $Q_{w} = q_{w}/\rho_{w}$, obtemos:
+\begin{equation} \label{eq:sateq3}
+\phi\frac{\partial S_{w}}{\partial t} = - \nabla\cdot\left(\left(f_{w}\mathbi{v}_{t} - \mathbi{K}h_{w}\nabla S_{w} + \mathbi{K}\lambda_{o}f_{w}\left(\rho_{w} - \rho_{o}\right)g\nabla z\right)\right) + Q_{w}
+\end{equation}
+
+
+A Eq. (\ref{eq:sateq3}) permite obter a saturação da fase água em um meio poroso considerando as hipóteses básicas descritas no início deste capítulo. Esta equação apresenta um comportamento essencialmente parabólico-hiperbólico, a não ser que o termo de capilaridade seja desprezível comparado com os termos advectivos, o que é verdade especialmente para casos como na vizinhança de poços ou em áreas do reservatório onde a velocidade total seja alta \citep{Carvalho2005}. Considerando esta última conjectura como válida e supondo um escoamento horizontal, obtemos a forma simplificada para a saturação da fase água em um meio poroso:
+\begin{equation} \label{eq:sateq3}
+\phi\frac{\partial S_{w}}{\partial t} = - \nabla\cdot\left(f_{w}\mathbi{v}_{t}\right) + Q_{w}
+\end{equation}
+
 \section{Condições Iniciais e de Contorno}
 \label{sc:cond_ini_bc}
 % Garcia / Chen / Shan / Comentarios Ewing
