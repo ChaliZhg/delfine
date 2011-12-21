@@ -15,14 +15,14 @@ Um aspecto comum a todos estes métodos computacionais é o tempo considerável nec
 
 Além disso, existe uma necessidade de reduzir o tempo de CPU de um programa de modo a viabilizar o uso de simulações dentro do prazo de um projeto. Normalmente, a parte que mais consome tempo de processamento em uma simulação é a solução numérica do sistema de equações lineares resultante da discretização das \ac{EDP}s \citep{Saad2003}. Várias técnicas estão disponíveis para resolver de modo iterativo este tipo de sistema, cada uma delas com suas próprias vantagens e desvantagens em termos de velocidade e generalidade, sendo que estas características frequentemente apontam para direções distintas, isto é, um método extremamente rápido para uma classe de problemas muitas vezes não é geral e vice-versa. Neste trabalho foi utilizado um método conhecido por acoplar de modo quase ideal estas duas características: o método Multigrid \citep{Trottenberg2001, Saad2003, Briggs2000}. Todavia, esta particularidade não é obtida sem custo, sendo neste caso as principais dificuldades adicionais associadas aos métodos Multigrid a necessidade de uma sequência de malhas sucessivamente mais grosseiras cuja geração pode se tornar um problema caso não seja abordada adequadamente e o uso de operadores de transferência de informações entre níveis consecutivos. Seguindo o princípio de economizar tempo de codificação com tarefas gerais e manter o foco no problema de interesse, neste trabalho foi utilizada a biblioteca de código aberto \emph{PyAMG} \citep{Bell2008}, a qual não apenas efetua de modo completamente automático a geração de uma sequência de matrizes dada uma malha inicial, como também permite o uso de diferentes variantes do Método do \ac{AMG}, incluindo os algortimos clássicos de Ruge-St\"{u}ben e o de Agregação Suavizada (\emph{Smooth Aggregation}) \citep{Trottenberg2001}.
 
-\section{Histórico da Simulação de Reservatórios de Petróleo}
-\label{sc:histSimRes}
+%\section{Histórico da Simulação de Reservatórios de Petróleo}
+%\label{sc:histSimRes}
 
-\section{Histórico do Multigrid}
-\label{sc:histMult}
+%\section{Histórico do Multigrid}
+%\label{sc:histMult}
 
-\section{Histórico da Modelagem Automática de Equações Diferenciais}
-\label{sc:histMult}
+%\section{Histórico da Modelagem Automática de Equações Diferenciais}
+%\label{sc:histMult}
 
 \section{Objetivos}
 \label{sc:obj}

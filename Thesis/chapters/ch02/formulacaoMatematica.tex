@@ -251,9 +251,39 @@ Além disso, dividindo a Eq. \ref{eq:sateq2} por $\rho_{w}$ e considerando a defi
 
 
 A Eq. (\ref{eq:sateq3}) permite obter a saturação da fase água em um meio poroso considerando as hipóteses básicas descritas no início deste capítulo. Esta equação apresenta um comportamento essencialmente parabólico-hiperbólico, a não ser que o termo de capilaridade seja desprezível comparado com os termos advectivos, o que é verdade especialmente para casos como na vizinhança de poços ou em áreas do reservatório onde a velocidade total seja alta \citep{Carvalho2005}. Considerando esta última conjectura como válida e supondo um escoamento horizontal, obtemos a forma simplificada para a saturação da fase água em um meio poroso:
-\begin{equation} \label{eq:sateq3}
+\begin{equation} \label{eq:sateq4}
 \phi\frac{\partial S_{w}}{\partial t} = - \nabla\cdot\left(f_{w}\mathbi{v}_{t}\right) + Q_{w}
 \end{equation}
+
+A Eq. (\ref{eq:sateq4}) apresenta características essencialmente hiperbólicas e não-lineares devido ao termo de fluxo fracional. Um modo de estudar os fenômenos principais associados a esta equação é utilizar modelos que isolem apenas algumas das características de interesse. Sendo assim, serão apresentadas a seguir duas variações das equações apresentadas para a saturação. A primeira delas considera um escoamento unidimensional e sem termo de fonte, onde o principal objetivo é analisar o efeito da não-linearidade decorrente do fluxo fracional. A segunda variação considera uma versão linear da Eq. (\ref{eq:sateq3}), a qual nada mais é do que a conhecida equação de difusão-convecção-reação e que neste caso governa o escoamento multidimensional de fluidos miscíveis \citep{Peaceman1977, Barbosa2009, Loula1995}.
+
+\subsection{Equação de Buckley-Leverett}
+\label{sc:buckleyeq}
+\cite{Buckley1942} propuseram um modelo para representar o deslocamento imiscível de óleo por água em meios porosos rígidos unidimensionais, considerando os termos de gravidade e capilaridade desprezíveis. Partindo da Eq. (\ref{eq:sateq4}), eliminamos o termo de fonte, já que neste modelo injeção e produção são manuseadas nas condições de contorno. Assim, para o caso unidimensional podemos obter:
+\begin{equation} \label{eq:buclev1}
+\phi\frac{\partial S_{w}}{\partial t} + \frac{\partial \left(f_{w}\mathbi{v}_{t}\right)}{\partial x}= 0
+\end{equation}
+
+Expandindo o segundo termo da Eq. (\ref{eq:buclev1}) utilizando a regra de derivada do produto, chegamos a:
+\begin{equation} \label{eq:buclev2}
+\phi\frac{\partial S_{w}}{\partial t} + \mathbi{v}_{t}\frac{\partial f_{w}}{\partial x} + f_{w}\frac{\partial \mathbi{v}_{t}}{\partial x}= 0
+\end{equation}
+
+Sendo que a derivada parcial do terceiro termo desta equação necessariamente tem que ser igual a zero se consideramos a imposição de continuidade dada pela Eq. (\ref{eq:pressure_eq_form1}) e utilizando um termo de fonte nulo. Além disso, podemos expandir o segundo termo usando a regra da cadeia, obtendo assim a equação de Buckley-Leverett:
+\begin{equation} \label{eq:buclev3}
+\phi\frac{\partial S_{w}}{\partial t} + \mathbi{v}_{t}\frac{d f_{w}}{d S_{w}}\frac{\partial S_{w}}{\partial x}= 0
+\end{equation}
+
+Esta é uma equação hiperbólica de transporte não-linear, pois o coeficiente que multiplica o termo $\partial S_{w}/\partial x$ é uma função não-linear de $S_{w}$ \citep{Carvalho2005}. A análise do comportamento desta função permite inferir um série de propriedades comuns aos escoamentos mais complexos. Um exemplo de representação da função de fluxo fracional e de sua derivada em relação à saturação pode ser observado na Fig. \ref{fig:fracflux}. No Capítulo \ref{ch:resultados} serão apresentados e discutidos resultados para esta equação modelo.
+\begin{figure} 
+\centering
+\includegraphics[width=0.8\textwidth]{chapters/ch02/fracflux}
+\caption{Exemplo de função de fluxo fracional e sua derivada relativa à saturação da fase água.}
+\label{fig:fracflux}
+\end{figure}
+
+\subsection{Equação do Deslocamento de Fluidos Miscíveis}
+\label{sc:miscibleeq}
 
 \section{Condições Iniciais e de Contorno}
 \label{sc:cond_ini_bc}
