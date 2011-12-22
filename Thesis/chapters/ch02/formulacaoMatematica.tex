@@ -94,8 +94,8 @@ Dada a complexidade envolvida na interação entre a rocha e as diferentes fases n
 
 \begin{figure} 
 \centering
-\includegraphics[width=0.6\textwidth]{chapters/ch02/relat_perm}
-\caption{Exemplo de modelo de permeabilidade relativa para escoamentos bifásicos em meios porosos (retirado de \cite{wikiRelatPerm2011}).}
+\includegraphics[width=0.7\textwidth]{chapters/ch02/relat_perm}
+\caption{Exemplo de modelo de permeabilidade relativa para escoamentos bifásicos em meios porosos.}
 \label{fig:relat_perm}
 \end{figure}
 
@@ -255,7 +255,7 @@ A Eq. (\ref{eq:sateq3}) permite obter a saturação da fase água em um meio poroso
 \phi\frac{\partial S_{w}}{\partial t} = - \nabla\cdot\left(f_{w}\mathbi{v}_{t}\right) + Q_{w}
 \end{equation}
 
-A Eq. (\ref{eq:sateq4}) apresenta características essencialmente hiperbólicas e não-lineares devido ao termo de fluxo fracional. Um modo de estudar os fenômenos principais associados a esta equação é utilizar modelos que isolem apenas algumas das características de interesse. Sendo assim, serão apresentadas a seguir duas variações das equações apresentadas para a saturação. A primeira delas considera um escoamento unidimensional e sem termo de fonte, onde o principal objetivo é analisar o efeito da não-linearidade decorrente do fluxo fracional. A segunda variação considera uma versão linear da Eq. (\ref{eq:sateq3}), a qual nada mais é do que a conhecida equação de difusão-convecção-reação e que neste caso governa o escoamento multidimensional de fluidos miscíveis \citep{Peaceman1977, Barbosa2009, Loula1995}.
+A Eq. (\ref{eq:sateq4}) apresenta características essencialmente hiperbólicas e não-lineares devido ao termo de fluxo fracional. Um modo de estudar os fenômenos principais associados a esta equação é utilizar modelos que isolem apenas algumas das características de interesse. Sendo assim, serão apresentadas a seguir duas variações das equações apresentadas para a saturação. A primeira delas considera um escoamento unidimensional e sem termo de fonte, onde o principal objetivo é analisar o efeito da não-linearidade decorrente do fluxo fracional. A segunda variação considera uma versão linear da Eq. (\ref{eq:sateq3}), a qual nada mais é do que a conhecida equação de difusão-convecção e que neste caso governa o escoamento multidimensional de fluidos miscíveis \citep{Peaceman1977, Barbosa2009, Loula1995}.
 
 \subsection{Equação de Buckley-Leverett}
 \label{sc:buckleyeq}
@@ -277,13 +277,27 @@ Sendo que a derivada parcial do terceiro termo desta equação necessariamente tem
 Esta é uma equação hiperbólica de transporte não-linear, pois o coeficiente que multiplica o termo $\partial S_{w}/\partial x$ é uma função não-linear de $S_{w}$ \citep{Carvalho2005}. A análise do comportamento desta função permite inferir um série de propriedades comuns aos escoamentos mais complexos. Um exemplo de representação da função de fluxo fracional e de sua derivada em relação à saturação pode ser observado na Fig. \ref{fig:fracflux}. No Capítulo \ref{ch:resultados} serão apresentados e discutidos resultados para esta equação modelo.
 \begin{figure} 
 \centering
-\includegraphics[width=0.8\textwidth]{chapters/ch02/fracflux}
+\includegraphics[width=0.7\textwidth]{chapters/ch02/fracflux}
 \caption{Exemplo de função de fluxo fracional e sua derivada relativa à saturação da fase água.}
 \label{fig:fracflux}
 \end{figure}
 
 \subsection{Equação do Deslocamento de Fluidos Miscíveis}
 \label{sc:miscibleeq}
+A análise da equações de escoamentos miscíveis em meios porosos permite analisar o comportamento de diversos fenômenos de interesse como, por exemplo, o transporte de contaminantes em aquíferos \citep{Carvalho2005}, a injeção de traçadores em reservatórios de petróleo para recuperação avançada \citep{Loula1995}, entre outros \citep{Bear1992, Barbosa2009}. Na área de simulação de reservatórios tais equações têm sido tradicionalmente utilizadas para testar e desenvolver formulação numéricas devido as diversas similaridades existentes quando comparadas às equações que descrevem os escoamentos imiscíveis \citep{Ewing1983}.
+
+A equação para a concentração $C$ do soluto (traçador) dissolvido em um fluido solvente é dada por:
+\begin{equation} \label{eq:misc1}
+\phi\frac{\partial C}{\partial t} = - \nabla\cdot\left(C\mathbi{v} - \mathbi{D}\nabla C \right) + \hat{C}Q
+\end{equation}%
+\nomenclature[acon]{$C$}{Concentração}%
+onde $\mathbi{D}$%
+\nomenclature[cdi]{$\mathbi{D}$}{Tensor de Dispersão-Difusão}
+representa o tensor de dispersão-difusividade, $Q$ é o termo fonte/sumidouro nos poços e $\hat{C}$ é a concentração nos mesmos.
+
+O tensor $\mathbi{D}$ combina os efeitos de dispersão mecânica e difusão molecular, onde o primeiro é normalmente proporcional à velocidade e possui componentes tanto na direção longitudinal quanto transversal do escoamento. Já o termo de difusão pode ser calculado pela Lei de Fick, a qual permite obter um fluxo difusivo a partir do gradiente de concentração do soluto $C$. Uma excelente discussão a respeito dos detalhes sobre este tensor e a interpretação física de seus componentes pode ser encontrado em \cite{Ewing1983}.
+
+No Capítulo \ref{ch:form_num} a versão unidimensional em meio homogêneo da Eq. (\ref{eq:misc1}) será utilizada para a apresentação de alguns dos métodos numéricos utilizados neste trabalho. Resultados para casos multidimensionais e considerando meios altamente heterogêneos serão apresentados e discutidos no Capítulo \ref{ch:resultados} esta equação modelo.
 
 \section{Condições Iniciais e de Contorno}
 \label{sc:cond_ini_bc}
@@ -322,12 +336,20 @@ Logo, assumindo que a transferência de massa entre o reservatório e o meio exter
 \end{equation}
 onde $q_{I}_{\alpha}$ e $q_{P}_{\alpha}$ representam as vazões volumétricas da fase $\alpha$ nos poços injetores e produtores, respectivamente.
 
-
 As condições inicial e de contorno para a equação de saturação são:
 \begin{equation} \label{eq:satinibc}
 \left. \begin{array}{lll}
 S_{w}(\mathbi{x},0) = S^{t=0}_{w} \quad \textrm{em $\Omega$} \\
 S_{w}(\mathbi{x},t) = S^{I}_{w} \quad \textrm{em $\Gamma_{I}$} \\
 \mathbi{K} \nabla S_{w}(\mathbi{x},t) \cdot \mathbi{n} = 0 \quad \textrm{em $\Gamma_{N}$}\\
+\end{array} \right.
+\end{equation}
+
+Para a equação da concentração de um soluto em um fluido solvente, ver Eq. (\ref{eq:misc1}), as condições iniciais e de contorno são definidas de modo similar:
+\begin{equation} \label{eq:coninibc}
+\left. \begin{array}{lll}
+C(\mathbi{x},0) = C^{t=0} \quad \textrm{em $\Omega$} \\
+C(\mathbi{x},t) = \hat{C} \quad \textrm{em $\Gamma_{I}$} \\
+\mathbi{D} \nabla C(\mathbi{x},t) \cdot \mathbi{n} = 0 \quad \textrm{em $\Gamma_{N}$}\\
 \end{array} \right.
 \end{equation}
