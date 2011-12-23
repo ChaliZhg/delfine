@@ -11,7 +11,7 @@
 # 31/03/11 - Added a 'rocks' list to the RockData class in order to store all the rocks created 
 # with the rockType type
 # 28/05/11 - Permeability Tensor class moved in to this module for code organization
-#
+# 21/11/11 - Fractional flow derivative added
 ############################################################
 from dolfin import *
 # 5th level-------------------------------------------------------------------------------------------------------------------------------------
@@ -176,8 +176,12 @@ class DelfineData:
             self.V = None
             self.u0 = None
             self.K = None
+            self.krW = None
+            self.krO = None
             self.mob = None
             self.velocity = None
+            self.satW = None
+            self.pressTot = None
         elif (type == "input"):
             # Geometric
             self.geom = GeomData()
@@ -419,17 +423,50 @@ class RelatPermScalar(Expression):
         self.Sw = Sw
         # Read data for Corey model (Attention: other models(Stone's I, II) still pending)
         if (self.model == "corey"):
-            if (self.fluid == "water"):
-                self.Swr =  parameter.phys.rockFluid.relativePerm.krw.Sr
-                self.krwEnd = parameter.phys.rockFluid.relativePerm.krw.krEnd
-                self.nw = parameter.phys.rockFluid.relativePerm.krw.n
-            elif (self.fluid == "oil"):
-                self.Sor =  parameter.phys.rockFluid.relativePerm.kro.Sr
-                self.no = parameter.phys.rockFluid.relativePerm.kro.n
+            self.Swr =  parameter.phys.rockFluid.relativePerm.krw.Sr
+            self.krwEnd = parameter.phys.rockFluid.relativePerm.krw.krEnd
+            self.nw = parameter.phys.rockFluid.relativePerm.krw.n
+            self.Sor =  parameter.phys.rockFluid.relativePerm.kro.Sr
+            self.no = parameter.phys.rockFluid.relativePerm.kro.n
     def eval (self, values, x):
+        # Normalize Saturation
+        Swn = (self.Sw(x) - self.Swr)/(1.0 - self.Swr - self.Sor)
         if (self.model == "corey"):
             if (self.fluid == "water"):
-                values[0] = self.Sw**4 #FIXME: Fix corey's formulae
+                values[0] = self.krwEnd*(Swn**self.nw)
             elif (self.fluid == "oil"):
-                values[0] = (1 - self.Sw)**4
+                values[0] = (1.0 - Swn)**self.no
+# Auxiliary class for hyperbolix assembly module------------------------------------------------------------------------------------------ 
+class WaterFracFlowDiff(Expression):
+    """Defines the water fractional flow for each point"""
+    def __init__(self, parameter, Sw):
+        self.model = parameter.phys.rockFluid.relativePerm.type
+        self.Sw = Sw
+        # Read data for Corey model (Attention: other models(Stone's I, II) still pending)
+        if (self.model == "corey"):
+            self.Swr =  parameter.phys.rockFluid.relativePerm.krw.Sr
+            self.krwEnd = parameter.phys.rockFluid.relativePerm.krw.krEnd
+            self.nw = parameter.phys.rockFluid.relativePerm.krw.n
+            self.muW = parameter.phys.fluid.water.viscosity.value
+            self.Sor =  parameter.phys.rockFluid.relativePerm.kro.Sr
+            self.no = parameter.phys.rockFluid.relativePerm.kro.Sr
+            self.muO = parameter.phys.fluid.oil.viscosity.value
+    def eval (self, values, x):
+        if (self.model == "corey"):
+            Swr = self.Swr
+            krwEnd = self.krwEnd
+            nw = self.nw
+            muW = self.muW
+            Sor = self.Sor
+            no = self.no
+            muO = self.muO
+            # Normalize Saturation
+            Swn = (self.Sw(x) - self.Swr)/(1.0 - self.Swr - self.Sor)
+            # Coefficients for dfw/dSw
+            A = krwEnd*nw*(Swn**(nw - 1.0))
+            B = muW*(krwEnd*(Swn**nw)/muW + ((1.0 - Swn)**no)/muO)
+            values[0] = (A/B) - krwEnd*(Swn**nw)*((A/muW) - ((1.0 - Swn)**(no - 1.0))/muO)/(B**2.0)
+        else:
+            # No-model applied,
+            values[0] = 1.0
 #############################################################

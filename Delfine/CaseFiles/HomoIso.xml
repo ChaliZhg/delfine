@@ -43,13 +43,13 @@
         <rock-fluid-properties>
             <relative-permeability model="corey">
                 <krw>
-                    <krw_end>0.5</krw_end>
-                    <Swc>0.15</Swc>
-                    <nw>3.5</nw>
+                    <krw_end>1.0</krw_end>
+                    <Swc>0.0</Swc>
+                    <nw>2.0</nw>
                 </krw>
                 <kro>
-                    <Sor>0.25</Sor>
-                    <no>1.5</no>
+                    <Sor>0.0</Sor>
+                    <no>2.0</no>
                 </kro>
             </relative-permeability>
         </rock-fluid-properties>

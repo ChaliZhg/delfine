@@ -143,10 +143,10 @@ class DelfineInput:
         parameter.phys.fluid.water.use = water.attrib["use"]
         
         parameter.phys.fluid.water.viscosity.model = water.find('viscosity').attrib["model"]
-        parameter.phys.fluid.water.viscosity.value = water.find('viscosity').text
+        parameter.phys.fluid.water.viscosity.value = float(water.find('viscosity').text)
        
         parameter.phys.fluid.water.density.model = water.find('density').attrib["model"]
-        parameter.phys.fluid.water.density.value = water.find('density').text
+        parameter.phys.fluid.water.density.value = float(water.find('density').text)
         
         dummyCapP = water.find('capillary-pressure') 
         if (dummyCapP != None): # Checking if not compulsory data is given in input file
@@ -167,10 +167,10 @@ class DelfineInput:
             parameter.phys.fluid.oil.use = oil.attrib["use"]
         
             parameter.phys.fluid.oil.viscosity.model = oil.find('viscosity').attrib["model"]
-            parameter.phys.fluid.oil.viscosity.value = oil.find('viscosity').text
+            parameter.phys.fluid.oil.viscosity.value = float(oil.find('viscosity').text)
        
             parameter.phys.fluid.oil.density.model = oil.find('density').attrib["model"]
-            parameter.phys.fluid.oil.density.value = oil.find('density').text
+            parameter.phys.fluid.oil.density.value = float(oil.find('density').text)
         
             dummyCapP = oil.find('capillary-pressure') 
             if (dummyCapP != None): # Checking if not compulsory data is given in input file
@@ -191,10 +191,10 @@ class DelfineInput:
             parameter.phys.fluid.gas.use = gas.attrib["use"]
         
             parameter.phys.fluid.gas.viscosity.model = gas.find('viscosity').attrib["model"]
-            parameter.phys.fluid.gas.viscosity.value = gas.find('viscosity').text
+            parameter.phys.fluid.gas.viscosity.value = float(gas.find('viscosity').text)
        
             parameter.phys.fluid.gas.density.model = gas.find('density').attrib["model"]
-            parameter.phys.fluid.gas.density.value = gas.find('density').text
+            parameter.phys.fluid.gas.density.value = float(gas.find('density').text)
         
             dummyCapP = gas.find('capillary-pressure') 
             if (dummyCapP != None): # Checking if not compulsory data is given in input file

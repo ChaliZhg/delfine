@@ -27,7 +27,7 @@ class AssembleElliptic:
         # Attention: this parameter(s) is different from the parameter
         # variable used by delfine to store the data file informations
         parameters.linear_algebra_backend = "uBLAS" #FIXME: Verificar se precisa de self
-
+        
         # Mesh data (see DelfineMesh for details)
         self.mesh = meshData.allData
         self.dim = parameter.geom.mesh.dim
@@ -42,18 +42,19 @@ class AssembleElliptic:
             self.invK = InversePermeabilityTensor3D(self.mesh, parameter)
 
         # Read data for fluid viscosity
-        muW = ViscScalar( "water", parameter)
-        muO = ViscScalar( "oil", parameter)
+        #muW = ViscScalar( "water", parameter)
+        #muO = ViscScalar( "oil", parameter)
 
         # Read data for relative permeabilities
-        Sw = 1.0 # FIXME: This comes from sat. solution
-        krW = RelatPermScalar("water", parameter, Sw)
-        krO = RelatPermScalar("oil", parameter, Sw)
+        #Sw = 1.0 # FIXME: This comes from sat. solution
+        #Sw = Expression("1.0")
+        #krW = RelatPermScalar("water", parameter, Sw)
+        #krO = RelatPermScalar("oil", parameter, Sw)
 
         # Define partials and total mobilites
-        mobW = krW/muW
-        mobO = krO/muO
-        self.mob = mobW + mobO
+        #mobW = krW/muW
+        #mobO = krO/muO
+        #self.mob = mobW + mobO
 ############################################################
     def Galerkin(self, delfineVar, parameter):
         """Assembles the elliptic problem in a Galerkin variational form with Dolfin.""" 
@@ -120,7 +121,21 @@ class AssembleElliptic:
         # Get data from base initialization
         mesh = self.mesh
         invK = self.invK
-        mob = self.mob
+        #mob = self.mob
+        
+        # FIXME: Decide if these parameters are initialized here
+        Sw = delfineVar.satW
+        muW = ViscScalar( "water", parameter) 
+        muO = ViscScalar( "oil", parameter)
+        krW = delfineVar.krW
+        krO = delfineVar.krO
+        krW.Sw = Sw
+        krO.Sw = Sw
+        
+        # Define partials and total mobilites
+        mobW = krW/muW
+        mobO = krO/muO
+        mob = mobW + mobO
         
         # Define function spaces and mixed (product) space
         BDM = FunctionSpace(mesh, "BDM", 1)
@@ -191,17 +206,8 @@ class AssembleElliptic:
         average_p = assemble (int_p, mesh=mesh)
         p_array = p.vector().array() - average_p
         p.vector()[:] = p_array
-
-        # Plot results
-        plot(v)
-        plot(p)
-        #interactive()
         
-        # Save solution in VTK format
-        ufile_pvd = File ( "Results/mfem_velocity.pvd" )
-        ufile_pvd << v 
-        pfile_pvd = File ( "Results/mfem_pressure.pvd" )
-        pfile_pvd << p
         # Define return parameters
+        delfineVar.pressTot = p
         delfineVar.velocity = v
 ############################################################

@@ -85,10 +85,10 @@ class Delfine:
             self.outPlot.plotResults(self.transferData,  self.parameter)
         elif (formulation == "mixedfem"):
             # Assemble and solve for pressure and velocity
-            self.elliptic.MixedFEM(self.transferData, self.parameter)
+            #self.elliptic.MixedFEM(self.transferData, self.parameter)
             
             # Assemble and solve for saturation
-            self.saturation.SUPG(self.transferData, self.parameter)
+            self.saturation.SUPG(self.transferData, self.parameter,  self.elliptic)
             
 #############################################################
 
