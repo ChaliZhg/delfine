@@ -4,7 +4,7 @@
 Neste trabalho, foi adotada a formulação matemática clássica proposta em \cite{Peaceman1977} para o escoamento simultâneo de duas fases imiscíveis em um meio poroso saturado. Esta abordagem vem sendo utilizada por muitos pesquisadores \citep{Ewing1983,Chavent1986,Carvalho2005,Silva2008} e tem com uma de suas principais características a manipulação da equação de conservação da massa usando a lei de Darcy de modo a formar um sistema com uma equação de pressão parabólica-elíptica e uma equação de saturação parabólica-hiperbólica \citep{Carvalho2005}, em oposição a outras formulações nas quais os campos de pressão e saturação são resolvidos simultaneamente em um sistema de \ac{EDP}s parabólicas \citep{Aziz1979}.
 % [1] Describe briefly Aziz's formulation in the thesis, for comparison purposes
 
-A formulação segregada de Peaceman permite o uso de métodos especializados capazes de explorar as particularidades matemáticas de cada equação do sistema resultante. O acoplamente entre estes dois campos é obtido através do uso de um termo de velocidade total.
+A formulação segregada de Peaceman permite o uso de métodos especializados capazes de explorar as particularidades matemáticas de cada equação do sistema resultante. O acoplamento entre estes dois campos é obtido através do uso de um termo de velocidade total.
 
 De modo a utilizar as equações apresentadas ao longo deste capítulo, faz-se necessário a adoção de algumas hipóteses simplificadoras \citep{Carvalho2005,Peaceman1977}:
 \begin{itemize}
@@ -30,7 +30,6 @@ Apesar do grande aumento percebido na capacidade computacional do hardware utili
 
 \subsection{Porosidade}
 Uma rocha, para ter a capacidade de armazenar um fluido, por exemplo petróleo, deve possuir vazios no seu interior, os quais são chamados de poros. Além disso, para que haja fluxo dentro desta rocha-reservatório é necessário que tais poros estejam interconectados para que existam um caminho que os fluidos possam percorrer. Para efeitos de cálculo de porosidade, existe uma diferença entre a porosidade \emph{absoluta}, a qual abrange todos os poros, estejam eles interconectados ou não, e a porosidade \emph{efetiva}, onde apenas os poros ligados entre si são considerados. Apenas esse segundo tipo de porosidade será usado neste trabalho, já que é o de maior interesse para a análise de escoamentos. Portanto, sempre que houver referência à porosidade, pode-se entender como a variante efetiva da mesma.
-% Adicionar figura baseada na figura do chines para a porosidade (ou copiar e citar figura da tese do demetrio). Ou entao figura preparado por mim no powerpoint.
 
 A porosidade de uma rocha-reservatório é definida matematicamente como a razão entre o volume dos espaços vazios existentes entre os poros da rocha e o volume total da amostra \citep{Thomas2001}. Logo, podemos descrever a porosidade $\phi$%
 \nomenclature[a1po]{$\phi$}{Porosidade efetiva}
@@ -90,7 +89,31 @@ estão relacionadas através da seguinte expressão:
 k_{r\alpha} = \frac{\mathbi{K}_{\alpha}}{\mathbi{K}} \leq 1
 \end{equation}
 
-Dada a complexidade envolvida na interação entre a rocha e as diferentes fases na escala dos poros durante o escoamento, os valores para a permeabilidade relativa em função das propriedades dos fluidos e dos meios poroses são difíceis de serem obtidos. De um modo geral, depende-se de modelos semi-empíricos para uso em simulações de reservatórios de petróleo. Um exemplo típico de curva de permeabilidade relativa tanto da fase água quanto da fase óleo em função da saturação da água normalizada ($S_{wn}$) usando o modelo de Corey é apresentado na Fig. \ref{fig:relat_perm}.
+Dada a complexidade envolvida na interação entre a rocha e as diferentes fases na escala dos poros durante o escoamento, os valores para a permeabilidade relativa em função das propriedades dos fluidos e dos meios porosos são difíceis de serem obtidos. De um modo geral, depende-se de modelos semi-empíricos para uso em simulações de reservatórios de petróleo.
+
+Um exemplo típico de curva de permeabilidade relativa tanto da fase água quanto da fase óleo em função da saturação da água normalizada ($S_{wn}$) é obtido usando o modelo de Corey \citep{Chen2006, Carvalho2005, Silva2008}, o qual foi utilizado neste trabalho. A saturação normalizada pode ser definida utilizando os valores das saturações irredutíveis de água ($S_{wi}$) e residual de óleo ($S_{orw}$). $S_{wi}$ representa a menor saturação possível para a fase água, já $S_{orw}$ representa a menor saturação da fase óleo depois do varrido pela fase água. Uma representação gráfica da saturação normalizada pode ser vista na Fig. \ref{fig:swnorm} e a expressão para o cálculo da mesma é mostrada a seguir:
+
+\begin{equation} \label{eq:normsat}
+S_{wn}(S_{w}) = \frac{S_{w} - S_{wi}}{1 - S_{wi} - S_{orw}}
+\end{equation}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{chapters/ch02/swnorm}
+\caption{Saturação normalizada.}
+\label{fig:swnorm}
+\end{figure}
+
+Uma vez obtido o valor para a saturação normalizada, as permeabilidade relativas para as fases são calculadas de acordo com a expressão a seguir. Um exemplo do uso do modelo de Corey para o cálculo das permeabilidades relativas é apresentado na Fig. \ref{fig:relat_perm}.
+
+\begin{subequations} \label{eq:coreymodel}
+\begin{equation} \label{eq:coreymodela}
+k_{rw}(S_{wn}) = k_{rw}^{o}S_{wn}^{n_{w}}
+\end{equation}
+\begin{equation} \label{eq:coreymodelb}
+k_{row}(S_{wn}) = \left(1 - S_{wn}\right)^{n_{w}}
+\end{equation}
+\end{subequations}
 
 \begin{figure} 
 \centering
@@ -99,8 +122,6 @@ Dada a complexidade envolvida na interação entre a rocha e as diferentes fases n
 \label{fig:relat_perm}
 \end{figure}
 
-% +-ok [3] Cite models for relative permeability (Chen,Aziz as general, Brooks-Corey as specific)
-% present also water saturation normalization
 \section{Equação da Conservação de Massa}
 
 Considerando a hipótese de meio poroso totalmente saturado e a existência de $n$ fases, a equação constitutiva para a saturação pode ser descrita por:
@@ -110,7 +131,6 @@ Considerando a hipótese de meio poroso totalmente saturado e a existência de $n$
 \nomenclature[as]{$S$}{Saturação}%
 \nomenclature[an]{$n$}{Quantidade total de fases}%
 onde $\alpha$ representa cada fase (neste trabalho, $\alpha = w$ e $o$ para água e óleo, respectivamente) e $S_{\alpha}$ representa a saturação da fase ${\alpha}$.
-% [2] Describe concepts as effective porosity and volume, and then give definition of saturation in the thesis. 
 
 A lei de Darcy generalizada para a velocidade de cada fase é expressa através da seguinte equação:
 \begin{equation} \label{eq:eq_darcy_general}
@@ -317,7 +337,7 @@ Os contornos são descritos como $\Gamma = \partial \Omega$ $= \Gamma_{I} \cup$ $
 \item $\Gamma_{N}$ = Condição de contorno de Neumman (Fluxo prescrito).
 \end{itemize}
 
-Usualmente, os poços são tratados como condições de contorno internas, sendo modelados através de métodos especiais para lidar com a velocidade alta nas adjacências de um poço \citep{Peaceman1977} comparada com o resto do domímio. Apesar disso, foi adotada neste trabalho uma hipótese simplificadora, considerando que os poços são termos fonte/sumidouros de produção ou injeção concentrados em um único nó da malha, isto é, uma função delta de Dirac neste ponto.
+Usualmente, os poços são tratados como condições de contorno internas, sendo modelados através de métodos especiais para lidar com a velocidade alta nas adjacências de um poço \citep{Peaceman1977} comparada com o resto do domínio. Apesar disso, foi adotada neste trabalho uma hipótese simplificadora, considerando que os poços são termos fonte/sumidouros de produção ou injeção concentrados em um único nó da malha, isto é, uma função delta de Dirac neste ponto.
 
 Neste trabalho, foi feita a consideração usual adotada em problemas de reservatório de petróleo \citep{Peaceman1977, Ewing1983} de condição de fluxo zero em todas as fronteiras exteriores do domínio, isto é:
 \begin{equation} \label{eq:noflowbc}
