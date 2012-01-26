@@ -5,7 +5,8 @@ Todas as formulações, tanto matemática quanto numéricas, utilizadas neste trabal
 
 Este capítulo se propõe a apresentar o modo como o programa de computador resultante deste trabalho foi elaborado, sendo que para isto foi adotada uma descrição \emph{top-down}, ou seja, primeiramente são expostas as características gerais do programa e em seguida as divisões do mesmo em diferentes blocos que permitem uma melhor abordagem do problema. Cada um destes blocos é então subdivido em partes menores, as quais correspondem a tarefas específicas, que podem ter suas soluções diretamente codificadas utilizando uma linguagem de programação ou então serem resolvidas através de alguma biblioteca de software disponível na internet.
 
-Outro aspecto a ser comentado a respeito da filosofia de desenvolvimento do programa é justamente que se buscou sempre utilizar soluções já prontas disponíveis publicamente, de modo a evitar o fenômeno popularmente conhecido como "reinventar a roda". Além disso, foi dada preferência explícita a pacotes publicados segundo licenças livres (e.g., GNU GPL, BSD License, etc.), as quais permitem o uso, estudo, adaptação e redistribuição de programas de modo bastante transparente. Logicamente, o resultado deste trabalho também está disponível através de uma licença livre. No Apêndice \ref{ch:manual} se encontra um manual com instruções para a obtenção, instalação e uso do software desenvolvido.
+Outro aspecto a ser comentado a respeito da filosofia de desenvolvimento do programa é justamente que se buscou sempre utilizar soluções já prontas disponíveis publicamente, de modo a evitar o fenômeno popularmente conhecido como "reinventar a roda". Além disso, foi dada preferência explícita a pacotes publicados segundo licenças livres (e.g., GNU GPL, BSD License, etc.), as quais permitem o uso, estudo, adaptação e redistribuição de programas de modo bastante transparente. Logicamente, o resultado deste trabalho também está disponível através de uma licença livre. 
+%No Apêndice \ref{ch:manual} se encontra um manual com instruções para a obtenção, instalação e uso do software desenvolvido.
 
 \section{Estrutura Geral do Programa}
 \label{sc:est_prog}
@@ -130,7 +131,7 @@ Na Fig. \ref{fig:moduledolfin} é apresentada a estrutura modular da biblioteca, 
 \label{fig:moduledolfin}
 \end{figure}
 
-O \emph{DOLFIN} permite a utilização de alguns operadores básicos na definição da forma variacional, como os de adição (\verb|v+w|), multiplicação (\verb|v*w|), diferenciação (\verb|v.dx(i)|) e integração (\verb|v*dx|). Além disso, e neste ponto reside o grande diferencial desta biblioteca em relação a outras existentes, é possível definir de modo bastante direto operações complexas que nada mais são do que composições dos operadores básicos citados. Entre estas operações podemos citar o produto interno (\verb|dot()|), produto vetorial (\verb|cross()|), divergente (\verb|div()|), gradiente (\verb|grad()|), rotacional (\verb|curl()|), entre outros. 
+O \emph{DOLFIN} permite a utilização de alguns operadores básicos na definição da forma variacional, como os de adição (\verb|v+w|), multiplicação (\verb|v*w|), diferenciação (\verb|v.dx(i)|) e integração (\verb|v*dx|). Além disso, e neste ponto reside o grande diferencial desta biblioteca em relação as outras existentes, é possível definir de modo bastante direto operações complexas que nada mais são do que composições dos operadores básicos citados. Entre estas operações podemos citar o produto interno (\verb|dot()|), produto vetorial (\verb|cross()|), divergente (\verb|div()|), gradiente (\verb|grad()|), rotacional (\verb|curl()|), entre outros. 
 
 Portanto, um dos grandes atrativos do \emph{DOLFIN} é a possibilidade de utilizar uma notação muito próxima da matemática para a escrita do código. De modo a exemplificar isto, serão apresentados a seguir os trechos de código correspondentes às formulações do \ac{MEF} de Galerkin, do \ac{MEFM} e do \ac{MEF} com estabilização via \ac{SUPG} discutidos nas seções \ref{sc:fem}, \ref{sc:mfem} e \ref{sc:supg}, respectivamente.
 
@@ -152,7 +153,7 @@ def Galerkin(self, delfineVar, parameter):
 	.
 	.      
     # Define variational form
-    a = inner(grad(w), K*mob*grad(u))*dx
+    a = inner(grad(w), K*mob*grad(p))*dx
     L = w*f*dx - g*w*ds
 \end{pythoncode}
 \caption{Codificação em \emph{Python} da montagem do operador elíptico via \ac{MEF} de Galerkin usando o \emph{FEniCS/DOLFIN}.}
@@ -161,10 +162,10 @@ def Galerkin(self, delfineVar, parameter):
 
 Já a formulação variacional para a equação que resolve simultaneamente a pressão e a velocidade utilizando o \ac{MEFM} é representada pelas seguintes formas bilinear e linear, respectivamente:
 \begin{equation} \label{eq:bilinearformhmfem2}
-A(p,v,\sigma,\tau) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \sigma \cdot \tau - \nabla \cdot \tau u - \nabla \sigma v \right) d \Omega
+A(p,w,\mathbf{v},\zeta) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \mathbf{v} \cdot \zeta - \nabla \cdot \zeta p - \nabla \mathbf{v} w \right) d \Omega
 \end{equation}
 \begin{equation} \label{eq:linearformhmfem2}
-f(v) = - \int_{\Omega} fv d \Omega
+f(w) = - \int_{\Omega} fw d \Omega
 \end{equation}
 que representam a notação matemática cuja codificação em \emph{Python} pode ser vista na Listagem \ref{lst:arqpymfem}.
 \begin{listing}[H]
@@ -173,9 +174,9 @@ def MixedFEM(self, delfineVar, parameter):
 	.
 	.  
     # Define variational form
-    a = (dot((invK/mob)*sigma, tau)
-        - div(tau)*u - div(sigma)*v)*dx
-    L = - f*v*dx
+    a = (dot((invK/mob)*v, zeta)
+        - div(zeta)*p - div(v)*w)*dx
+    L = - f*w*dx
 \end{pythoncode}
 \caption{Codificação em \emph{Python} da montagem do operador elíptico via \ac{MEFM} usando o \emph{FEniCS/DOLFIN}.}
 \label{lst:arqpymfem}
@@ -183,18 +184,18 @@ def MixedFEM(self, delfineVar, parameter):
 
 A formulação variacional para a equação da saturação utilizando o \ac{MEF} com estabilização via \ac{SUPG} é representada matematicamente da seguinte forma:
 \begin{equation} \label{eq:bilinearformhsupg2}
-F(S,v) = \int_{\Omega} \left( v \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
-\int_{\Omega} vf_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1} d \Omega +
-\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{u}^{n+1} \cdot \nabla v \right) \tau_{s} r^{n+1} d \Omega
+F(S,w) = \int_{\Omega} \left( w \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
+\int_{\Omega} wf_{,S}\mathbf{v}^{n+1} \cdot \nabla S^{n+1} d \Omega +
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega
 \end{equation}
 onde
 \begin{equation} \label{eq:residuumsupg2}
 r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+ 
-          f_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1}
+          f_{,S}\mathbf{v}^{n+1} \cdot \nabla S^{n+1}
 \end{equation}
 com
 \begin{equation} \label{eq:stabtermsupg2}
-\tau_{s} = \frac{h}{2 \left| \left| \mathbf{u}^{n+1} \right| \right| }
+\tau_{s} = \frac{h}{2 \left| \left| \mathbf{v}^{n+1} \right| \right| }
 \end{equation}
 A codificação em \emph{Python} deste método pode ser vista na Listagem \ref{lst:arqpysupg}.
 \begin{listing}[H]
@@ -203,13 +204,13 @@ def SUPG(self, delfineVar, parameter):
 	.
 	.      
     # Galerkin variational problem
-    F = v*phi*((S-S0)/dt)*dx +
-        (v*fs*dot(velocity, grad(S))*dx
+    F = w*phi*((S-S0)/dt)*dx +
+        (w*fs*dot(v, grad(S))*dx
     # Residual
-    r = phi*((S-S0)/dt) + fs*(dot(velocity, grad(S)))
+    r = phi*((S-S0)/dt) + fs*(dot(v, grad(S)))
     # SUPG stabilization terms
-    tau = h/(2.0*sqrt(dot(velocity, velocity)))
-    F += tau*dot(velocity, grad(v))*r*dx
+    tau = h/(2.0*sqrt(dot(v, v)))
+    F += tau*dot(v, grad(w))*r*dx
     # Create bilinear and linear forms
     a = lhs(F)
     L = rhs(F)
@@ -218,7 +219,7 @@ def SUPG(self, delfineVar, parameter):
 \label{lst:arqpysupg}
 \end{listing}
 
-Como pôde ser visto, o \emph{DOLFIN} permite tanto a definição diretamente das formas bilineares e lineares, quanto a definição de um funcional e posterior subdivisão do mesmo através dos comandos \verb|rhs()| e \verb|lhs()|. Uma vez obtidas as formas que descrevem o problema, o sistema de equações é montado através de um simples comando, como exemplificado na Listagem \ref{lst:assembly}.
+Como pôde ser visto, o \emph{DOLFIN} permite tanto a definição direta das formas bilineares e lineares, quanto a definição de um funcional e posterior subdivisão do mesmo através dos comandos \verb|rhs()| e \verb|lhs()|. Uma vez obtidas as formas que descrevem o problema, o sistema de equações é montado através de um simples comando, como exemplificado na Listagem \ref{lst:assembly}.
 
 \begin{listing}[H]
 \begin{pythoncode}
@@ -235,7 +236,7 @@ Para a resolução do sistema de equações proveniente das matrizes e vetores resul
 \subsection{PyAMG}
 \label{sc:pyamg}
 
-O \emph{PyAMG} \citep{Bell2008} é uma coleção de resolvedores de equações lineares com uma interface em \emph{Python}. Diversas variações do método \ac{AMG} estão implementadas no \emph{PyAMG}, como o \ac{AMG} clássico, o \emph{smoothed aggregation} (SA) e o \emph{adaptive smoothed aggregation}. Por ter sido escrito de maneira modular, o \emph{PyAMG} se apresenta como uma excelente ferramenta para prototipagem rápida de métodos multigrid. Além disso, por ter suas operações de maior custo computacional compiladas em \emph{C++}, é possível a resolução eficiente de problemas de grande escala.
+O \emph{PyAMG} \citep{Bell2008} é uma coleção de resolvedores de equações lineares com uma interface em \emph{Python}. Diversas variações do método \ac{AMG} estão implementadas no \emph{PyAMG}, como o \ac{AMG} clássico, o \emph{smoothed aggregation} (SA) e o \emph{adaptive smoothed aggregation}. Por ter sido escrito de maneira modular, o \emph{PyAMG} se apresenta como uma excelente ferramenta para prototipagem rápida de métodos multigrid. Além disso, por ter suas operações de maior custo computacional compiladas em \emph{C++} é possível a resolução eficiente de problemas de grande escala.
 
 A listagem de código \ref{lst:pyamg} apresenta um exemplo típico de utilização do \emph{PyAMG} em conjunto com o \emph{DOLFIN}. A comunicação das matrizes e vetores provenientes da montagem no \emph{DOLFIN} é feita através do formato \emph{SciPy}. Em seguida, tais dados são repassados em conjunto com alguns parâmetros numéricos para a função do \emph{PyAMG} responsável pela resolução do sistema de equações. No exemplo mostrado, se utilizou um resolvedor do tipo \ac{CG} com precondicionamento via \ac{AMG}. Os parâmetros passados foram o número máximo de níveis grosseiros (ver seção \ref{sc:multigrid} para mais detalhes) e a tolerância considerada. A grande vantagem do uso desta biblioteca é justamente a possibilidade de testar diversas possibilidades apenas com a mudança destes parâmetros de entrada, já que seria perfeitamente possível trocar o resolvedor do tipo \ac{CG} para um \ac{GMRES}, caso se esteja trabalhando com matrizes não-simétricas. Outra flexibilidade permitida é a de alterar o tipo de ciclo multigrid utilizado, sendo o tipo $V$ considerado default caso nenhuma informação seja fornecida, como no caso do exemplo utilizado.
 

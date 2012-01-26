@@ -141,27 +141,40 @@ w_{s} = w + \tau_{s} \mathbf{v} \cdot \nabla w
 \nomenclature[a1tau]{$\tau$}{Parâmetro de estabilização}%
 onde $\mathbf{v}$ representa o vetor velocidade, $w$ a função de ponderação original e $\tau_{s}$ um parâmetro de estabilização que depende do tamanho do elemento e do módulo da velocidade.
 
-Uma vez definida tal função, aplica-se um procedimento semelhante ao utilizado para a discretização pelo Método de Galerkin, onde se integra a Eq. (\ref{eq:sateq4}), porém a multiplicação é pela função de ponderação modificada (Eq. (\ref{eq:supgweight})) para se obter, de modo totalmente consistente, a seguinte forma variacional para o problema da equação de saturação:
-% DERIVACAO DO PROBLEMA NA FORMA FRACA PARA SATURACAO. USAR TEMPLATE DE PROBLEM.
-\begin{equation} \label{eq:bilinearformhsupg2ch3}
-F(S,v) = \int_{\Omega} \left( v \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
-\int_{\Omega} vf_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1} d \Omega +
-\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{u}^{n+1} \cdot \nabla v \right) \tau_{s} r^{n+1} d \Omega
+Uma vez definida tal função, aplica-se um procedimento semelhante ao utilizado para a discretização pelo Método de Galerkin onde se integra a Eq. (\ref{eq:sateq4}), porém a multiplicação é pela função de ponderação modificada (Eq. (\ref{eq:supgweight})), para se obter depois de algum algebrismo e de modo totalmente consistente a seguinte forma variacional discreta para o problema da equação de saturação \citep{Wells2008}:
+\begin{problem} [Discreto]
+Dados $S_{h}^{n+1}, f_{,S}$ e $\mathbf{v}_{h}$, encontre $S_{h}^{n+1}$ $\in$ $X_{h}$ tal que:
+\begin{equation} \label{eq:supgprob1}
+F(S_{h}^{n+1}, w_{h}) = 0 \quad \forall w_{h} \in W_{h}
 \end{equation}
-onde
+com
+\begin{equation} \label{eq:supgprob2}
+X_{h} = \{ S_{h} \in H^{1}(\Omega_{h}), S_{h} \in \mathbf{P}^{1}(E_{i}), \textrm{$S_{h} = S_{D}$ em $\Gamma_{D}$} \}  
+\end{equation}
+\begin{equation} \label{eq:supgprob3}
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}), w_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
+\end{equation}
+\begin{equation} \label{eq:supgprob4}
+F(S_{h}^{n+1}, w_{h}) = \int_{\Omega} \left( w \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
+\int_{\Omega} wf_{,S}\mathbf{v}^{n+1} \cdot \nabla S^{n+1} d \Omega +
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega
+\end{equation}
+onde o resíduo $r$ é descrito por:
 \begin{equation} \label{eq:residuumsupg2ch3}
 r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+ 
-          f_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1}
+          f_{,S}\mathbf{v}^{n+1} \cdot \nabla S^{n+1}
 \end{equation}
+\end{problem}
 
-A consistência da formulação utilizada é garantida pelo fato do termo adicionado ser diretamente proporcional ao resíduo da solução, o qual tende a zero para a resposta exata, cancelando portanto qualquer difusão que poderia ser adicionada.
+Ao se observar o problema acima, percebe-se que os dois primeiros termos do lado direito da Eq. (\ref{eq:supgprob4}) correspondem ao que seria obtido através de uma discretização via \ac{MEF} de Galerkin, sendo o terceiro termo o responsável pela estabilização do método através de um somatório das contribuições calculadas elemento por elemento. A consistência da formulação utilizada é garantida pelo fato do termo adicionado ser diretamente proporcional ao resíduo da solução, o qual tende a zero para a resposta exata, cancelando portanto qualquer difusão não-física que poderia ser adicionada neste caso.
 
-Existem diversas sugestões na literatura acerca do modo mais adequado de definir o parâmetro de estabilização $\tau_{s}$ \citep{Brooks1982, Barbosa2009, Papastavrou1998, Wells2008}. De um modo geral, este termo está relacionado a uma dimensão característica de malha e à velocidade de transporte, tendo portanto que ser calculado para cada elemento. Neste trabalho optou-se pelo uso da expressão apresentada a seguir, a qual normalmente se mostra adequada para problemas altamente hiperbólicos como é o caso da equação de saturação ao se desprezar os termos de capilaridade e gravidade:
+Existem diversas sugestões na literatura acerca do modo mais adequado de definir o parâmetro de estabilização $\tau_{s}$ \citep{Brooks1982, Barbosa2009, Papastavrou1998, Wells2008}. De um modo geral, este termo está relacionado a uma dimensão característica de malha e à velocidade de transporte, tendo portanto que ser calculado para cada elemento. Neste trabalho optou-se pelo uso da expressão apresentada a seguir, a qual, apesar de bastante simples comparada a outras encontradas na literatura, normalmente se mostra adequada para problemas altamente hiperbólicos como é o caso da equação da saturação ao se desprezar os termos de capilaridade e gravidade:
 \begin{equation} \label{eq:supgstabterm}
 \tau_{s} = \frac{h}{2\vert\vert \mathbf{v} \vert\vert}
 \end{equation}
 
 \subsection{Termo de Captura de Choque}
+Apesar do \ac{SUPG} permitir a obtenção de soluções numéricas estáveis em comparação ao \ac{MEF} de Galerkin, o mesmo não garante a inexistência de oscilações em regiões próximas às descontinuidades da solução exata. Isto se explica pelo fato deste método não ser do tipo monótono ou preservador de monotonicidade. Métodos monótonos são aqueles nos quais a solução numérica mantém ao longo do tempo o seu sinal para todos os nós da malha \citep{Codina1992, Papastavrou1998}.
 
 \begin{figure} 
 \centering
@@ -186,7 +199,7 @@ Existem diversas sugestões na literatura acerca do modo mais adequado de definir
 
 \section{Multigrid} \label{sc:multigrid}
 % Relatorios de IC / Trottenberg/ Briggs / Mavriplis
-A ideia básica dos métodos Multigrid é acelerar a solução de sistemas de equações em uma malha fina usando correções caculadas em uma malha grosseira. A motivação para esta abordagem vem da observação do comportamento do erro da solução numérica no domínio da frequência. Erros de alta frequência, os quais estão associados à variações locais da solução, são bem resolvidos por métodos iterativos convencionais (Gauss-Seidel, Gradientes Conjugados, etc.). Entretanto, erros de baixa frequência, associados à variação global das soluções, são muito mais insensíveis a esses métodos.
+A ideia básica dos métodos Multigrid é acelerar a solução de sistemas de equações em uma malha fina usando correções calculadas em uma malha grosseira. A motivação para esta abordagem vem da observação do comportamento do erro da solução numérica no domínio da frequência. Erros de alta frequência, os quais estão associados à variações locais da solução, são bem resolvidos por métodos iterativos convencionais (Gauss-Seidel, Gradientes Conjugados, etc.). Entretanto, erros de baixa frequência, associados à variação global das soluções, são muito mais insensíveis a esses métodos.
 
 Um esquema Multigrid começa amortecendo os erros de alta frequência associados à solução inicial na malha fina, usando algum tipo de método de relaxação (usualmente um método iterativo que seria usado isoladamente). Uma vez atingido este objetivo inicial, efetuar mais iterações iria apenas resultar em uma pior convergência. Sendo assim, o resíduo é transferido para uma malha grosseira, onde os modos de baixa frequência da malha fina se comportam como de alta frequência, sendo, portanto, facilmente eliminados usando algum tipo de método direto, no caso da malha ser grosseira o suficiente, ou mesmo usando o mesmo método de relaxação aplicado na malha mais fina. As correções são então calculadas na malha grosseira e transferidos de volta para a malha fina de modo a atualizar a solução. Este procedimento pode ser aplicado recursivamente em uma sequência de malhas cada vez mais grosseiras, a fim de que cada nível nesta hierarquia seja responsável pela eliminação de uma faixa de frequência de erro \citep{Briggs2000}. 
 % 1- Explicar matematica do multigrid (Relatorio IC) 2 - Explicar GMGxAMG e AMG(Sorensen / Trottenberg)!!
