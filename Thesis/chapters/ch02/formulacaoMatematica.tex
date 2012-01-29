@@ -32,7 +32,7 @@ Apesar do grande aumento percebido na capacidade computacional do hardware utili
 Uma rocha, para ter a capacidade de armazenar um fluido, por exemplo petróleo, deve possuir vazios no seu interior, os quais são chamados de poros. Além disso, para que haja fluxo dentro desta rocha-reservatório é necessário que tais poros estejam interconectados para que existam um caminho que os fluidos possam percorrer. Para efeitos de cálculo de porosidade, existe uma diferença entre a porosidade \emph{absoluta}, a qual abrange todos os poros, estejam eles interconectados ou não, e a porosidade \emph{efetiva}, onde apenas os poros ligados entre si são considerados. Apenas esse segundo tipo de porosidade será usado neste trabalho, já que é o de maior interesse para a análise de escoamentos. Portanto, sempre que houver referência à porosidade, pode-se entender como a variante efetiva da mesma.
 
 A porosidade de uma rocha-reservatório é definida matematicamente como a razão entre o volume dos espaços vazios existentes entre os poros da rocha e o volume total da amostra \citep{Thomas2001}. Logo, podemos descrever a porosidade $\phi$%
-\nomenclature[a1po]{$\phi$}{Porosidade efetiva}
+\nomenclature[a1phi]{$\phi$}{Porosidade efetiva}
 como:
 
 \begin{equation} \label{eq:porosidade}
@@ -137,9 +137,9 @@ A lei de Darcy generalizada para a velocidade de cada fase é expressa através da
 \mathbi{v}_{\alpha} = - \frac{\mathbi{K}_{\alpha}}{\mu_{\alpha}} \left(\nabla p_{\alpha} - \rho_{\alpha}g\nabla z \right)
 \end{equation}%
 \nomenclature[bv]{$\mathbi{v}$}{Velocidade}%
-\nomenclature[a1vi]{$\mu$}{Viscosidade}%
+\nomenclature[a1mu]{$\mu$}{Viscosidade}%
 \nomenclature[apr]{$p$}{Pressão}%
-\nomenclature[a1de]{$\rho$}{Densidade}%
+\nomenclature[a1rho]{$\rho$}{Densidade}%
 \nomenclature[agr]{$g$}{Aceleração da gravidade}%
 com $K_{\alpha}$, $\mu_{\alpha}$, $p_{\alpha}$ e $\rho_{\alpha}$ representando a permeabilidade efetiva, viscosidade, pressão e densidade da fase $\alpha$, ao passo que $g$ e $z$ representam a aceleração da gravidade e o deslocamento na direção da mesma, respectivamente.
 % [4] Explain better Darcies experiment and how it led to the Darcy's law. Explain also its limitation and how it has been used nowadays far beyond its original intent.
@@ -209,7 +209,7 @@ As mobilidades das fases são definidas como a relação entre a permeabilidade rel
 \begin{equation} \label{eq:phase_mob}
 \lambda_{\alpha} = \frac{k_{r\alpha}}{\mu_{\alpha}}
 \end{equation}%
-\nomenclature[a1mo]{$\lambda$}{Mobilidade}%
+\nomenclature[a1lambda]{$\lambda$}{Mobilidade}%
 Finalmente, reescrevendo a Eq. (\ref{eq:pressure_eq_form1}) utilizando pressões médias e capilares pode-se obter depois de um rearranjo dos termos a seguinte expressão:
 \begin{equation} \label{eq:pressure_eq_form2}
 \nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
@@ -308,7 +308,7 @@ A análise da equações de escoamentos miscíveis em meios porosos permite analisar
 
 A equação para a concentração $C$ do soluto (traçador) dissolvido em um fluido solvente é dada por:
 \begin{equation} \label{eq:misc1}
-\phi\frac{\partial C}{\partial t} = - \nabla\cdot\left(C\mathbi{v} - \mathbi{D}\nabla C \right) + \hat{C}Q
+\phi\frac{\partial C}{\partial t} = - \nabla\cdot\left(\mathbi{v}C - \mathbi{D}\nabla C \right) + \hat{C}Q
 \end{equation}%
 \nomenclature[acon]{$C$}{Concentração}%
 onde $\mathbi{D}$%

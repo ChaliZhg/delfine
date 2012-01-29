@@ -155,14 +155,16 @@ X_{h} = \{ S_{h} \in H^{1}(\Omega_{h}), S_{h} \in \mathbf{P}^{1}(E_{i}), \textrm
 W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}), w_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
 \end{equation}
 \begin{equation} \label{eq:supgprob4}
+\begin{array}{cc}
 F(S_{h}^{n+1}, w_{h}) = \int_{\Omega} \left( w \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
-\int_{\Omega} wf_{,S}\mathbf{v}^{n+1} \cdot \nabla S^{n+1} d \Omega +
-\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega
+\int_{\Omega} wf_{,S}\mathbi{v}^{n+1} \cdot \nabla S^{n+1} d \Omega + \\
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbi{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega
+\end{array}
 \end{equation}
 onde o resíduo $r$ é descrito por:
 \begin{equation} \label{eq:residuumsupg2ch3}
 r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+ 
-          f_{,S}\mathbf{v}^{n+1} \cdot \nabla S^{n+1}
+          f_{,S}\mathbi{v}^{n+1} \cdot \nabla S^{n+1}
 \end{equation}
 \end{problem}
 
@@ -170,11 +172,41 @@ Ao se observar o problema acima, percebe-se que os dois primeiros termos do lado
 
 Existem diversas sugestões na literatura acerca do modo mais adequado de definir o parâmetro de estabilização $\tau_{s}$ \citep{Brooks1982, Barbosa2009, Papastavrou1998, Wells2008}. De um modo geral, este termo está relacionado a uma dimensão característica de malha e à velocidade de transporte, tendo portanto que ser calculado para cada elemento. Neste trabalho optou-se pelo uso da expressão apresentada a seguir, a qual, apesar de bastante simples comparada a outras encontradas na literatura, normalmente se mostra adequada para problemas altamente hiperbólicos como é o caso da equação da saturação ao se desprezar os termos de capilaridade e gravidade:
 \begin{equation} \label{eq:supgstabterm}
-\tau_{s} = \frac{h}{2\vert\vert \mathbf{v} \vert\vert}
+\tau_{s} = \frac{h}{2\vert\vert \mathbi{v} \vert\vert}
 \end{equation}
 
 \subsection{Termo de Captura de Choque}
 Apesar do \ac{SUPG} permitir a obtenção de soluções numéricas estáveis em comparação ao \ac{MEF} de Galerkin, o mesmo não garante a inexistência de oscilações em regiões próximas às descontinuidades da solução exata. Isto se explica pelo fato deste método não ser do tipo monótono ou preservador de monotonicidade. Métodos monótonos são aqueles nos quais a solução numérica mantém ao longo do tempo o seu sinal para todos os nós da malha \citep{Codina1992, Papastavrou1998}.
+
+Um meio para garantir uma alta precisão na região de solução suave e ao mesmo tempo evitar o aparecimento de oscilações espúrias na região de choque é utilizar métodos não-lineares, os quais dependem portanto da própria solução do problema. Isto se deve à condição estabelecida pelo teorema de Godunov de que métodos lineares e que preservem a monotonicidade podem ser no máximo de primeira ordem \citep{Leveque1992}.
+
+A ideia básica do uso de um termo de captura de choque é adicionar uma dissipação numérica (também chamada de viscosidade artificial) extra na região de descontinuidade. Neste trabalho foi utilizado um termo de dissipação isotrópico, ou seja, que acrescenta a mesma viscosidade em todas as direções \citep{Wells2008}. Todavia, existem na literatura exemplos de usos de termos anisotrópicos \citep{Codina1992, Papastavrou1998}, já que o uso do \ac{SUPG} implica na adição de uma certa viscosidade artificial na direção das linhas de corrente, sendo em princípio necessário acrescentar dissipação apenas na componente perpendicular ao fluxo em cada ponto. Em todo caso, é importante mencionar que assim como na estabilização via \ac{SUPG} a viscosidade artificial adicionada é proporcional ao resíduo da solução, garantindo assim a consistência do método. Sendo assim, podemos somar o termo seguinte à Eq. (\ref{eq:supgprob4}) para obter uma nova forma variacional discreta:
+\begin{equation} \label{eq:viscartterm1}
+F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \cdot \nabla S_{h}^{n+1} d \Omega
+\end{equation}%
+\nomenclature[a1nu]{$\nu$}{Viscosidade artificial}%
+onde $\nu_{shock}$ é a viscosidade artificial definida por:
+
+\begin{equation} \label{eq:viscartterm2}
+\nu_{shock} = \left\{ \begin{array}{ll}
+  \frac{\beta h \vert r^{n+1} \vert}{2\vert\vert \nabla S_{h}^{n} \vert\vert} & \textrm{se $\vert\vert \nabla S_{h}^{n} \vert\vert \neq 0$}\\
+  0 & \textrm{caso contrário}
+  \end{array} \right.
+\end{equation}
+
+De modo a exemplificar a influência dos termos tanto de estabilização como de captura de choque, são apresentados a seguir os resultados obtidos para a equação linear de adveção pura, a qual pode ser vista com uma versão simplificada da Eq. (\ref{eq:misc1}) com o tensor de difusão e o termo de reação nulos, sendo representada no caso unidimensional pela expressão a seguir:
+\begin{equation} \label{eq:hyperpde}
+\frac{\partial C(x,t)}{\partial t} = - \mathbi{v}\frac{\partial C(x,t)}{\partial x}
+\end{equation}
+onde para este exemplo consideramos um vetor velocidade $\mathbi{v}$ unitário na direção $x$ e as seguintes condições iniciais e de contorno:
+\begin{equation} \label{eq:hyperpdeconinibc}
+\left. \begin{array}{lll}
+C(x,0) = 0.0 \quad \textrm{em $\Omega$} \\
+C(x,t) = 1.0 \quad \textrm{em $x=0$} \\
+\end{array} \right.
+\end{equation}
+
+A solução analítica do problema apresentado é uma função degrau com altura $1$ que se desloca na direção positiva do eixo $x$. A Fig. \ref{fig:puregalerkin} apresenta a solução numérica obtida para o instante de tempo $t=0.5s$ utilizando exclusivamente o \ac{MEF} de Galerkin conforme descrito na seção \ref{sc:fem} em uma malha unidimensional com 500 elementos lineares. Como esperado, a localização da descontinuidade foi resolvida com precisão por este método para este exemplo simples, porém verifica-se o surgimento de oscilações espúrias completamente inaceitáveis na região do choque.
 
 \begin{figure} 
 \centering
@@ -183,12 +215,16 @@ Apesar do \ac{SUPG} permitir a obtenção de soluções numéricas estáveis em compar
 \label{fig:puregalerkin}
 \end{figure}
 
+De modo a estabilizar a solução aplicamos o método \ac{SUPG} descrito na seção \ref{sc:supg} e representado pela Eq. (\ref{eq:supgprob4}), obtendo o resultado mostrado na Fig. \ref{fig:supg}, onde pode-se perceber uma eliminação de grande parte da oscilação presente na aproximação numérica inicial. Entretanto, apesar de o choque ter permanecido com uma definição tão boa quanto na análise com o \ac{MEF} de Galerkin, ainda se percebe a existência de \emph{overshoots} e \emph{undershoots} na região de descontinuidade.
+
 \begin{figure} 
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch03/SUPGt_n=500}
 \caption{Comparação entre solução analítica e numérica considerando o uso do \ac{MEF} com estabilização via \ac{SUPG} para o caso de advecção pura.}
 \label{fig:supg}
 \end{figure}
+
+Por fim, acrescentamos à formulação o termo de captura de choque com adição de viscosidade artificial conforme descrito pelas Eqs. (\ref{eq:viscartterm1}) e (\ref{eq:viscartterm2}). Como pode ser visto na Fig. \ref{fig:supg_ad}, a solução numérica se encontra praticamente livre de qualquer oscilação sem que isto tenha afetado a solução nas regiões distante da descontinuidade. Apenas próximo a esta região de maior variação é que pode ser percebida uma maior difusão da solução quando comparada com a analítica, sendo tal consequência esperada devido ao fato de a solução poder ser no máximo de primeira ordem na região de choque conforme previsto pelo teorema de Godunov \citep{Leveque1992}.
 
 \begin{figure} 
 \centering
