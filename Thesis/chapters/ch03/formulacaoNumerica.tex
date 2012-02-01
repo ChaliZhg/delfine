@@ -27,10 +27,10 @@ A(p,w) = f(w) \quad \forall w \in W
 \nomenclature[ew]{$W$}{Espaço das funções de ponderação para a formulação de Galerkin}%
 com
 \begin{equation} \label{eq:funcspace1}
-P = \{ p \in H^{1}(\Omega), \textrm{$p = p_{D}$ em $\Gamma_{D}$} \}  
+P = \{ p \in H^{1}(\Omega); \textrm{$p = p_{D}$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:funcspace2}
-W = \{ w \in H^{1}(\Omega), \textrm{$w = 0$ em $\Gamma_{N}$} \}  
+W = \{ w \in H^{1}(\Omega); \textrm{$w = 0$ em $\Gamma_{N}$} \}  
 \end{equation}
 \begin{equation} \label{eq:bilinearform}
 A(p,w) = \int_{\Omega} \lambda K \nabla p \cdot \nabla w d \Omega \quad \forall p,w \in P,W
@@ -40,9 +40,17 @@ f(w) = \int_{\Omega} q_{t}w d \Omega \quad \forall w \in W
 \end{equation}
 \end{problem}
 onde $p_{D}$ é o valor prescrito de $p$ nos contornos de Dirichlet e $H^{1}$%
-\nomenclature[eh]{$H^{n}$}{Espaço de Sobolev com derivadas de ordem $n$ quadrado-integráveis}
- é o Espaço de Sobolev de funções com derivadas de primeira ordem quadrado-integráveis. Isto significa que ao passo que a solução da \ac{EDP} tem que existir em um espaço de funções com derivadas contínuas (\emph{forma forte}), o Espaço de Sobolev exigido pela forma fraca permite funções com derivadas descontínuas \citep{Langtangen2010}.
-% Explain better about function spaces (Sobolev, L2, etc.). Fenics tutorial good on that
+\nomenclature[eh]{$H^{k}$}{Espaço de Sobolev com derivadas de ordem $k$ quadrado-integráveis}
+ é o Espaço de Sobolev de funções com derivadas generalizadas de primeira ordem quadrado-integráveis, podendo este espaço ser definido de modo mais geral do seguinte modo \citep{Hughes2000}:
+\begin{equation} \label{eq:sobolevspace}
+H^{k}(\Omega) = \{w \in L_{2}(\Omega); w_{,x} \in L_{2}(\Omega); \ldots; w_{,\underbrace{x \ldots x}_{k \phantom{l} vezes}} \in L_{2}(\Omega) \}  
+\end{equation}
+onde
+\begin{equation} \label{eq:lebesguespace}
+L_{2}(\Omega) = \{w | \int_{\Omega} w^{2} d \Omega < \infty \}  
+\end{equation}
+
+Isto significa que ao passo que a solução da \ac{EDP} tem que existir em um espaço de funções com derivadas contínuas (\emph{forma forte}), o Espaço de Sobolev de grau 1 exigido pela forma fraca permite funções com derivadas descontínuas \citep{Langtangen2010}.
 A existência e unicidade da solução deste problema é dada pelo lema de Lax e seu detalhamento completo pode ser encontrado em \cite{Garcia1997}.
 
 % Verify the statement about the velocity on well region and the assumptions made for simplification.
@@ -56,10 +64,10 @@ A(p_{h},w_{h}) = f(w_{h}) \quad \forall w_{h} \in W_{h}
 \end{equation}
 com
 \begin{equation} \label{eq:funcspace1h}
-P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}), p_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$p_{h} = p_{D}$ em $\Gamma_{D}$} \}  
+P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}); p_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$p_{h} = p_{D}$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:funcspace2h}
-W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}), w_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
 \end{equation}
 \begin{equation} \label{eq:bilinearformh}
 A(p_{h},w_{h}) = \int_{\Omega_{h}} \lambda K \nabla p_{h} \cdot \nabla w_{h} d \Omega \quad \forall p_{h},w_{h} \in P_{h},W_{h}
@@ -92,14 +100,78 @@ Na simulação de escoamentos em meios porosos é fundamental se obter uma boa apro
 
 O modo mais direto de fazer isto seria usar diretamente a equação de Darcy (Eq. (\ref{eq:eq_darcy_general})), a qual permite obter o campo de velocidades a partir do gradiente de pressão. Porém, tal alternativa apresenta as grandes desvantagens de requerer a diferenciação do campo de pressão, diminuindo a ordem de convergência da aproximação e de não garantir a continuidade da velocidade nas fronteiras, já que um campo contínuo linear de pressão terá o seu gradiente representado como descontínuo entre elementos vizinhos. Uma alternativa utilizada por alguns autores \citep{Loula1995, Barbosa2009} é realizar um pós-processamento ao final do cálculo do campo de pressão para se obter um novo problema variacional na variável de velocidade, o qual ao ser resolvido garante uma melhor ordem de aproximação e a continuidade do campo entre os elementos.
 
-Uma outra alternativa, a qual é apresentada nesta seção, é o uso de uma formulação mista. A maior motivação para o desenvolvimento e uso do \acf{MEFM} é que em algumas aplicações, como no caso da simulação de escoamentos em meios porosos, uma variável vetorial (ex: velocidade de um fluido) é a variável de interesse, sendo que os métodos do tipo \ac{MEFM} foram desenvolvidos para aproximar tanto esta variável quanto a escalar (ex: pressão) simultaneamente e fornecer aproximações de alta ordem para ambas as variáveis.
+Uma outra alternativa, a qual é apresentada nesta seção e utilizada neste trabalho, é o uso de uma formulação mista. A maior motivação para o desenvolvimento e uso do \acf{MEFM} é que em algumas aplicações, como no caso da simulação de escoamentos em meios porosos, uma variável vetorial (ex: velocidade de um fluido) é a variável de interesse, sendo que os métodos do tipo \ac{MEFM} foram desenvolvidos para aproximar tanto esta variável quanto a escalar (ex: pressão) simultaneamente e fornecer aproximações de alta ordem para ambas as variáveis.
 
 Entretanto, esta vantagem é obtida ao custo de uma maior complexidade da formulação, já que ao invés de um único espaço de elementos finitos o \ac{MEFM} requer dois espaços, os quais \emph{não} podem ser escolhidos arbitrariamente pois têm que satisfazer uma condição do tipo \emph{inf-sup} para serem estáveis \citep{Chen2006}.
 
-Várias combinações de espaços que satisfazem a condição de estabilidade conhecida como \emph{Ladyshenskaja-Babuska-Brezzi Condition} (LBB) (ver \cite{Brezzi1991} para uma discussão detalhada sobre esta condição) já foram sugeridos na literatura \citep{Brezzi1985, Chen2006} para problemas elípticos de 2ª ordem como o representado pela equação da pressão (Eq. (\ref{eq:pressure_eq_form3})).
+Em \cite{Raviart1977} foi proposta a primeira família de espaços de elementos finitos mistos que satisfazem a condição de estabilidade conhecida como \emph{Ladyshenskaja-Babuska-Brezzi Condition} (LBB) (ver \cite{Brezzi1991} para uma discussão detalhada sobre esta condição) para problemas elípticos de 2ª ordem como o representado pela equação da pressão (Eq. (\ref{eq:pressure_eq_form3})), sendo depois desta várias outras combinações de espaços já foram sugeridos na literatura \citep{Brezzi1985, Chen2006}.
 
-Para isto, é necessário reescrever a  descrição matemática da equação de pressão, subdividindo a mesma em dois problemas, como pode ser visto na Eq. (CITAR EQ. ABAIXO).
-% EQs. DE PRESSÂO E VELOCIDADE SEGREGADAS.
+De modo a ilustrar o procedimento para obtenção da forma fraca, consideremos inicialmente a equação da pressão desenvolvida na seção \ref{sc:press_eq}, a qual é reproduzida a seguir, onde os subíndices foram omitidos por questão de clareza:
+\begin{equation} \label{eq:pressure_eq_formMFEM}
+- \nabla \cdot \left(\mathbi{K} \lambda \nabla p \right) = Q
+\end{equation}
+sendo que ela está sujeita à condição de fluxo zero em todas as fronteiras exteriores do domínio, conforme explicado na seção \ref{sc:cond_ini_bc}:
+\begin{equation} \label{eq:noflowbc}
+\mathbi{K} \lambda \nabla p \cdot \mathbi{n} = 0 \quad \textrm{em $\Gamma_{N}$}
+\end{equation}
+
+De modo a garantir que a variável vetorial (velocidade $\mathbf{v}$) tenha componentes contínuas em $\Omega$, podemos utilizar um Espaço de Sobolev para funções vetoriais definido por:
+\begin{equation} \label{eq:vectorsobolevspace}
+\mathbf{H}(div, \Omega) = \{\mathbf{\zeta} = (\zeta_{1}, \zeta_{2}) \in (L_{2}(\Omega))^{2}; \nabla \cdot \mathbf{\zeta} \in L_{2}(\Omega) \}  
+\end{equation}
+
+Assim, podemos definir o espaço $\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}$ para garantir a condição de fluxo zero na fronteira e o $W = L_{2}(\Omega)$, onde é importante observar que funções em $W$ não necessariamente são contínuas.
+
+Além disso, definimos a seguinte notação para o produto interno em $L_{2}(\Omega)$:
+\begin{equation} \label{eq:innerprod}
+(v,w) = \int_{\Omega} v(x)w(x) dx
+\end{equation}
+
+Utilizando a definição da velocidade, podemos escrever:
+\begin{equation} \label{eq:velocityMFEM}
+\mathbf{v} = - \mathbi{K} \lambda \nabla p  
+\end{equation}
+
+Logo, a Eq. (\ref{eq:pressure_eq_formMFEM}) se torna:
+\begin{equation} \label{eq:pressure_eq_formMFEM2}
+\nabla \cdot \mathbf{v} = Q  
+\end{equation}
+
+Multiplicando-se a Eq. (\ref{eq:velocityMFEM}) por um $\zeta \in \mathbf{V}$, passando os termos de permeabilidade e mobilidade para o lado esquerdo da equação e integrando o resultado no domínio, usamos a definição de produto interno da Eq. (\ref{eq:innerprod}) para obter:
+\begin{equation} \label{eq:pressure_eq_formMFEM3}
+\left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) = - (\zeta, \nabla p)
+\end{equation}
+
+Aplicando o teorema de Green ao lado direito desta equação, obtemos:
+\begin{equation} \label{eq:pressure_eq_formMFEM4}
+\left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) = (\nabla \cdot \zeta, p)
+\end{equation}
+
+Multiplicando a Eq.(\ref{eq:pressure_eq_formMFEM2}) por um $w \in W$, temos:
+\begin{equation} \label{eq:pressure_eq_formMFEM4}
+(\nabla \cdot \mathbf{v}, w) = (Q, w)
+\end{equation}
+
+De posse de todas estas definições, podemos descrever o problema variacional (\emph{forma fraca}) para as equações de pressão e velocidade do seguinte modo \citep{Chen2006}:
+\begin{problem} [Contínuo]
+Encontre $p$ $\in$ $W$ e $\mathbf{v}$ $\in$ $\mathbf{V}$ tal que:
+\begin{equation} \label{eq:variationalmfem}
+A(p,w,\mathbf{v},\zeta) = f(w) \quad \forall \zeta \in \mathbf{V}, \quad \forall w \in W
+\end{equation}
+com
+\begin{equation} \label{eq:funcspace1mfem}
+\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}
+\end{equation}
+\begin{equation} \label{eq:funcspace2mfem}
+W = L_{2}(\Omega)
+\end{equation}
+\begin{equation} \label{eq:bilinearformhmfemch03}
+A(p,w,\mathbf{v},\zeta) = \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) -(\nabla \cdot \zeta, p) -(\nabla \cdot \mathbf{v}, w)
+\end{equation}
+\begin{equation} \label{eq:linearformhmfemch03}
+f(w) = - (Q, w)
+\end{equation}
+\end{problem}
 
 \begin{figure}
 \centering
@@ -118,14 +190,6 @@ Para isto, é necessário reescrever a  descrição matemática da equação de pressão
 \label{fig:HeterogeneoAnisoError_N=64}
 \end{figure}
 
-\begin{equation} \label{eq:bilinearformhmfem2ch3}
-A(p,v,\sigma,\tau) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \sigma \cdot \tau - \nabla \cdot \tau u - \nabla \sigma v \right) d \Omega
-\end{equation}
-\begin{equation} \label{eq:linearformhmfem2ch3}
-f(v) = - \int_{\Omega} fv d \Omega
-\end{equation}
-
-% DECRICAO DA DESCRITAZACAO SEGUNDO MFEM. REFERENCIAS EM AARNES, BREZZI e OUTROS.
 \section{Estabilização do \ac{MEF} via \ac{SUPG}} \label{sc:supg}
 O \ac{MEF} de Galerkin permite obter respostas bastantes acuradas para problemas com soluções suaves, como normalmente é o caso para equações essencialmente elípticas como a equação de pressão. Entretanto, o mesmo não se mostra adequado para a simulação de fenômenos dominados por termos advectivos, caso frequente de equações com características hiperbólicas como a equação de saturação descrita em \ref{sc:eq_sat}. Nestes casos a solução tende a se tornar instável na região de choque, sendo que tal instabilidade é transportada para todo o domínio, deteriorando rapidamente a acurácia global.
 
@@ -155,10 +219,10 @@ F(S_{h}^{n+1}, w_{h}) = 0 \quad \forall w_{h} \in W_{h}
 \end{equation}
 com
 \begin{equation} \label{eq:supgprob2}
-X_{h} = \{ S_{h} \in H^{1}(\Omega_{h}), S_{h} \in \mathbf{P}^{1}(E_{i}), \textrm{$S_{h} = S_{D}$ em $\Gamma_{D}$} \}  
+X_{h} = \{ S_{h} \in H^{1}(\Omega_{h}); S_{h} \in \mathbf{P}^{1}(E_{i}); \textrm{$S_{h} = S_{D}$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:supgprob3}
-W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}), w_{h} \in \mathbf{P}^{k}(E_{i}), \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
 \end{equation}
 \begin{equation} \label{eq:supgprob4}
 \begin{array}{cc}

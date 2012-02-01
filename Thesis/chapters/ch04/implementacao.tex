@@ -162,7 +162,7 @@ def Galerkin(self, delfineVar, parameter):
 
 Já a formulação variacional para a equação que resolve simultaneamente a pressão e a velocidade utilizando o \ac{MEFM} é representada pelas seguintes formas bilinear e linear, respectivamente:
 \begin{equation} \label{eq:bilinearformhmfem2}
-A(p,w,\mathbf{v},\zeta) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \mathbf{v} \cdot \zeta - \nabla \cdot \zeta p - \nabla \mathbf{v} w \right) d \Omega
+A(p,w,\mathbf{v},\zeta) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \mathbf{v} \cdot \zeta - \nabla \cdot \zeta p - \nabla \cdot \mathbf{v} w \right) d \Omega
 \end{equation}
 \begin{equation} \label{eq:linearformhmfem2}
 f(w) = - \int_{\Omega} fw d \Omega
