@@ -147,7 +147,7 @@ Aplicando o teorema de Green ao lado direito desta equação, obtemos:
 \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) = (\nabla \cdot \zeta, p)
 \end{equation}
 
-Multiplicando a Eq.(\ref{eq:pressure_eq_formMFEM2}) por um $w \in W$, temos:
+E multiplicando a Eq.(\ref{eq:pressure_eq_formMFEM2}) por um $w \in W$, temos:
 \begin{equation} \label{eq:pressure_eq_formMFEM4}
 (\nabla \cdot \mathbf{v}, w) = (Q, w)
 \end{equation}
@@ -173,22 +173,50 @@ f(w) = - (Q, w)
 \end{equation}
 \end{problem}
 
+De modo a se possibilitar a análise deste problema variacional via \ac{MEFM}, é necessário representar o mesmo na forma discreta. Para isto, precisamos definir espaços finitos que substituam os espaços $\mathbf{V}$ e $\mathbf{W}$ determinados conforme mostrado nas Eqs. (\ref{eq:funcspace1mfem}) e (\ref{eq:funcspace2mfem}). Neste trabalho foi utilizada a combinação conhecida como espaços \ac{BDM} \citep{Brezzi1985}, os quais têm a característica de permitir obter a mesma ordem de convergência do erro para a variável vetorial que os espaços de \emph{Raviart-Thomas} \citep{Raviart1977}, porém com a vantagem de terem uma dimensão menor. Os espaços \ac{BDM} podem ser definidos para cada elemento finito da malha do modo a seguir, considerando um $k \geq 1$ \citep{Chen2006}:
+\begin{equation} \label{eq:bdmspaces1}
+\mathbf{V}_{h}(E_{i}) = \left( \mathbf{P}^{k}(E_{i}) \right)^{2}
+\end{equation}
+\begin{equation} \label{eq:bdmspaces2}
+\mathbf{W}_{h}(E_{i}) = \mathbf{P}^{k-1}(E_{i})
+\end{equation}
+
+Para o caso mais simples, com $k = 1$, obtemos a seguinte definição para $\mathbf{V}_{h}$ em um triângulo:
+\begin{equation} \label{eq:bdmspaces3}
+\mathbf{V}_{h}(E_{i}) = \{\mathbf{\zeta}_{h} =  \left( a_{E_{i}}^{1} + a_{E_{i}}^{2}x_{1} + a_{E_{i}}^{3}x_{2}, a_{E_{i}}^{4} + a_{E_{i}}^{5}x_{1} + a_{E_{i}}^{6}x_{2} \right) \}
+\end{equation}
+
+Este triângulo é mostrado na Fig. \ref{fig:mfemtriangles}(a), onde percebe-se que os graus de liberdade em $\mathbf{V}_{h}$ são os valores das componentes normais das funções em dois pontos diferentes para cada aresta do elemento, tendo este espaço portanto uma dimensão igual a seis. Para $k = 1$, o espaço $\mathbf{W}_{h}$ é constante em cada elemento, tendo portanto uma dimensão unitária.
 \begin{figure}
 \centering
-\subfigure[Triângulo Linear]{
+\subfigure[Triângulo de Ordem 1]{
 \includegraphics[width=0.35\textwidth]{chapters/ch03/BDMTri1}
 }
 \quad
-\subfigure[Triângulo Quadrático]{
+\subfigure[Triângulo de Ordem 2]{
 \includegraphics[width=0.35\textwidth]{chapters/ch03/BDMTri2}
 }
 \quad
-\subfigure[Triângulo Cúbico]{
+\subfigure[Triângulo de Ordem 3]{
 \includegraphics[width=0.35\textwidth]{chapters/ch03/BDMTri3}
 }
 \caption[Exemplo de elementos triângulares para análise via MEFM.]{Exemplo de elementos triângulares para análise via \ac{MEFM}.}
-\label{fig:HeterogeneoAnisoError_N=64}
+\label{fig:mfemtriangles}
 \end{figure}
+O problema discreto para o \ac{MEFM} pode então ser descrito por:
+\begin{problem} [Discreto]
+Encontre $p_{h}$ $\in$ $W_{h}$ e $\mathbf{v_{h}}$ $\in$ $\mathbf{V_{h}}$ tal que:
+\begin{equation} \label{eq:variationalmfemh}
+A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = f(w_{h}) \quad \forall \zeta_{h} \in \mathbf{V}_{h}, \quad \forall w \in W_{h}
+\end{equation}
+com
+\begin{equation} \label{eq:bilinearformhmfemch03h}
+A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v_{h}}, \zeta_{h} \right) -(\nabla \cdot \zeta_{h}, p_{h}) -(\nabla \cdot \mathbf{v_{h}}, w_{h})
+\end{equation}
+\begin{equation} \label{eq:linearformhmfemch03h}
+f(w_{h}) = - (Q_{h}, w_{h})
+\end{equation}
+\end{problem}
 
 \section{Estabilização do \ac{MEF} via \ac{SUPG}} \label{sc:supg}
 O \ac{MEF} de Galerkin permite obter respostas bastantes acuradas para problemas com soluções suaves, como normalmente é o caso para equações essencialmente elípticas como a equação de pressão. Entretanto, o mesmo não se mostra adequado para a simulação de fenômenos dominados por termos advectivos, caso frequente de equações com características hiperbólicas como a equação de saturação descrita em \ref{sc:eq_sat}. Nestes casos a solução tende a se tornar instável na região de choque, sendo que tal instabilidade é transportada para todo o domínio, deteriorando rapidamente a acurácia global.
