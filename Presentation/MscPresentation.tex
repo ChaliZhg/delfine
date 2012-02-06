@@ -15,7 +15,6 @@
 \usepackage{subfigure}
 \usepackage{supertabular}
 % Command added to present problem in 'theorem form'
-\newtheorem{problem}{Problema}
 % Definition for tensors format
 \def\mathbi#1{\textbf{\em #1}}
 
@@ -1216,14 +1215,8 @@ def SUPG(self, delfineVar, parameter):
   \frametitle{Solução Numérica}
 \begin{figure}
 \centering
-\subfigure{
-\includegraphics[width=0.45\textwidth]{figs/PressureHeteroIso}
-}
-\quad
-\subfigure{
-\includegraphics[width=0.45\textwidth]{figs/SaturationHeteroIso}
-}
-\caption{Perfis de Pressão e Saturação para t = 0.2 PVI}
+\includegraphics[width=1.0\textwidth]{figs/BIPHASE2D_PlotOverLine}
+\caption{Perfil de Saturação de poço a poço}
 \end{figure}
 \end{frame}
 
@@ -1231,9 +1224,31 @@ def SUPG(self, delfineVar, parameter):
   \frametitle{Solução Numérica}
 \begin{figure}
 \centering
-\includegraphics[width=0.8\textwidth]{figs/BIPHASE2D2}
+\includegraphics[width=0.75\textwidth]{figs/BIPHASE2D2}
 \caption{Campo de Saturação e Velocidade para t = 0.3 PVI}
 \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Buckley-Leverett 1-D}
+  \begin{itemize}
+  \item Resolução da Eq. de Buckley Leverett em 1-D com $v_{t}=1.0$
+  \end{itemize}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.75\textwidth]{figs/BL1D}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Buckley-Leverett 1-D}
+  \begin{itemize}
+  \item Comparação com sol. analítica da Eq. de Buckley Leverett em 1-D com $v_{t}=1.0$ e $t=0.3$
+  \end{itemize}
+  \begin{figure}
+  \centering
+  \includegraphics[width=0.85\textwidth]{figs/BL1Dcomp}
+  \end{figure}
 \end{frame}
 
 %% SECTION 6 - Conclusions
