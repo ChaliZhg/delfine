@@ -14,6 +14,11 @@
 \usepackage[latin1]{inputenc}
 \usepackage{subfigure}
 \usepackage{supertabular}
+% Command added to present problem in 'theorem form'
+\newtheorem{problem}{Problema}
+% Definition for tensors format
+\def\mathbi#1{\textbf{\em #1}}
+
 \setbeamercovered{transparent}
 
 \title[ ]{Modelagem Automática de Escoamentos em Meios Porosos via Método dos Elementos Finitos}
@@ -95,7 +100,7 @@
 \section{Formulação Matemática}
 
 \begin{frame}
-  \frametitle{Propriedades}
+  \frametitle{Conceitos}
   \begin{columns}
   \column{0.7\textwidth}
     \begin{figure}[ht]
@@ -113,7 +118,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Propriedades}
+  \frametitle{Conceitos}
   \begin{columns}
   \column{0.7\textwidth}
     \begin{figure}[ht]
@@ -131,7 +136,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Propriedades}
+  \frametitle{Conceitos}
   \begin{columns}
   \column{0.6\textwidth}
     \begin{figure}[ht]
@@ -153,7 +158,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Propriedades}
+  \frametitle{Conceitos}
   \begin{columns}
   \column{0.6\textwidth}
     \begin{figure}[ht]
@@ -177,7 +182,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Propriedades}
+  \frametitle{Conceitos}
   \begin{columns}
   \column{0.6\textwidth}
     \begin{figure}[ht]
@@ -228,136 +233,468 @@
   \end{alertblock}
 \end{frame}
 
-\subsection{Equação de Pressão}
+\subsection{Equação da Pressão}
 
 \begin{frame}
-\frametitle{Equação de Pressão}
+  \frametitle{Equação da Pressão }
+  \begin{block}{Expansão da Derivada Temporal}<1->
+\begin{equation*} \label{eq:twophase_system2a}
+-\nabla \cdot \left(\rho_{\alpha} \mathbi{v}_{\alpha}\right) + q_{\alpha} =
+\rho_{\alpha}S_{\alpha}\frac{\partial \phi}{\partial t} + \phi S_{\alpha} \frac{d\rho_{\alpha}}{d p_{\alpha}} \frac{\partial p_{\alpha}}{\partial t} + \phi\rho_{\alpha}\frac{\partial S_{\alpha}}{\partial t}
+  \end{equation*}
+  \end{block}
+  
+  \begin{block}{Divisão por $\rho_{\alpha}$, hipótese de incompressibilidade e soma das eqs. das fases}<1->
+  \begin{equation*} \label{eq:twophase_oneequation}
+-\nabla \cdot \mathbi{v}_{t} + Q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
+  \end{equation*}
+  \end{block}
+  
+  \begin{block}{$\sum_{\alpha=1}^n S_{\alpha} = 1 $ -$>$ Eq. da Pressão para escoamentos bifásicos}<2->
+  \begin{equation*}
+  \nabla \cdot \mathbi{v}_{t} = Q_{t}
+  \end{equation*}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Equação da Pressão}
+  \begin{block}{Definição de pressão média e capilar}<1->
+  \begin{equation*} \label{eq:average_press}
+  p_{avg} = \frac{p_{w} + p_{o}} {2}
+  \end{equation*}
+  \begin{equation*} \label{eq:phase_pressures}
+  p_{c} = p_{o} - p_{w}
+  \end{equation*}
+  \end{block}
+  
+  \begin{block}{Definição de mobilidade da fase $\alpha$}<1->
+  \begin{equation*} \label{eq:phase_mob}
+  \lambda_{\alpha} = \frac{k_{r\alpha}}{\mu_{\alpha}} 
+  \end{equation*}
+  \end{block}
+  
+  \begin{alertblock}{Forma expandida da Eq. da Pressão}<2->
+  \begin{equation*}
+\nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
+\left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = Q_{t}
+  \end{equation*}
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Equação da Pressão}
 \begin{itemize}
-\item <1-> Manipulando a Eq. Acoplada obtem-se a Forma Segregada:
+\item <1-> Desprezando a pressão capilar e considerando um fluxo horizontal:
 \end{itemize}
-\begin{block}{Forma Segregada da Eq. de Pressão}
+\begin{alertblock}{Forma segregada da Eq. da Pressão}
 \begin{equation*}
-- \nabla \cdot K \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p \right) = Q_{t}
+- \nabla \cdot \left(\mathbi{K} \lambda_{t} \nabla p_{avg} \right) = Q_{t}
+\end{equation*}
+\end{alertblock}
+\end{frame}
+
+\subsection{Equação da Saturação}
+
+\begin{frame}
+  \frametitle{Equação da Saturação}
+  \begin{block}{Considerando as velocidades para um caso bifásico mais geral}<1->
+  \begin{equation*} \label{eq:phase_velocitiesa}
+\mathbi{v}_{w} = - \mathbi{K}\lambda_{w} \left(\nabla p_{w} - \rho_{w}g\nabla z \right)
+  \end{equation*}
+  \begin{equation*} \label{eq:phase_velocitiesb}
+\mathbi{v}_{o} = - \mathbi{K}\lambda_{o} \left(\nabla p_{o} - \rho_{o}g\nabla z \right)
+  \end{equation*}
+  \end{block}
+  
+  \begin{block}{Utilizando pressão capilar, velocidade e mobilidade totais}<1->
+\begin{equation*} \label{eq:phase_velocities3}
+\lambda_{t}\mathbi{v}_{w} = \lambda_{w}\mathbi{v}_{t} + \mathbi{K}\lambda_{o}\lambda_{w}\left(\nabla p_{c} + \left(\rho_{w} - \rho_{o}\right)g\nabla z\right)
+\end{equation*}
+  \end{block}
+  
+  \begin{block}{Fluxo fracional e função da saturação para simplificar notação}<1->
+  \begin{equation*} \label{eq:fracflux}
+  f_{\alpha} = \frac{\lambda_{\alpha}}{\lambda_{t}}
+  \end{equation*}
+  \begin{equation*} \label{eq:derivcapsat}
+  h_{w} = - \frac{\lambda_{o}\lambda_{w}}{\lambda_{t}} \frac{d p_{c}}{d S_{w}}
+  \end{equation*}
+  \end{block}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Equação da Saturação}
+\begin{itemize}
+\item <1-> Manipulando a Eq. de Conservação e usando as definições anteriores:
+\end{itemize}
+\begin{block}{Forma expandida da Eq. da Saturação}
+\begin{equation*} \label{eq:sateq}
+\frac{\partial (\phi\rho_{w}S_{w})}{\partial t} = - \nabla\cdot\left(\rho_{w}\left(f_{w}\mathbi{v}_{t} - \mathbi{K}h_{w}\nabla S_{w} + \mathbi{K}\lambda_{o}f_{w}\left(\rho_{w} - \rho_{o}\right)g\nabla z\right)\right) + q_{w}
 \end{equation*}
 \end{block}
 \end{frame}
 
-\subsection{Equação de Saturação}
-
 \begin{frame}
-\frametitle{Equação de Saturação}
+\frametitle{Equação da Saturação}
 \begin{itemize}
-\item <1-> Manipulando a Eq. Acoplada obtem-se a Forma Segregada:
+\item <1-> Assumindo novamente as hipóteses de incompressibilidade do meio e do fluido, desprezando a pressão capilar e considerando um fluxo horizontal:
 \end{itemize}
-\begin{block}{Forma Segregada da Eq. de Saturação}
-\begin{equation*}
-\phi \frac{\partial S_{w}}{\partial t} + f_{,S} \mathbf{u} \cdot \nabla S_{w} = Q_{w} 
+\begin{alertblock}{Forma segregada da Eq. da Saturação}
+\begin{equation*} \label{eq:sateq4}
+\phi\frac{\partial S_{w}}{\partial t} = - \nabla\cdot\left(f_{w}\mathbi{v}_{t}\right) + Q_{w}
 \end{equation*}
-\end{block}
+\end{alertblock}
 \end{frame}
 
-%% SECTION 3 - Numerical Formulation
-\section{Formulação Numérica e Implementação}
-
-\subsection{FEniCS/Dolfin}
-
 \begin{frame}
-  \frametitle{FEniCS/Dolfin (www.fenicsproject.org)}
+  \frametitle{Equação da Saturação}
+  \begin{itemize}
+\item <1-> Não-linearidade devido à função de fluxo fracional
+\end{itemize}
   \begin{figure} 
   \centering
-  \includegraphics[width=0.07\textwidth, angle=270]{figs/SequenceFenics}
-  \end{figure}  
-  \begin{figure} 
-  \centering
-  \includegraphics[width=0.4\textwidth]{figs/ModulesDolfin}
+  \includegraphics[width=0.75\textwidth]{figs/fracflux}
   \end{figure}
 \end{frame}
 
+%% SECTION 3 - Numerical Formulation
+\section{Formulação Numérica}
+
 \subsection{Método dos Elementos Finitos}
 
-\begin{frame}[fragile]
+\begin{frame}
   \frametitle{Método dos Elementos Finitos - Galerkin}
-  \begin{block}{Forma Variacional}
-    \begin{equation} \label{eq:bilinearformh2}
-    A(p,v) = \int_{\Omega} \nabla v \cdot \lambda K \nabla p d \Omega \nonumber
-    \end{equation}
-    \begin{equation} \label{eq:linearformh2}
-    f(v) = \int_{\Omega} vf d \Omega - \int_{\Gamma} gv d \Gamma \nonumber
-    \end{equation}
-    
-   \end{block}
-   \begin{block}{Código Python}
-    \begin{pythoncode}
-def Galerkin(self, delfineVar, parameter):
-	.      
-    # Define variational form
-    a = inner(grad(v), K*mob*grad(u))*dx
-    L = v*f*dx - g*v*ds
-    \end{pythoncode}
-  \end{block}
+ \begin{problem} [Contínuo - Forma Fraca da Eq. da Pressão]
+Encontre $p$ $\in$ $P$ tal que:
+\begin{equation*} \label{eq:variational}
+A(p,w) = f(w) \quad \forall w \in W
+\end{equation*}
+com
+\begin{equation*} \label{eq:funcspace1}
+P = \{ p \in H^{1}(\Omega); \textrm{$p = p_{D}$ em $\Gamma_{D}$} \}  
+\end{equation*}
+\begin{equation*} \label{eq:funcspace2}
+W = \{ w \in H^{1}(\Omega); \textrm{$w = 0$ em $\Gamma_{N}$} \}  
+\end{equation*}
+\begin{equation*} \label{eq:bilinearform}
+A(p,w) = \int_{\Omega} \lambda K \nabla p \cdot \nabla w d \Omega \quad \forall p,w \in P,W
+\end{equation*}
+\begin{equation*} \label{eq:linearform}
+f(w) = \int_{\Omega} q_{t}w d \Omega \quad \forall w \in W
+\end{equation*}
+\end{problem}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Método dos Elementos Finitos Mistos}
-  \begin{block}{Forma Variacional}
-  \begin{equation} \label{eq:bilinearformhmfem2}
-  A(p,v,\sigma,\tau) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \sigma \cdot \tau - \nabla \cdot \tau p - \nabla \sigma v \right) d\Omega \nonumber
-  \end{equation}
-  \begin{equation} \label{eq:linearformhmfem2}
-  f(v) = - \int_{\Omega} fv d \Omega \nonumber
-  \end{equation}
+\begin{frame}
+\frametitle{Método dos Elementos Finitos - Galerkin}
+\begin{itemize}
+\item <1-> Solução da EDP tem que existir em um espaço de funções com derivadas contínuas (\emph{forma forte}).
+\item <1-> Espaço de Sobolev de grau 1 exigido pela forma fraca permite funções com derivadas descontínuas.
+\end{itemize}
+\begin{block}{Espaços de funções}
+\begin{equation*} \label{eq:sobolevspace}
+H^{k}(\Omega) = \{w \in L_{2}(\Omega); w_{,x} \in L_{2}(\Omega); \ldots; w_{,\underbrace{x \ldots x}_{k \phantom{l} vezes}} \in L_{2}(\Omega) \}  
+\end{equation*}
+onde
+\begin{equation*} \label{eq:lebesguespace}
+L_{2}(\Omega) = \{w | \int_{\Omega} w^{2} d \Omega < \infty \}  
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Método dos Elementos Finitos - Galerkin}
+\begin{problem} [Discreto - Forma fraca da Eq. da Pressão]
+Encontre $p_{h}$ $\in$ $P_{h}$ tal que:
+\begin{equation*} \label{eq:galerkin}
+A(p_{h},w_{h}) = f(w_{h}) \quad \forall w_{h} \in W_{h}
+\end{equation*}
+com
+\begin{equation*} \label{eq:funcspace1h}
+P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}); p_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$p_{h} = p_{D}$ em $\Gamma_{D}$} \}  
+\end{equation*}
+\begin{equation*} \label{eq:funcspace2h}
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
+\end{equation*}
+\begin{equation*} \label{eq:bilinearformh}
+A(p_{h},w_{h}) = \int_{\Omega_{h}} \lambda K \nabla p_{h} \cdot \nabla w_{h} d \Omega \quad \forall p_{h},w_{h} \in P_{h},W_{h}
+\end{equation*}
+\begin{equation*} \label{eq:linearformh}
+f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
+\end{equation*}
+\end{problem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Método dos Elementos Finitos - Galerkin}
+  \begin{itemize}
+\item <1-> $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$
+\end{itemize}
+\begin{figure}
+\centering
+\subfigure[Triângulo Linear]{
+\includegraphics[width=0.28\textwidth]{figs/LagTri1}
+}
+\quad
+\subfigure[Triângulo Quadrático]{
+\includegraphics[width=0.28\textwidth]{figs/LagTri2}
+}
+\quad
+\subfigure[Triângulo Cúbico]{
+\includegraphics[width=0.28\textwidth]{figs/LagTri3}
+}
+\label{fig:femtrilinear}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Método dos Elementos Finitos Mistos (MEFM)}
+  \begin{itemize}
+\item <1-> Método de Galerkin calcula apenas a pressão
+\item <1-> Velocidade a partir da Lei de Darcy -$>$ Baixa convergência
+\item <1-> Método dos Elementos Finitos Mistos calcula simultaneamente pressão e velocidade.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEFM - Obtenção da Forma Fraca}
+  \begin{block}{Equação da Pressão}<1->
+\begin{equation*} \label{eq:pressure_eq_formMFEM}
+\nabla \cdot \mathbi{v} = Q
+\end{equation*}
   \end{block}
-  \begin{block}{Código Python}
-    \begin{pythoncode}
-def MixedFEM(self, delfineVar, parameter):
-	.
-    # Define variational form
-    a = (dot((invK/mob)*sigma, tau) 
-    - div(tau)*u - div(sigma)*v)*dx
-    L = - f*v*dx
-    \end{pythoncode}
+  
+  \begin{block}{Espaço de Sobolev para funções vetorias}<1->
+\begin{equation*} \label{eq:vectorsobolevspace}
+\mathbf{H}(div, \Omega) = \{\mathbf{\zeta} = (\zeta_{1}, \zeta_{2}) \in (L_{2}(\Omega))^{2}; \nabla \cdot \mathbf{\zeta} \in L_{2}(\Omega) \}  
+\end{equation*}
+\begin{equation*} \label{eq:vectorsobolevspace2}
+\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}
+\end{equation*}
+  \end{block}
+  
+  \begin{block}{Produto interno em $L_{2}(\Omega)$}<1->
+\begin{equation*} \label{eq:innerprod}
+(v,w) = \int_{\Omega} v(x)w(x) dx
+\end{equation*}
   \end{block}
 \end{frame}
 
 \begin{frame}
-  \frametitle{MEF Estabilizado via SUPG}
-  \begin{block}{Forma Variacional}
-  \begin{equation} \label{eq:bilinearformhsupg2}
-F(S,v) = \int_{\Omega} \left( v \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
-\int_{\Omega} vf_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1} d \Omega\nonumber
-  \end{equation}
-  \begin{equation}
-+ \sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{u}^{n+1} \cdot \nabla v \right) \tau_{s} r^{n+1} d \Omega \nonumber  
-  \end{equation}
-  \begin{equation} \label{eq:residuumsupg2}
-  r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+ 
-          f_{,S}\mathbf{u}^{n+1} \cdot \nabla S^{n+1} \nonumber
-  \end{equation}
-  \begin{equation} \label{eq:stabtermsupg2}
-  \tau_{s} = \frac{h}{2 \left| \left| \mathbf{u}^{n+1} \right| \right| }\nonumber
-  \end{equation}
+  \frametitle{MEFM - Obtenção da Forma Fraca}
+  \begin{block}{Equação da velocidade}<1->
+\begin{equation*} \label{eq:pressure_eq_formMFEM}
+\mathbf{v} = - \mathbi{K} \lambda \nabla p
+\end{equation*}
+  \end{block}
+  
+  \begin{block}{Multiplicando a Eq. da velocidade por $\mathbf{\zeta} \in \mathbf{V}$ e rearranjando os termos}<1->
+\begin{equation*} \label{eq:pressure_eq_formMFEM4}
+\left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) = (\nabla \cdot \zeta, p)
+\end{equation*}
+  \end{block}
+  
+  \begin{block}{Multiplicando a Eq. da pressão por um $w \in W = L_{2}(\Omega)$}<1->
+\begin{equation*} \label{eq:pressure_eq_formMFEM5}
+(\nabla \cdot \mathbf{v}, w) = (Q, w)
+\end{equation*}
   \end{block}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{MEF Estabilizado via SUPG}
-  \begin{block}{Código Python}
-    \begin{pythoncode}
-def SUPG(self, delfineVar, parameter):
-	.
-    # Galerkin variational problem
-    F = v*phi*((S-S0)/dt)*dx +
-        (v*dot(velocity, grad(S))*dx
-    # Residual
-    r = phi*((S-S0)/dt) + (dot(velocity, grad(S)))
-    # SUPG stabilisation terms
-    tau = h/(2.0*sqrt(dot(velocity, velocity)))
-    F += tau*dot(velocity, grad(v))*r*dx
-    # Create bilinear and linear forms
-    a = lhs(F)
-    L = rhs(F)
-    \end{pythoncode}
+\begin{frame}
+  \frametitle{MEFM - Obtenção da Forma Fraca}
+\begin{problem} [Contínuo - Forma Fraca da Eq. da Pressão e Velocidade]
+Encontre $p$ $\in$ $W$ e $\mathbf{v}$ $\in$ $\mathbf{V}$ tal que:
+\begin{equation*} \label{eq:variationalmfem}
+A(p,w,\mathbf{v},\zeta) = f(w) \quad \forall \zeta \in \mathbf{V}, \quad \forall w \in W
+\end{equation*}
+com
+\begin{equation*} \label{eq:funcspace1mfem}
+\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}
+\end{equation*}
+\begin{equation*} \label{eq:funcspace2mfem}
+W = L_{2}(\Omega)
+\end{equation*}
+\begin{equation*} \label{eq:bilinearformhmfemch03}
+A(p,w,\mathbf{v},\zeta) = \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) -(\nabla \cdot \zeta, p) -(\nabla \cdot \mathbf{v}, w)
+\end{equation*}
+\begin{equation*} \label{eq:linearformhmfemch03}
+f(w) = - (Q, w)
+\end{equation*}
+\end{problem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEFM - Discretização da Forma Fraca}
+  \begin{itemize}
+\item <1-> Várias alternativas na literatura que atendem a condição de estabilidade para combinação de espaços.
+\item <1-> Utilizados os espaços finitos de Brezzi-Douglas-Marini (BDM).
+\item <1-> BDM com mesma ordem de convergência para velocidade que Raviart-Thomas, porém possui dimensão menor.
+\end{itemize}
+  
+  \begin{block}{Espaços BDM para cada elemento:}<1->
+\begin{equation*} \label{eq:bdmspaces1}
+\mathbf{V}_{h}(E_{i}) = \left( \mathbf{P}^{k}(E_{i}) \right)^{2}
+\end{equation*}
+\begin{equation*} \label{eq:bdmspaces2}
+\mathbf{W}_{h}(E_{i}) = \mathbf{P}^{k-1}(E_{i})
+\end{equation*}
   \end{block}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEFM - Discretização da Forma Fraca}
+\begin{problem} [Discreto - Forma fraca da Eq. da Pressão e Velocidade]
+Encontre $p_{h}$ $\in$ $W_{h}$ e $\mathbf{v_{h}}$ $\in$ $\mathbf{V_{h}}$ tal que:
+\begin{equation*} \label{eq:variationalmfemh}
+A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = f(w_{h}) \quad \forall \zeta_{h} \in \mathbf{V}_{h}, \quad \forall w \in W_{h}
+\end{equation*}
+com
+\begin{equation*} \label{eq:bilinearformhmfemch03h}
+A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v_{h}}, \zeta_{h} \right) -(\nabla \cdot \zeta_{h}, p_{h}) -(\nabla \cdot \mathbf{v_{h}}, w_{h})
+\end{equation*}
+\begin{equation*} \label{eq:linearformhmfemch03h}
+f(w_{h}) = - (Q_{h}, w_{h})
+\end{equation*}
+\end{problem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEFM - Discretização da Forma Fraca}
+  \begin{itemize}
+\item <1-> Para $k = 1$, $\mathbf{V}_{h}(E_{i}) = \{\mathbf{\zeta}_{h} =  \left( a_{E_{i}}^{1} + a_{E_{i}}^{2}x_{1} + a_{E_{i}}^{3}x_{2}, a_{E_{i}}^{4} + a_{E_{i}}^{5}x_{1} + a_{E_{i}}^{6}x_{2} \right) \}$
+\item <1->  Para $k = 1$, G.L. em $\mathbf{V}_{h}$ são os valores das componentes normais das funções em dois pontos diferentes para cada aresta do elemento
+\item <1-> Para $k = 1$, $\mathbf{W}_{h}$ é constante em cada elemento
+\end{itemize}
+\begin{figure}
+\centering
+\subfigure[Triângulo de Ordem 1]{
+\includegraphics[width=0.29\textwidth]{figs/BDMTri1}
+}
+\quad
+\subfigure[Triângulo de Ordem 2]{
+\includegraphics[width=0.29\textwidth]{figs/BDMTri2}
+}
+\quad
+\subfigure[Triângulo de Ordem 3]{
+\includegraphics[width=0.29\textwidth]{figs/BDMTri3}
+}
+\label{fig:mfemtriangles}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEF com Estabilização via SUPG}
+  \begin{itemize}
+\item <1-> MEF de Galerkin acurado para soluções suaves.
+\item <1-> Presença de instabilidades para equações hiperbólicas. 
+\item <1-> Ponderação com peso maior na direção do fluxo (Idéia do \emph{Upwind})
+\item <1-> SUPG -$>$ Função de ponderação não mais corresponde ao espaço da função tentativa utilizada -$>$ $w_{s} = w + \tau_{s} \mathbf{v} \cdot \nabla w$
+\end{itemize}
+\begin{figure} 
+\centering
+\includegraphics[width=0.5\textwidth]{figs/supgweightfunc}
+\caption{Comparação entre diferentes definições da função de ponderação.}
+\label{fig:supgweightfunc}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEF com Estabilização via SUPG}
+  \begin{itemize}
+\item <1-> Aplicando procedimento parecido ao MEF de Galerkin, porém com função $w_{s}$:
+\end{itemize}
+\begin{problem} [Discreto - Forma fraca da Eq. da Saturação]
+Dados $S_{h}^{n+1}, f_{,S}$ e $\mathbf{v}_{h}$, encontre $S_{h}^{n+1}$ $\in$ $X_{h}$ tal que:
+\begin{equation*} \label{eq:supgprob1}
+F(S_{h}^{n+1}, w_{h}) = 0 \quad \forall w_{h} \in W_{h}
+\end{equation*}
+com
+\begin{equation*} \label{eq:supgprob2}
+X_{h} = \{ S_{h} \in H^{1}(\Omega_{h}); S_{h} \in \mathbf{P}^{1}(E_{i}); \textrm{$S_{h} = S_{D}$ em $\Gamma_{D}$} \}  
+\end{equation*}
+\begin{equation*} \label{eq:supgprob3}
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
+\end{equation*}
+\begin{equation*} \label{eq:supgprob4}
+\begin{array}{cc}
+F(S_{h}^{n+1}, w_{h}) = \int_{\Omega} \left( w \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
+\int_{\Omega} wf_{,S}\mathbi{v}^{n+1} \cdot \nabla S^{n+1} d \Omega + \\
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbi{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega
+\end{array}
+\end{equation*}
+\end{problem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEF com Estabilização via SUPG}
+  \begin{itemize}
+\item <1-> Dois primeiros termos equivalem ao MEF de Galerkin.
+\item <1-> Terceiro termo responsável pela estabilização. 
+\item <1-> Termo adicional mantém consistência pois é basedo no resíduo $r$ descrito por:
+\end{itemize}
+\begin{block}{Resíduo}<1->
+\begin{equation*} \label{eq:residuumsupg2ch3}
+r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+ 
+          f_{,S}\mathbi{v}^{n+1} \cdot \nabla S^{n+1}
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEF com Estabilização via SUPG + Difusão Artificial}
+  \begin{itemize}
+\item <1-> Utilizado termo de estabilização simples: $\tau_{s} = \frac{h}{2\vert\vert \mathbi{v} \vert\vert}$
+\item <1-> SUPG não elimina todas as oscilações. 
+\item <1-> Adição de dissipação numérica artificial para diminuir oscilações espúrias.
+\end{itemize}
+\begin{block}{Adição de difusão artificial}<1->
+\begin{equation*} \label{eq:viscartterm1}
+F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \cdot \nabla S_{h}^{n+1} d \Omega
+\end{equation*}
+\begin{equation*} \label{eq:viscartterm2}
+\nu_{shock} = \left\{ \begin{array}{ll}
+  \frac{\beta h \vert r^{n+1} \vert}{2\vert\vert \nabla S_{h}^{n} \vert\vert} & \textrm{se $\vert\vert \nabla S_{h}^{n} \vert\vert \neq 0$}\\
+  0 & \textrm{caso contrário}
+  \end{array} \right.
+\end{equation*}
+\end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEF com Estabilização via SUPG + Difusão Artificial}
+  \begin{itemize}
+\item <1-> Exemplo para Advecção Linear: MEF Galerkin
+\end{itemize}
+  \begin{figure} 
+  \centering
+  \includegraphics[width=0.75\textwidth]{figs/PureGalerkin_t_n=500}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEF com Estabilização via SUPG + Difusão Artificial}
+  \begin{itemize}
+\item <1-> Exemplo para Advecção Linear: MEF + SUPG
+\end{itemize}
+  \begin{figure} 
+  \centering
+  \includegraphics[width=0.75\textwidth]{figs/SUPGt_n=500}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEF com Estabilização via SUPG + Difusão Artificial}
+  \begin{itemize}
+\item <1-> Exemplo para Advecção Linear: MEF + SUPG + Dif. Artificial
+\end{itemize}
+  \begin{figure} 
+  \centering
+  \includegraphics[width=0.75\textwidth]{figs/SUPG+ADt_n=500}
+  \end{figure}
 \end{frame}
 
 \subsection{Resolução do Sistema de Equações Lineares}
@@ -406,7 +743,10 @@ def SUPG(self, delfineVar, parameter):
   \end{columns}
 \end{frame}
 
-\subsection{Implementação}
+%% SECTION 5 - Implementation
+\section{Implementação}
+
+\subsection{Estrutura Geral}
 
 \begin{frame}
   \frametitle{Pré-Processamento}
@@ -417,28 +757,119 @@ def SUPG(self, delfineVar, parameter):
 \end{frame}
 
 \begin{frame}
-  \frametitle{Sequencial Implícito}
- \begin{columns}[c]
-
-   \begin{column}{5cm}
+  \frametitle{Sequencial Implícito}   
     \begin{figure} 
      \centering
-     \includegraphics[width=1.0\textwidth]{figs/Elliptic}
+     \includegraphics[width=0.64\textwidth]{figs/Elliptic}
     \end{figure}
-   \end{column}
-   
-   \begin{column}{5cm}
-    \begin{figure} 
-     \centering
-     \includegraphics[width=1.0\textwidth]{figs/Hyperbolic}
-    \end{figure}
-   \end{column}
-  \end{columns}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Sequencial Implícito}   
+    \begin{figure} 
+     \centering
+     \includegraphics[width=0.75\textwidth]{figs/Hyperbolic}
+    \end{figure}
+\end{frame}
 
+\subsection{FEniCS/Dolfin}
 
-%% SECTION 5 - Results
+\begin{frame}
+  \frametitle{FEniCS/Dolfin (www.fenicsproject.org)}
+  \begin{figure} 
+  \centering
+  \includegraphics[width=0.07\textwidth, angle=270]{figs/SequenceFenics}
+  \end{figure}  
+  \begin{figure} 
+  \centering
+  \includegraphics[width=0.4\textwidth]{figs/ModulesDolfin}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Método dos Elementos Finitos - Galerkin}
+  \begin{block}{Forma Variacional}
+\begin{equation*} \label{eq:bilinearformh2}
+A(p,w) = \int_{\Omega} \nabla w \cdot \lambda K \nabla p d \Omega
+\end{equation*}
+\begin{equation*} \label{eq:linearformh2}
+f(w) = \int_{\Omega} wf d \Omega - \int_{\Gamma} gw d \Gamma
+\end{equation*}
+    
+   \end{block}
+   \begin{block}{Código Python}
+    \begin{pythoncode}
+def Galerkin(self, delfineVar, parameter):
+	.      
+    # Define variational form
+    a = inner(grad(v), K*mob*grad(u))*dx
+    L = v*f*dx - g*v*ds
+    \end{pythoncode}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Método dos Elementos Finitos Mistos}
+  \begin{block}{Forma Variacional}
+  \begin{equation*} \label{eq:bilinearformhmfem2}
+A(p,w,\mathbf{v},\zeta) = \int_{\Omega} \left( K^{-1} \lambda^{-1} \mathbf{v} \cdot \zeta - \nabla \cdot \zeta p - \nabla \cdot \mathbf{v} w \right) d \Omega
+\end{equation*}
+\begin{equation*} \label{eq:linearformhmfem2}
+f(w) = - \int_{\Omega} fw d \Omega
+\end{equation*}
+  \end{block}
+  \begin{block}{Código Python}
+    \begin{pythoncode}
+def MixedFEM(self, delfineVar, parameter):
+	.
+    # Define variational form
+    a = (dot((invK/mob)*v, zeta)
+        - div(zeta)*p - div(v)*w)*dx
+    L = - f*w*dx
+\end{pythoncode}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MEF Estabilizado via SUPG}
+  \begin{block}{Forma Variacional}
+\begin{array}{ll}
+F(S, w) = \int_{\Omega} \left( w \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
+\int_{\Omega} wf_{,S}\mathbi{v}^{n+1} \cdot \nabla S^{n+1} d \Omega + \\
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbi{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega
+\end{array}
+\begin{equation*} \label{eq:residuumsupg2}
+r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+ 
+          f_{,S}\mathbf{v}^{n+1} \cdot \nabla S^{n+1}
+\end{equation*}
+\begin{equation*} \label{eq:stabtermsupg2}
+\tau_{s} = \frac{h}{2 \left| \left| \mathbf{v}^{n+1} \right| \right| }
+\end{equation*}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{MEF Estabilizado via SUPG}
+  \begin{block}{Código Python}
+    \begin{pythoncode}
+def SUPG(self, delfineVar, parameter):
+	.
+    # Galerkin variational problem
+    F = w*phi*((S-S0)/dt)*dx +
+        (w*fs*dot(v, grad(S))*dx
+    # Residual
+    r = phi*((S-S0)/dt) + fs*(dot(v, grad(S)))
+    # SUPG stabilization terms
+    tau = h/(2.0*sqrt(dot(v, v)))
+    F += tau*dot(v, grad(w))*r*dx
+    # Create bilinear and linear forms
+    a = lhs(F)
+    L = rhs(F)
+\end{pythoncode}
+  \end{block}
+\end{frame}
+
+%% SECTION 6 - Results
 \section{Resultados}
 
 \subsection{Elíptico - Homogêneo}
