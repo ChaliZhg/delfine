@@ -18,8 +18,8 @@
 
 \title[ ]{Modelagem Automática de Escoamentos em Meios Porosos via Método dos Elementos Finitos}
 \author[ ]{Mestrando: Bruno Luna \linebreak Orientador: Paulo Lyra \linebreak Co-orientador: Ramiro Willmersdorf}
-\institute{Seminário de Dissertação - Mestrado}
-%%\titlegraphic{\includegraphics[width=20mm]{Reservoir-SimulationFigure}}
+\institute{Seminário de Dissertação - Mestrado/PPGEM - UFPE}
+%%\titlegraphic{\includegraphics[width=40mm]{BIPHASE2D2}}
 \date{Fevereiro - 2012}
 \AtBeginSection[]
 {
@@ -28,9 +28,12 @@
    \end{frame}
 }
 \begin{document}
+{
+%%\usebackgroundtemplate{\includegraphics[width=\paperwidth]{BIPHASE2D2_t6}}
 \begin{frame}<handout:0>
   \titlepage
 \end{frame}
+}
 
 \section*{Sumário}
 \begin{frame}
@@ -42,24 +45,24 @@
 
 \begin{frame}
   \frametitle{Motivação}
-  \begin{block}{Simulação de Reservatórios de Petróleo}
+  \begin{block}{Gerenciamento de Reservatórios de Petróleo}
    \begin{itemize}
-    \item <2-> Agilidade no Desenvolvimento e Gerenciamento de Reservatórios
-    \item <3-| alert@3-> Métodos Numéricos Robustos e Eficientes
+    \item <2-> Agilidade na Resposta
+    \item <3-| alert@3-> Métodos Numéricos
    \end{itemize}
   \end{block}
 
   \begin{block}{Programas de Simulação Numérica}
    \begin{itemize}
-    \item <4-> Codificação dos Métodos pode ser Complexa e Demorada
-    \item <5- | alert@5-> Bibliotecas para Automação da Geração do Código
+    \item <4-> Codificação Complexa e Demorada
+    \item <5- | alert@5-> Geração Automática do Código
    \end{itemize}
   \end{block}
   
-  \begin{block}{Eficiência na Resolução de Sist. Eq. Lineares}
+  \begin{block}{Sist. Eq. Lineares}
    \begin{itemize}
-    \item <6-> Velocidade de simulação é crucial para viabilizar uso
-    \item <7- | alert@7-> Métodos de Aceleração de Convergência
+    \item <6-> Velocidade para Viabilização do Uso
+    \item <7- | alert@7-> Aceleração de Convergência
    \end{itemize}
   \end{block}
 \end{frame}
@@ -91,7 +94,116 @@
 %% SECTION 2 - Mathematical Formulation
 \section{Formulação Matemática}
 
-\subsection{Equação de Pressão}
+\begin{frame}
+  \frametitle{Propriedades}
+  \begin{columns}
+  \column{0.7\textwidth}
+    \begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width=1.0\textwidth]{figs/MeioPoroso}
+    \end{center}
+    \end{figure}
+  \column{0.3\textwidth}
+    \begin{block}{Porosidade Absoluta}
+    \begin{displaymath} \label{eq:porosidade}
+    \phi = \frac{V_{p}}{V_{t}}
+    \end{displaymath}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Propriedades}
+  \begin{columns}
+  \column{0.7\textwidth}
+    \begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width=1.0\textwidth]{figs/MeioPorosoSaturado}
+    \end{center}
+    \end{figure}
+  \column{0.3\textwidth}
+    \begin{block}{Porosidade Efetiva}
+    \begin{displaymath} \label{eq:porosidade}
+    \phi = \frac{V_{p conec}}{V_{t}}
+    \end{displaymath}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Propriedades}
+  \begin{columns}
+  \column{0.6\textwidth}
+    \begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width=0.8\textwidth, angle=270]{figs/PorosityPermModel}
+    \end{center}
+    \end{figure}
+  \column{0.4\textwidth}
+    \begin{block}{Permeabilidade Absoluta}
+    \begin{displaymath} \label{eq:permabs}
+    \mathbi{K} = \left( \begin{array}{ccc}
+    K_{xx} & K_{xy} & K_{xz} \\
+    K_{yx} & K_{yy} & K_{yz} \\
+    K_{zx} & K_{zy} & K_{zz}
+    \end{array} \right)
+    \end{displaymath}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Propriedades}
+  \begin{columns}
+  \column{0.6\textwidth}
+    \begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width=1.0\textwidth]{figs/relat_perm}
+    \end{center}
+    \end{figure}
+  \column{0.4\textwidth}
+    \begin{block}{Permeabilidade Relativa}
+    \begin{displaymath} \label{eq:permrel}
+    k_{r\alpha} = \frac{\mathbi{K}_{\alpha}}{\mathbi{K}} \leq 1
+    \end{displaymath}
+    \begin{displaymath} \label{eq:coreymodela}
+    k_{rw}(S_{wn}) = k_{rw}^{o}S_{wn}^{n_{w}}
+    \end{displaymath}
+    \begin{displaymath} \label{eq:coreymodelb}
+    k_{row}(S_{wn}) = \left(1 - S_{wn}\right)^{n_{w}}
+    \end{displaymath}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Propriedades}
+  \begin{columns}
+  \column{0.6\textwidth}
+    \begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width=1.0\textwidth]{figs/swnorm}
+    \end{center}
+    \end{figure}
+  \column{0.4\textwidth}
+    \begin{block}{Saturação Normalizada}
+    \begin{displaymath} \label{eq:satnorm}
+    S_{wn}(S_{w}) = \frac{S_{w} - S_{wi}}{1 - S_{wi} - S_{orw}}
+    \end{displaymath}
+    \end{block}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Hipóteses Simplificadoras}
+  \begin{itemize}
+  \item Meio poroso totalmente saturado;
+  \item Rochas e fluidos incompressíveis;
+  \item Fluidos imiscíveis;
+  \item Escoamento isotérmico;
+  \item Lei de Darcy válida para as velocidades consideradas.
+  \end{itemize}
+\end{frame}
 
 \begin{frame}
   \frametitle{Conservação de Massa}
@@ -115,6 +227,8 @@
   \end{equation*}
   \end{alertblock}
 \end{frame}
+
+\subsection{Equação de Pressão}
 
 \begin{frame}
 \frametitle{Equação de Pressão}
@@ -327,10 +441,83 @@ def SUPG(self, delfineVar, parameter):
 %% SECTION 5 - Results
 \section{Resultados}
 
-\subsection{Elíptico - Homogêneo e Anisotrópico}
+\subsection{Elíptico - Homogêneo}
 
 \begin{frame}
-  \frametitle{Definição do Problema}
+  \frametitle{Definição do Problema $|$ Tensor Isotrópico}
+  \begin{columns}[b]
+
+  \begin{column}{0.3\textwidth}
+    \begin{figure} 
+    \includegraphics[width=1.35\textwidth]{figs/HomogeneoIsotropico_N=64}
+    \end{figure}
+  \end{column}
+
+  \begin{column}{0.7\textwidth}
+    \begin{itemize}
+    \item Tensor de ``Permeabilidade'':
+    \end{itemize}
+    \begin{equation*}
+    \mathbf{K} = \left( \begin{array}{cc}
+    1 & 0 \\
+    0 & 1
+    \end{array} \right)
+    \end{equation*}
+    \begin{itemize}
+    \item Condição de Contorno:
+    \end{itemize}
+    \begin{displaymath} \label{eq:bchomoiso}
+    \left. \begin{array}{ccc}
+    u = \cos(\pi x)  & \textrm{para } 0<x<1  \textrm{ e } y=0} \\
+    u = -\cos(\pi x) & \textrm{para } 0<x<1 \textrm{ e } y=1}  \\
+    \nabla u \cdot \vec{n} = 0 & \textrm{para } 0<y<1 \textrm{ e } x=0,1}
+    \end{array} \right.
+    \end{displaymath}
+    \begin{itemize}
+    \item Termo Fonte:
+    \end{itemize}
+  \begin{equation*} \label{eq:bchomoiso}
+  f(x,y) = 
+  \end{equation*}
+  \end{column}
+  
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Evolução do Resíduo e do Erro $|$ Tensor Anisotrópico}
+  \begin{columns}[c]
+
+  \begin{column}{0.5\textwidth}
+  \begin{figure} 
+     %%\centering
+     \includegraphics[width=1.3\textwidth]{figs/residualHomoAniso_N=64}
+    \end{figure}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+  \begin{table}
+  \centering
+  \subtable[Norma Máxima do Erro]{
+	\begin{tabular}{|c|c|c|}
+	\hline N & \vert\vert E_{max}\vert\vert & q_{max} \\
+	\hline
+	\hline 8 & 2.1e-03 & --- \\ 
+	\hline 16 & 5.3e-04 & 2.01 \\ 
+	\hline 32 & 1.3e-04 & 2.00 \\ 
+	\hline 64 & 3.3e-05 & 1.99 \\ 
+	\hline 128 & 8.3e-06 & 2.00 \\ 
+	\hline 256 & 2.1e-06 & 2.00 \\ 
+	\hline 
+	\end{tabular}
+	\label {tab:homoanisolinear}
+}
+\end{table}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Definição do Problema $|$ Tensor Anisotrópico}
   \begin{columns}[b]
 
   %%\begin{column}{2.5cm}
@@ -344,7 +531,7 @@ def SUPG(self, delfineVar, parameter):
   %%\begin{column}{7.5cm}
   \begin{column}{0.7\textwidth}
     \begin{itemize}
-  \item Tensor de "Permeabilidade":
+  \item Tensor de ``Permeabilidade'':
   \end{itemize}
   \begin{equation*}
   \mathbf{K} = \left( \begin{array}{cc}
@@ -370,7 +557,7 @@ def SUPG(self, delfineVar, parameter):
 \end{frame}
 
 \begin{frame}
-  \frametitle{Evolução do Resíduo e do Erro}
+  \frametitle{Evolução do Resíduo e do Erro $|$ Tensor Anisotrópico}
   \begin{columns}[c]
 
   \begin{column}{0.5\textwidth}
@@ -603,11 +790,13 @@ def SUPG(self, delfineVar, parameter):
 \begin{frame}
   \frametitle{Conclusões}
   \begin{itemize}
-    \item Desenvolvimento rápido de simulador de escoamentos em meios porosos.
-    \item Facilidade de acrescentar novos métodos ou acessórios no código.
-    \item Utilizadas diferentes metodologias do MEF (Galerkin, MEFM, MEF+SUPG).
-    \item SUPG fundamental para estabilizar a parte hiperbólica.
-    \item Multigrid Algébrico acelera consideravelmente a convergência.
+    \item Desenvolvimento rápido ($<$ 1 ano $|$ ``meio'' expediente).
+    \item Malhas não-estruturadas; Domínios homogêneos e heterogêneos; Tensores de permeabilidade iso- e anisotrópicos.
+    \item Boa concordância das soluções numéricas com analíticas.
+    \item Facilidade para acrescentar novos métodos ou acessórios no código.
+    \item Testadas diferentes metodologias do MEF (Galerkin, MEFM, MEF+SUPG+Dif. Artif.).
+    \item SUPG + Dif. Artif. fundamentais para estabilizar a parte hiperbólica.
+    \item Multigrid Algébrico acelera consideravelmente a convergência.    
    \end{itemize}
 \end{frame}
 
@@ -615,7 +804,7 @@ def SUPG(self, delfineVar, parameter):
   \frametitle{Trabalhos Futuros}
   \begin{itemize}
   \item Adicionar estabilização anisotrópica.
-  \item Mais "Física": Capilaridade, Gravidade e Modelo Black-oil.
+  \item Mais ``Física'': Capilaridade, Gravidade e Modelo Black-oil.
   \item Computação paralela (MPI/OpenMP).
   \end{itemize}
 \end{frame}
@@ -626,7 +815,6 @@ def SUPG(self, delfineVar, parameter):
   \item PADMEC
   \item FACEPE
   \item CNPQ
-  \item UFPE
   \end{itemize}
 \end{frame}
 
