@@ -497,7 +497,7 @@ requirements for the degree of \@degree\ in \@majorfielden.
     \end{minipage}
   \end{flushright}
   \vfill
-  \@address , \@date
+  %\@address , \@date
   \end{center}
 }
 
