@@ -73,7 +73,7 @@ class DelfineSat:
         
         # Parameters #FIXME: Should be in input file
         T = 5.0
-        dt = 0.001
+        dt = 0.005
         t = dt
         step = 0
         c = 0.0
@@ -85,7 +85,9 @@ class DelfineSat:
         u_mid = 0.5*(u0 + u)
         
         u_mida = variable(u_mid)
-        fwsb = 2.0*u0/(u0**2.0 + (1.0-u0)**2.0) - (u0**2.0)*(2.0*u0 - 2.0*(1.0-u0))/((u0**2.0 + (1.0-u0)**2.0)**2.0)
+        #fwsb = 2.0*u0/(u0**2.0 + (1.0-u0)**2.0) - (u0**2.0)*(2.0*u0 - 2.0*(1.0-u0))/((u0**2.0 + (1.0-u0)**2.0)**2.0)
+        #fwsb =1.0
+        fwsb = 2.0*u0*(1 - u0)/((u0**2.0 + (1.0 - u0)**2.0)**2.0) 
         
         # Residual
         r = phi*(u-u0) + dt*((fwsb*dot(velocity, grad(u_mid))) - c*div(grad(u_mid)) - f)
@@ -108,6 +110,11 @@ class DelfineSat:
 #        else:
 #            vshock = 0.0
 #        F+= vshock*dot(grad(v), grad(u_mid))*dx
+        beta = 9E-6
+        snorm = sqrt(dot(grad(u0), grad(u0)))
+        snorm = abs(snorm)
+        c = beta*h*snorm
+        F+=c*dot(grad(v), grad(u_mid))*dx
         
         # Create bilinear and linear forms
         a = lhs(F)

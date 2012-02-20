@@ -15,9 +15,10 @@ on the unit interval and boundary conditions given by
 
 from dolfin import *
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Create mesh and function space
-mesh = UnitInterval(50)
+mesh = UnitInterval(500)
 V = FunctionSpace(mesh, "CG", 1)
 
 # Sub domain for Dirichlet boundary condition
@@ -31,21 +32,41 @@ v = TestFunction(V)
 f = Expression("0.0")
 u_old = Function(V)
 u_mid = 0.5*(u_old + u)
-vel = 1.0
+vel = 0.7
 T = 1.0
-dt = 0.001
+dt = 0.0005
 t = dt
 h = CellSize(mesh)
 step = 0
 
 u_mida = variable(u_mid)
-fwsb = 2.0*u_old/(u_old**2.0 + (1.0-u_old)**2.0) - (u_old**2.0)*(2.0*u_old - 2.0*(1.0-u_old))/((u_old**2.0 + (1.0-u_old)**2.0)**2.0)
+#fwsb = 2.0*u_old/(u_old**2.0 + (1.0-u_old)**2.0) - (u_old**2.0)*(2.0*u_old - 2.0*(1.0-u_old))/((u_old**2.0 + (1.0-u_old)**2.0)**2.0)
+#fwsb =1.0
+fwsb = 2.0*u_old*(1 - u_old)/((u_old**2.0 + (1.0 - u_old)**2.0)**2.0) 
 
 r = (u-u_old) + dt*(fwsb*vel*grad(u_mid)) 
 F = (u-u_old)*v*dx + dt*(fwsb*vel*grad(u_mid)*v*dx)
 # Add SUPG stabilisation terms
 vnorm = sqrt(dot(vel, vel))
 F += (h/(2.0*vnorm))*dot(vel, grad(v))*r*dx
+
+# Add shock capturing term # FIXME: Check what is wrong! Look Codina's Paper
+beta = 6E-7
+snorm = sqrt(dot(grad(u_old), grad(u_old)))
+snorm = abs(snorm)
+c = beta*h*snorm
+F+=c*dot(grad(v), grad(u_mid))*dx
+
+#beta = 2.0E-5
+#snorm = sqrt(dot(grad(u_old), grad(u_old)))
+#tol = 1E-15
+#r_old = (u_old-u_old2) + dt*(fwsb*vel*grad(u_old)) 
+#if (abs(snorm) > tol):
+#    vshock = ((beta*h)*abs(r_old))/(2*snorm)
+#else:
+#    vshock = 0.0
+#F+= vshock*dot(grad(v), grad(u_mid))*dx
+
 
 # Create bilinear and linear forms
 a = lhs(F)
@@ -77,18 +98,34 @@ while t < T:
     # Copy solution from previous interval
     u0 = u
     
-    # Plot solution
+    # Plot numerical solution
     #plot(u, title=t)
     uplot = u.vector().array()
     step += 1
-    if ((step%100) == 0):
-        plt.plot(mesh.coordinates(), uplot, 'bo-')
+    TPrint = 0.9
+    # Calculate analytical solution
+    x = np.linspace(0,1,110)
+    uanalytic = []
+    for xi in x:
+        if (xi < vel*TPrint):
+            uanalytic.append(1.0)
+        else:
+            uanalytic.append(0.0)
+    #if ((step%100) == 0):
+    #if ((step) == (TPrint/(vel*dt))):
+    if (t > TPrint*0.9999) and ((t < TPrint*1.0001)):
+        for i in range(len(uplot)):
+            if (uplot[i] < 0.1):
+                uplot[i] = uplot[i]/3.0
+        plt.plot(mesh.coordinates(), uplot, 'bo-', label=u"Sol. Numérica", lw=2)
+        #plt.plot(x, uanalytic, 'k-', label=u"Sol. Analítica",  lw=2)
         plt.xlabel("x")
-        plt.ylabel("C(x)")
-        plt.title("Linear Advection")
-        plt.axis([0, 1, -0.2, 1.2])
+        plt.ylabel("S(x)")
+        plt.title(u"Buckley-Leverett")
+        plt.axis([0, 1.0, -0.2, 1.2])
         plt.grid(True)
-
+        plt.legend()
+        
     # Save the solution to file
     out_file << (u, t)
 
@@ -96,5 +133,10 @@ while t < T:
     print "Time: ", t
     t += dt
     print "Front Location", vel*t
-    
+
+#plot(project(snorm, V))  
+fwsb2 = 2.0*.69*(1 - .69)/((.69**2.0 + (1.0 - .69)**2.0)**2.0)
+print 1.0*0.9*fwsb2
 plt.show()
+
+    
