@@ -420,7 +420,27 @@ Os resultados obtidos para a evolução dos resíduos podem ser verificados na Fig.
 %Ao se considerar também a equação de saturação, o problema do deslocamento de fluidos em meios porosos passa a ter também um componente %altamente hiperbólico.
 \subsection{Buckley-Leverett 1-D}
 \label{sc:bl1D}
-\emph{DESCRIÇÃO PENDENTE}
+Este exemplo trata do deslocamento imiscível de óleo por água em um meio poroso rígido unidimensional e homogêneo, onde foram desprezados os efeitos da gravidade e capilaridade (ver Fig. \ref{fig:bl1dmodel}). O modelo para representar este fenômeno foi proposto originalmente por \cite{Buckley1942} e sua representação matemática está descrita na seção \ref{sc:buckleyeq} deste trabalho. 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{chapters/ch05/figBL}
+\caption{Representação de escoamento unidimensional imiscível de óleo por água (retirado de \cite{Hurtado2005}).}
+\label{fig:bl1dmodel}
+\end{figure}
+
+Foi utilizado o modelo de Corey (descrito na seção \ref{sc:propriedades}) com coeficiente $n_{w} = n_{o} = 2$ para a dependência da permeabilidade relativa em relação à saturação. A saturação residual de água e óleo foi assumida como nula e a razão de viscosidade entre as fases como unitária. Para este exemplo consideramos um vetor velocidade $\mathbi{v}$ unitário e as seguintes condições iniciais e de contorno:
+\begin{equation} \label{eq:buclevertconinibc}
+\left. \begin{array}{lll}
+S_{w}(x,0) = 0.0 \quad \textrm{em $\Omega$} \\
+S_{w}(x,t) = 1.0 \quad \textrm{em $x=0$} \\
+\end{array} \right.
+\end{equation}
+
+Devido às características essencialmente hiperbólicas deste problema, foi utilizado para sua solução o \ac{MEF} com estabilização via \ac{SUPG} e adição de viscosidade artificial para diminuir as oscilações. Na Fig. \ref{fig:bl1dfemsupg} são apresentadas as soluções analítica e numérica para um $t=0.3$ em domínio como comprimento unitário e considerando uma malha uniforme com 500 subdivisões. 
+
+Como pode ser observado, na região de gradiente mais suave as soluções são praticamente coincidentes. Além disso, a posição do choque é corretamente capturada pela solução numérica. Entretanto, observa-se a existência de uma região de oscilação logo após o choque, mesmo ao se utilizar difusão artificial. Uma alternativa seria aumentar a quantidade de difusão adicionada, porém isto teria o efeito colateral de causar uma maior dispersão na região de choque, o que não é desejado. De um modo geral, consideramos os resultados satisfatórios, porém os mesmos são dependentes de termos para estabilização e captura de choque que contém parâmetros que devem ser calibrados para cada problema.
+
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch05/BL1D}
@@ -430,7 +450,23 @@ Os resultados obtidos para a evolução dos resíduos podem ser verificados na Fig.
 
 \subsection{1/4 de Cinco Poços Heterogêneo}
 \label{sc:quarterfivespothetero}
-\emph{DESCRIÇÃO PENDENTE}
+Este último exemplo considera o escoamento bifásico imiscível óleo-água em um meio poroso heterogêneo e bidimensional. Este problema foi adaptado de \citep{Carvalho2005}, e consiste em um domínio $\Omega$ quadrilateral com uma região de baixa permeabilidade entre os poços injetor e produtor, os quais se encontram nas diagonais inferior esquerda e superior direita, respectivamente. A Fig \ref{fig:biphase2description} mostra uma descrição das principais características e condições de contorno deste problema.
+
+A saturação inicial considerada foi $S_{w}(\mathbi{x},0) = 0.0$ em $\Omega$. Foi utilizado o modelo de Corey (descrito na seção \ref{sc:propriedades}) com coeficiente $n_{w} = n_{o} = 2$ para a dependência da permeabilidade relativa em relação à saturação. Tanto a porosidade $\phi$ quanto a viscosidade $\mu$ foram consideradas constantes e com valor unitário. As permeabilidades das regiões $1$ e $2$ de $\Omega$ são isotrópicas e podem ser representadas pelos tensores a seguir:
+\begin{equation} \label{eq:permcincpocheter}
+\mathbi{K} = \left\{ \begin{array}{cc}
+  \left( \begin{array}{cc}
+1 & 0 \\
+0 & 1
+\end{array} \right) & \textrm{se $\mathbi{K} = \mathbi{K}_{1}$}\\
+  \left( \begin{array}{ll}
+10^{-4} & 0 \\
+0 & 10^{-4}
+\end{array} \right) & \textrm{se $\mathbi{K} = \mathbi{K}_{2}$}
+  \end{array} \right.
+\end{equation}
+
+Para a solução numérica deste problema utilizamos uma malha não-estruturada com 898 elementos triangulares de 1ª ordem. As variáveis pressão e velocidade foram obtidas através do \ac{MEFM} resolvido de modo implícito. A velocidade obtida foi utilizada para o acoplamento com a equação da saturação, a qual também foi discretizada utilizando o \ac{MEF} com estabilização via \ac{SUPG} e adição de difusão artifical nas regiões de maiores gradientes, cuja indicação é alcançada através de um termo de captura de choque. A parte hiperbólica também foi resolvida de maneira implícita resultando portanto em um esquema de avanço no tempo do tipo sequencial implícito. A saturação calculada é usada para atualizar as propriedades (apenas a permeabilidade relativa para este caso particular) utilizadas pela equação da pressão e velocidade.
 
 \begin{figure}
 \centering
@@ -438,6 +474,8 @@ Os resultados obtidos para a evolução dos resíduos podem ser verificados na Fig.
 \caption[Descrição do problema de 1/4 de cinco poços]{Descrição do problema de 1/4 de cinco poços heterogêneo.}
 \label{fig:biphase2description}
 \end{figure}
+
+Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo de saturação extrudado para o tempo $t = 0.3$ PVI(Porous Volume Injected). Pode ser observado nesta figura que a região de baixa permabilidade \emph{CONTINUAR DAQUI!!!}
 
 \begin{figure}
 \centering
