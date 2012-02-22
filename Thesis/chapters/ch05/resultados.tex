@@ -452,7 +452,7 @@ Como pode ser observado, na região de gradiente mais suave as soluções são prati
 \label{sc:quarterfivespothetero}
 Este último exemplo considera o escoamento bifásico imiscível óleo-água em um meio poroso heterogêneo e bidimensional. Este problema foi adaptado de \citep{Carvalho2005}, e consiste em um domínio $\Omega$ quadrilateral com uma região de baixa permeabilidade entre os poços injetor e produtor, os quais se encontram nas diagonais inferior esquerda e superior direita, respectivamente. A Fig \ref{fig:biphase2description} mostra uma descrição das principais características e condições de contorno deste problema.
 
-A saturação inicial considerada foi $S_{w}(\mathbi{x},0) = 0.0$ em $\Omega$. Foi utilizado o modelo de Corey (descrito na seção \ref{sc:propriedades}) com coeficiente $n_{w} = n_{o} = 2$ para a dependência da permeabilidade relativa em relação à saturação. Tanto a porosidade $\phi$ quanto a viscosidade $\mu$ foram consideradas constantes e com valor unitário. As permeabilidades das regiões $1$ e $2$ de $\Omega$ são isotrópicas e podem ser representadas pelos tensores a seguir:
+A saturação inicial considerada foi $S_{w}(\mathbi{x},0) = 0.0$ em $\Omega$. Foi utilizado o modelo de Corey (descrito na seção \ref{sc:propriedades}) com coeficiente $n_{w} = n_{o} = 2$ para a dependência da permeabilidade relativa em relação à saturação. Tanto a porosidade $\phi$ quanto a viscosidade $\mu$ foram consideradas constantes e com valor unitário. As permeabilidades das regiões $1$ e $2$ de $\Omega$ são isotrópicas, porém distintas por 4 ordens de magnitude e podem ser representadas pelos tensores a seguir:
 \begin{equation} \label{eq:permcincpocheter}
 \mathbi{K} = \left\{ \begin{array}{cc}
   \left( \begin{array}{cc}
@@ -466,7 +466,7 @@ A saturação inicial considerada foi $S_{w}(\mathbi{x},0) = 0.0$ em $\Omega$. Foi
   \end{array} \right.
 \end{equation}
 
-Para a solução numérica deste problema utilizamos uma malha não-estruturada com 898 elementos triangulares de 1ª ordem. As variáveis pressão e velocidade foram obtidas através do \ac{MEFM} resolvido de modo implícito. A velocidade obtida foi utilizada para o acoplamento com a equação da saturação, a qual também foi discretizada utilizando o \ac{MEF} com estabilização via \ac{SUPG} e adição de difusão artifical nas regiões de maiores gradientes, cuja indicação é alcançada através de um termo de captura de choque. A parte hiperbólica também foi resolvida de maneira implícita resultando portanto em um esquema de avanço no tempo do tipo sequencial implícito. A saturação calculada é usada para atualizar as propriedades (apenas a permeabilidade relativa para este caso particular) utilizadas pela equação da pressão e velocidade.
+Para a solução numérica deste problema utilizamos uma malha não-estruturada com 898 elementos triangulares de 1ª ordem. As variáveis pressão e velocidade foram obtidas através do \ac{MEFM} resolvido de modo implícito. A velocidade obtida foi utilizada para o acoplamento com a equação da saturação, a qual foi discretizada utilizando o \ac{MEF} com estabilização via \ac{SUPG} e adição de difusão artifical nas regiões de maiores gradientes, cuja indicação é obtida através de um termo de captura de choque descrito no capítulo \ref{ch:form_num}. A parte hiperbólica também foi resolvida de maneira implícita resultando portanto em um esquema de avanço no tempo do tipo sequencial implícito. A saturação calculada é usada para atualizar as propriedades (apenas a permeabilidade relativa para este caso particular) utilizadas pela equação da pressão e velocidade.
 
 \begin{figure}
 \centering
@@ -475,7 +475,7 @@ Para a solução numérica deste problema utilizamos uma malha não-estruturada com 
 \label{fig:biphase2description}
 \end{figure}
 
-Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo de saturação extrudado para o tempo $t = 0.3$ PVI(Porous Volume Injected). Pode ser observado nesta figura que a região de baixa permabilidade \emph{CONTINUAR DAQUI!!!}
+Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo de saturação extrudado para o tempo $t = 0.3$ PVI(Porous Volume Injected). Pode ser observado nesta figura que a região de baixa permabilidade é "contornada" pelo campo de velocidade, o que era esperado devido à razão entre as permeabilidades de 10000. Nota-se também de modo qualitativo que as maiores velocidades são obtidas próximas aos poços injetores e produtos, como era de se esperar.
 
 \begin{figure}
 \centering
@@ -483,6 +483,8 @@ Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo
 \caption[Campo de velocidade e representação extrudada da saturação]{Campo de velocidade e representação extrudada da saturação para problema de 1/4 de cinco poços heterogêneo.}
 \label{fig:biphase2dextrude}
 \end{figure}
+
+Na Fig. \ref{fig:biphase2dprofile} é apresentado o campo de saturação e o seu perfil traçado na diagonal entre os poços injetores e produtores. Percebe-se que a frente de saturação não atravessa a região de baixa permeabilidade, ou seja, praticamente não há entrada de água na mesma. De um modo geral, o uso de difusão artificial foi suficiente para reduzir bastante a presença de oscilações não-físicas, porém percebe-se na representação do perfil de saturação ao longo da diagonal que ainda assim existem algumas oscilações espúrias após a frente de saturação na solução numérica.
 
 \begin{figure}
 \centering
