@@ -15,18 +15,18 @@ De modo a utilizar as equações apresentadas ao longo deste capítulo, faz-se nece
 \item Lei de Darcy válida para as velocidades consideradas.
 \end{itemize}
 
-Para o correto entendimento da formulação adotada faz-se necessário introduzir alguns conceitos, os quais serão discutidos na seção seguinte, usados para a descrição macroscópica das propriedades de rochas, fluidos e da interação entre os mesmos.
+Para o correto entendimento da formulação adotada é necessário introduzir alguns conceitos, os quais serão discutidos na seção seguinte, usados para a descrição macroscópica das propriedades de rochas, fluidos e da interação entre os mesmos.
 
 \section{Propriedades} \label{sc:propriedades}
 Antes de iniciar a descrição das diversas propriedades necessárias para a elaboração do modelo matemático utilizado, é importante fazer um comentário a respeito do modo como essas propriedades se apresentam na realidade e como são de fato representadas na simulação do fenômeno no domínio de interesse.
 
-Para uma perfeita descrição do escoamento de fluidos em meios porosos, seria necessário adotar uma abordagem microscópica, a qual necessitaria do conhecimento das características geométricas de cada um dos poros para a definição das fronteiras e das condições de contorno. De posse dessas informações, seria possível utilizar uma formulação matemática, como as equações de Navier-Stokes \citep{Fortuna2000}, para simular o escoamento de cada um dos fluidos existentes no meio e a interação entre eles. Desnecessário comentar que tal alternativa é impraticável tanto do ponto de vista computacional, já que seria possível analisar domínios apenas em escalas cuja ordem de grandeza esteja na escala dos poros, quanto do ponto de vista da aquisição de dados de entrada, pois é impossível atualmente se obter toda a descrição morfológica de um meio como um reservatório de petróleo, do qual se obtém normalmente apenas algumas amostras, chamadas de testemunhas, as quais são retiradas de pontos que estão várias centenas de metros ou até quilômetros de distância entre si \citep{Thomas2001}.
+Para uma perfeita descrição do escoamento de fluidos em meios porosos, seria necessário adotar uma abordagem microscópica, a qual necessitaria do conhecimento das características geométricas de cada um dos poros para a definição das fronteiras e das condições de contorno. De posse dessas informações, seria possível utilizar uma formulação matemática, como as equações de Navier-Stokes \citep{Fortuna2000}, para simular o escoamento de cada um dos fluidos existentes no meio e a interação entre eles. Desnecessário comentar que tal alternativa é impraticável tanto do ponto de vista computacional, já que seria possível analisar domínios apenas em escalas cuja ordem de grandeza esteja na escala dos poros, quanto do ponto de vista da aquisição de dados de entrada, pois é impossível atualmente se obter toda a descrição morfológica de um meio como um reservatório de petróleo, do qual se obtém normalmente apenas algumas amostras, chamadas de testemunhos, os quais são retiradas de pontos que estão várias centenas de metros ou até quilômetros de distância entre si \citep{Thomas2001}.
 
-Sendo assim, para todos os efeitos práticos se utiliza na análise numérica de reservatórios de petróleo uma abordagem macroscópica, onde o valor das propriedades são consideradas variáveis contínuas definidas em todo o domínio ocupado pelo meio poroso. Tais valores das grandezas físicas representam para cada ponto específico uma média volumétrica dos valores da região circunvizinha a este ponto. Ou seja, não é mais necessário uma descrição da morfologia exata do reservatório, já que ao invés disso serão utilizadas propriedades não mensuráveis no nível microscópico, mas que representam no nível macroscópico o efeito equivalente ao da estrutura do meio poroso \citep{Hurtado2005}.
+Sendo assim, para todos os efeitos práticos, na análise numérica de reservatórios de petróleo se utiliza uma abordagem macroscópica, onde o valor das propriedades são consideradas variáveis contínuas definidas em todo o domínio ocupado pelo meio poroso. Tais valores das grandezas físicas representam para cada ponto específico uma média volumétrica dos valores da região circunvizinha a este ponto. Ou seja, não é mais necessário uma descrição da morfologia exata do reservatório, já que ao invés disso serão utilizadas propriedades não mensuráveis no nível microscópico, mas que representam no nível macroscópico o efeito equivalente ao da estrutura do meio poroso \citep{Hurtado2005}.
 
-Entretanto, é válido comentar que esta descrição macroscópica do meio poroso apresenta também dificuldades. As formações rochosas que formam os reservatórios de petróleo são frequentemente descritas através de modelos geológicos e geofísicos na escala de metros ou até menor \citep{Aarnes2007}. Tal escala tornaria em muitos casos inviável a simulação de escoamentos de fluidos em tais reservatórios, já que os mesmos têm ordem de grandeza de quilômetros, o que implicaria para casos tridimensionais em malhas com vários milhões de células, passíveis de serem analisadas apenas em clusters de grande porte.
+Entretanto, é válido comentar que esta descrição macroscópica do meio poroso apresenta também dificuldades. As formações rochosas que formam os reservatórios de petróleo são frequentemente descritas através de modelos geológicos e geofísicos na escala de metros ou até menor \citep{Aarnes2007}. Tal escala tornaria em muitos casos inviável a simulação de escoamentos de fluidos em tais reservatórios, já que os mesmos têm ordem de grandeza de quilômetros, o que implicaria, para casos tridimensionais, em malhas com vários milhões de células, passíveis de serem analisadas apenas em clusters de grande porte.
 
-Apesar do grande aumento percebido na capacidade computacional do hardware utilizado e também do uso de técnicas avançadas para extrair o máximo de desempenho de tais computadores, os modelos de reservatório a serem analisados na prática frequentemente têm que contar com o uso de técnicas de \emph{Upscaling} \citep{Menezes2009}, ou seja, uma restrição dos parâmetros geofísicos obtidos em modelos geológicos para malhas tipicamente dezenas ou centenas de vezes mais grosseiras que serão então analisadas via algum método numérico \citep{Aarnes2007}.
+Apesar do grande aumento percebido na capacidade computacional do \emph{hardware} utilizado e também do uso de técnicas avançadas para extrair o máximo de desempenho de tais computadores, os modelos de reservatório a serem analisados na prática frequentemente têm que contar com o uso de técnicas de \emph{Upscaling} \citep{Menezes2009}, ou seja, uma restrição dos parâmetros geofísicos obtidos em modelos geológicos para malhas tipicamente dezenas ou centenas de vezes mais grosseiras que serão então analisadas via algum método numérico \citep{Aarnes2007}.
 
 \subsection{Porosidade}
 Uma rocha, para ter a capacidade de armazenar um fluido, por exemplo petróleo, deve possuir vazios no seu interior, os quais são chamados de poros. Além disso, para que haja fluxo dentro desta rocha-reservatório é necessário que tais poros estejam interconectados para que existam um caminho que os fluidos possam percorrer. Para efeitos de cálculo de porosidade, existe uma diferença entre a porosidade \emph{absoluta}, a qual abrange todos os poros, estejam eles interconectados ou não, e a porosidade \emph{efetiva}, onde apenas os poros ligados entre si são considerados. Apenas esse segundo tipo de porosidade será usado neste trabalho, já que é o de maior interesse para a análise de escoamentos. Portanto, sempre que houver referência à porosidade, pode-se entender como a variante efetiva da mesma.
@@ -42,7 +42,7 @@ como:
 
 onde o volume total é $V_{t} = V_{p} + V_{s}$, com $V_{p}$ o volume poroso e $V_{s}$ o volume da matriz sólida. Segundo a abordagem macroscópica adotada, a porosidade será uma função contínua no espaço. Logo, se está assumindo que o valor calculado pela Eq. (\ref{eq:porosidade}) representará a média de um volume representativo com dimensão pequena quando comparada ao meio poroso como um todo, porém grande em comparação com as dimensões características dos poros.
 
-A Fig. \ref{fig:meioporoso} apresenta esquematicamente uma amostra de meio poroso, com uma aproximação em uma parte da mesma onde se pode observar claramente os conceitos de volume poroso e de matriz sólida representados. A caracterização das fases em um escoamento bifásico é vista na Fig. \ref{fig:meioporososat}.
+A Fig. \ref{fig:meioporoso} apresenta, esquematicamente, uma amostra de meio poroso, com uma aproximação em uma parte da mesma onde se pode observar claramente os conceitos de volume poroso e de matriz sólida representados. A caracterização das fases em um escoamento bifásico é vista na Fig. \ref{fig:meioporososat}.
 
 \begin{figure} 
 \centering
@@ -59,11 +59,11 @@ A Fig. \ref{fig:meioporoso} apresenta esquematicamente uma amostra de meio poros
 \end{figure}
 
 \subsection{Permeabilidade Absoluta}
-A permeabilidade absoluta é definida como uma medida da capacidade de um meio poroso escoar uma única fase sob certas condições. Esta é uma propriedade mais difícil de ser medida do que a porosidade, porém mais importante no que tange ao escoamento de fluidos. Não necessariamente irá existir uma proporcionalidade direta entre estes dois parâmetros, já que para a permeabilidade importa não apenas a quantidade de poros interconectados, mas também o modo como eles estão conectados e a tortuosidade do caminho formado por eles. Existe também a possibilidade de se ter rochas com baixíssimas porosidades, como muitas vezes é o caso de algumas rochas carbonáticas, que porém apresentam uma alta permeabilidade devido à presença de fraturas ou falhas. Todavia, para vários casos específicos podem ser geradas correlações entre as duas propriedades, como pode ser visto na Fig. \ref{fig:poropermcorrelation} \citep{Schneider2003}.
+A permeabilidade absoluta é definida como uma medida da capacidade de uma única fase escoar em um meio poroso escoar sob certas condições. Esta é uma propriedade mais difícil de ser medida do que a porosidade, porém mais importante no que tange ao escoamento de fluidos. Não necessariamente irá existir uma proporcionalidade direta entre estes dois parâmetros, já que para a permeabilidade importa não apenas a quantidade de poros interconectados, mas também o modo como eles estão conectados e a tortuosidade do caminho formado por eles. Existe também a possibilidade de se ter rochas com baixíssimas porosidades, como muitas vezes é o caso de algumas rochas carbonáticas, que porém apresentam uma alta permeabilidade devido à presença de fraturas ou falhas. Todavia, para vários casos específicos podem ser geradas correlações entre as duas propriedades, como pode ser visto na Fig. \ref{fig:poropermcorrelation} \citep{Schneider2003}.
 
-Normalmente a permeabilidade é representada matematicamente através de um tensor de 2ª ordem, denominado de $\mathbi{K}$%
+Normalmente, a permeabilidade é representada matematicamente através de um tensor de 2ª ordem, denominado de $\mathbi{K}$%
 \nomenclature[cp]{$\mathbi{K}$}{Permeabilidade absoluta}
-ao longo deste trabalho. Isto significa que não apenas os valores da permeabilidade absoluta variam de acordo com a orientação da rocha, como também que, devido aos termos cruzados de um tensor cheio, os valores em uma direção influenciam a permeabilidade nas outras direções. Neste caso o tensor é chamado de anisotrópico. Se $\mathbi{K}$ puder ser representado por uma função escalar, ou seja, a permeabilidade em todas as direções for a mesma, este tensor degenerado em um escalar é chamado de isotrópico. Além disso, devido a grande heterogeneidade entre as diferentes formações rochosas, a permeabilidade pode variar espacialmente em ordens de grandeza, sendo que variações locais no intervalo entre 1mD e 10D não são incomuns \citep{Aarnes2007}.
+ao longo deste trabalho. Isto significa que não apenas os valores da permeabilidade absoluta variam de acordo com a orientação da rocha, como também que, devido aos termos cruzados de um ``tensor cheio'', os valores em uma direção influenciam a permeabilidade nas outras direções. Neste caso o tensor é chamado de anisotrópico. Se $\mathbi{K}$ puder ser representado por uma função escalar, ou seja, a permeabilidade em todas as direções for a mesma, este tensor degenerado em um escalar é chamado de isotrópico. Além disso, devido a grande heterogeneidade entre as diferentes formações rochosas, a permeabilidade pode variar espacialmente em ordens de grandeza, sendo que variações locais no intervalo entre 1mD e 10D não são incomuns \citep{Aarnes2007}.
 
 O sistema elaborado neste trabalho pode lidar de modo efetivo tanto com tensores cheios (anisotropia), quanto com variações do mesmo ao longo do domínio (heterogeneidade).
 
@@ -75,9 +75,9 @@ O sistema elaborado neste trabalho pode lidar de modo efetivo tanto com tensores
 \end{figure}
 
 \subsection{Permeabilidade Relativa}
-Apesar de termos assumido total imiscibilidade entre as fases é considerado para efeitos de simulação, segundo a abordagem macroscópica adotada neste trabalho, a presença de todas as fases simultaneamente no mesmo ponto, já que como mencionado anteriormente na seção \ref{sc:propriedades} o comportamento do escoamento na escala dos poros não é de interesse prático para a análise de reservatórios. Isto significa que todas as fases terão influência umas sobre as outras.
+Apesar de termos assumido total imiscibilidade entre as fases, consideramos para efeitos de simulação, segundo a abordagem macroscópica adotada neste trabalho, a presença de todas as fases simultaneamente no mesmo ponto, já que, como mencionado anteriormente na seção \ref{sc:propriedades}, o comportamento do escoamento na escala dos poros não é de interesse prático para a análise de reservatórios. Isto significa que todas as fases terão influência umas sobre as outras.
 
-Portanto, a permeabilidade de fato percebida por um fluido em um meio poroso será reduzida pela presença das outras fases, resultando portanto na necessidade da definição de um termo de permeabilidade relativa da fase $\alpha$, representado neste trabalho por $k_{r\alpha}$, que irá descrever como uma fase $\alpha$%
+Portanto, a permeabilidade de fato percebida por um fluido em um meio poroso será reduzida pela presença das outras fases, resultando, portanto, na necessidade da definição de um termo de permeabilidade relativa da fase $\alpha$, representado neste trabalho por $k_{r\alpha}$, que irá descrever como uma fase $\alpha$%
 \nomenclature[d1a]{$\alpha$}{Relativo à fase $\alpha$ ($\alpha$=$w$ para água e $\alpha$=$o$ para óleo)}%
 \nomenclature[dw]{$w$}{Relativo à fase água}%
 \nomenclature[do]{$o$}{Relativo à fase óleo}
@@ -86,15 +86,15 @@ As permeabilidades absoluta $\mathbi{K}$, efetiva $\mathbi{K}_{\alpha}$ e relati
 \nomenclature[ak]{$k_{r}$}{Permeabilidade relativa}
 estão relacionadas através da seguinte expressão:
 \begin{equation} \label{eq:relat_perm}
-k_{r\alpha} = \frac{\mathbi{K}_{\alpha}}{\mathbi{K}} \leq 1
+\mathbi{K}_{\alpha} = k_{r\alpha} \mathbi{K}
 \end{equation}
 
 Dada a complexidade envolvida na interação entre a rocha e as diferentes fases na escala dos poros durante o escoamento, os valores para a permeabilidade relativa em função das propriedades dos fluidos e dos meios porosos são difíceis de serem obtidos. De um modo geral, depende-se de modelos semi-empíricos para uso em simulações de reservatórios de petróleo.
 
-Um exemplo típico de curva de permeabilidade relativa tanto da fase água quanto da fase óleo em função da saturação da água normalizada ($S_{wn}$) é obtido usando o modelo de Corey \citep{Chen2006, Carvalho2005, Silva2008}, o qual foi utilizado neste trabalho. A saturação normalizada pode ser definida utilizando os valores das saturações irredutíveis de água ($S_{wi}$) e residual de óleo ($S_{orw}$). $S_{wi}$ representa a menor saturação possível para a fase água, já $S_{orw}$ representa a menor saturação da fase óleo depois do varrido pela fase água. Uma representação gráfica da saturação normalizada pode ser vista na Fig. \ref{fig:swnorm} e a expressão para o cálculo da mesma é mostrada a seguir:
+Um exemplo típico de curva de permeabilidade relativa tanto da fase água quanto da fase óleo em função da saturação da água normalizada ($S_{wn}$) é obtido usando o modelo de Corey \citep{Chen2006, Carvalho2005, Silva2008}, o qual foi utilizado neste trabalho. A saturação normalizada pode ser definida utilizando os valores das saturações irredutíveis de água ($S_{wir}$) e residual de óleo ($S_{orw}$). $S_{wi}$ representa a menor saturação possível para a fase água em um processo mecânico, já $S_{orw}$ representa a menor saturação da fase óleo depois do varrido pela fase água. Uma representação gráfica da saturação normalizada pode ser vista na Fig. \ref{fig:swnorm} e a expressão para o cálculo da mesma é mostrada a seguir:
 
 \begin{equation} \label{eq:normsat}
-S_{wn}(S_{w}) = \frac{S_{w} - S_{wi}}{1 - S_{wi} - S_{orw}}
+S_{wn}(S_{w}) = \frac{S_{w} - S_{wir}}{1 - S_{wir} - S_{orw}}
 \end{equation}
 
 \begin{figure}
@@ -104,7 +104,7 @@ S_{wn}(S_{w}) = \frac{S_{w} - S_{wi}}{1 - S_{wi} - S_{orw}}
 \label{fig:swnorm}
 \end{figure}
 
-Uma vez obtido o valor para a saturação normalizada, as permeabilidade relativas para as fases são calculadas de acordo com a expressão a seguir. Um exemplo do uso do modelo de Corey para o cálculo das permeabilidades relativas é apresentado na Fig. \ref{fig:relat_perm}.
+Uma vez obtido o valor para a saturação normalizada, as permeabilidade relativas para as fases são calculadas de acordo com a expressão a seguir. Um exemplo do uso do modelo de Corey para o cálculo das permeabilidades relativas é apresentado na Fig. \ref{fig:relat_perm}, onde $k_{rw}^{o}$ representa o valor máximo da permeabilidade relativa da água.
 
 \begin{subequations} \label{eq:coreymodel}
 \begin{equation} \label{eq:coreymodela}
@@ -151,7 +151,7 @@ A equação de conservação para cada fase é descrita como em \cite{Peaceman1977}:
 \end{equation}
 \nomenclature[aqf]{$q$}{Termo fonte/sumidouro}%
 \nomenclature[ate]{$t$}{Tempo}%
-Os termos $q_{\alpha}$, $\phi$ e $t$ representam termos fontes/sumidores da fase $\alpha$ (por exemplo, poços), porosidade efetiva da rocha e o tempo, respectivamente. Além disso, se forem consideradas duas fases, uma molhante (água) e uma não-molhante (óleo), combinando as Eqs. (\ref{eq:eq_darcy_general}) e (\ref{eq:cons_eq}), e usando a definição dada na Eq. (\ref{eq:relat_perm}), é obtido o seguinte sistema de equações diferenciais parciais que resolve o problem do escoamento bifásico dadas as hipóteses já mencionadas:
+Os termos $q_{\alpha}$, $\phi$ e $t$ representam termos fontes/sumidores da fase $\alpha$ (por exemplo, poços), porosidade efetiva da rocha e o tempo, respectivamente. Além disso, se forem consideradas duas fases, uma molhante (água) e uma não-molhante (óleo), combinando as Eqs. (\ref{eq:eq_darcy_general}) e (\ref{eq:cons_eq}), e usando a definição dada na Eq. (\ref{eq:relat_perm}), é obtido o seguinte sistema de equações diferenciais parciais que resolve o problema do escoamento bifásico dadas as hipóteses já mencionadas:
 \begin{subequations} \label{eq:twophase_system}
   \begin{equation} \label{eq:twophase_systema}
 \nabla \cdot \left(\frac{\rho_{w}\mathbi{K}k_{rw}}{\mu_{w}} \nabla\left(p_{w} - \rho_{w}g\nabla z \right)\right) + q_{w} =
@@ -184,7 +184,7 @@ Então, dividindo a primeira equação por $\rho_{w}$, a segunda por $\rho_{o}$ e l
 \begin{equation} \label{eq:twophase_oneequation}
 -\nabla \cdot \mathbi{v}_{t} + q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
 \end{equation}
-onde $\mathbi{v}_{t} = \mathbi{v}_{w} + \mathbi{v}_{o}$ é a velocidade total do fluido e $Q_{t} = (q_{w}/\rho_{w}) + (q_{o}/\rho_{o})$ é a taxa volumétrica total. Além disso, considerando a Eq. (\ref{eq:eq_const_sat}) e rearranjando os termos, nós obtemos a equação de pressão para o escoamento bifásico em meios porosos:
+onde $\mathbi{v}_{t} = \mathbi{v}_{w} + \mathbi{v}_{o}$ é a velocidade total e $Q_{t} = (q_{w}/\rho_{w}) + (q_{o}/\rho_{o})$ é a taxa volumétrica total. Além disso, considerando a Eq. (\ref{eq:eq_const_sat}) e rearranjando os termos, nós obtemos a equação de pressão para o escoamento bifásico em meios porosos:
 \begin{equation} \label{eq:pressure_eq_form1}
 \nabla \cdot \mathbi{v}_{t} = Q_{t}
 \end{equation}
@@ -210,13 +210,14 @@ As mobilidades das fases são definidas como a relação entre a permeabilidade rel
 \lambda_{\alpha} = \frac{k_{r\alpha}}{\mu_{\alpha}}
 \end{equation}%
 \nomenclature[a1lambda]{$\lambda$}{Mobilidade}%
-Finalmente, reescrevendo a Eq. (\ref{eq:pressure_eq_form1}) utilizando pressões médias e capilares pode-se obter depois de um rearranjo dos termos a seguinte expressão:
+
+Finalmente, reescrevendo a Eq. (\ref{eq:pressure_eq_form1}) utilizando pressões médias e capilares pode-se obter, depois de um rearranjo dos termos, a seguinte expressão:
 \begin{equation} \label{eq:pressure_eq_form2}
 \nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
 \left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = Q_{t}
 \end{equation}
 
-Logo, pode ser claramente observado que a Eq. (\ref{eq:pressure_eq_form2}), considerando as hipóteses feitas, tem uma natureza elíptica. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão. Definindo-se a mobilidade total como $\lambda_{t} = \lambda_{w} + \lambda_{o}$, a forma simplificada da equação de pressão pode ser apresentada como:
+Logo, pode ser observado que a Eq. (\ref{eq:pressure_eq_form2}), considerando as hipóteses feitas, tem uma natureza elíptica. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão. Definindo-se a mobilidade total como $\lambda_{t} = \lambda_{w} + \lambda_{o}$, a forma simplificada da equação de pressão pode ser apresentada como:
 \begin{equation} \label{eq:pressure_eq_form3}
 - \nabla \cdot \left(\mathbi{K} \lambda_{t} \nabla p_{avg} \right) = Q_{t}
 \end{equation}
@@ -317,7 +318,7 @@ representa o tensor de dispersão-difusividade, $Q$ é o termo fonte/sumidouro nos
 
 O tensor $\mathbi{D}$ combina os efeitos de dispersão mecânica e difusão molecular, onde o primeiro é normalmente proporcional à velocidade e possui componentes tanto na direção longitudinal quanto transversal do escoamento. Já o termo de difusão pode ser calculado pela Lei de Fick, a qual permite obter um fluxo difusivo a partir do gradiente de concentração do soluto $C$. Uma excelente discussão a respeito dos detalhes sobre este tensor e a interpretação física de seus componentes pode ser encontrado em \cite{Ewing1983}.
 
-No Capítulo \ref{ch:form_num} a versão unidimensional em meio homogêneo da Eq. (\ref{eq:misc1}) será utilizada para a apresentação de alguns dos métodos numéricos utilizados neste trabalho. Resultados para casos multidimensionais e considerando meios altamente heterogêneos serão apresentados e discutidos no Capítulo \ref{ch:resultados} esta equação modelo.
+No Capítulo \ref{ch:form_num} a versão unidimensional em meio homogêneo da Eq. (\ref{eq:misc1}) será utilizada para a apresentação de alguns dos métodos numéricos utilizados neste trabalho.
 
 \section{Condições Iniciais e de Contorno}
 \label{sc:cond_ini_bc}

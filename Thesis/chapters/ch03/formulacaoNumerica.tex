@@ -1,11 +1,11 @@
 \chapter{Formulação Numérica}
 \label{ch:form_num}
 
-A ideia básica de praticamente todos os métodos numéricos para a solução de \ac{EDP}s é a discretização de um problema contínuo com infinitos graus de liberdade (DOFs) e desse modo redução para um número finito de DOFs. Este problema discreto resulta em um sistema de equações com um número finito de variáveis, o qual normalmente pode ser resolvido utilizando um método adequado (ver seção \ref{sc:multigrid} para detalhes) \citep{Chen2006}.
+A ideia básica de praticamente todos os métodos numéricos para a solução de \ac{EDP}s é a discretização de um problema contínuo com infinitos graus de liberdade (DOFs) e desse modo a redução para um número finito de DOFs. Este problema discreto resulta em um sistema de equações com um número finito de variáveis, o qual normalmente pode ser resolvido utilizando um método adequado (ver seção \ref{sc:multigrid} para detalhes) \citep{Chen2006}.
 
 No \acf{MDF}, o qual ainda é o padrão na simulação numérica de reservatórios, as derivadas das equações originais são simplesmente substituídas por quocientes de diferenças. Os valores das variáveis são definidos apenas por um número específico de pontos, os quais podem estar localizados nos vértices ou no interior das células \citep{Fortuna2000}.
 
-O processo de discretização no caso do \ac{MEF} é diferente na medida em que ele requer a reformulação das \ac{EDP}s em uma forma variacional equivalente. As variáveis desconhecidas para o problema abordado são a pressão e saturação (além da velocidade, para formulações mistas), as quais podem ser descritas em qualquer ponto da região usando uma função de interpolação (também conhecida como função de forma do elemento). Os pontos de suporte para estas funções são os nós da malha, os quais são conectados para formar os elementos.
+O processo de discretização no caso do \ac{MEF} é diferente na medida em que ele usualmente requer a reformulação das \ac{EDP}s em uma forma variacional equivalente. As variáveis desconhecidas para o problema abordado são a pressão e saturação (além da velocidade, para formulações mistas), as quais podem ser descritas em qualquer ponto da região usando uma função de interpolação (também conhecida como função de forma do elemento). Os pontos de suporte para estas funções são os nós da malha, os quais são conectados para formar os elementos.
 
 Neste trabalho, foram experimentados tanto o clássico Método de Elementos Finitos de Galerkin quanto uma formulação dos Métodos dos Elementos Finitos Mistos para resolver a equação da pressão descrita na seção \ref{sc:press_eq}. Para a resolução da equação da saturação (ver seção \ref{sc:eq_sat}) foi utilizado o \ac{MEF} acrescido de um termo de estabilização do tipo \ac{SUPG}. Os resultados destas equações foram acoplados através de um método Sequencial Implícito. Estas metodologias são discutidas nas seções subsequentes e referências são citadas para informações adicionais.
 
@@ -76,7 +76,7 @@ A(p_{h},w_{h}) = \int_{\Omega_{h}} \lambda K \nabla p_{h} \cdot \nabla w_{h} d \
 f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 \end{equation}
 \end{problem}
-onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$. Na Fig. \ref{fig:femtrilinear} são apresentados elementos triangulares para a formulação clássica de Galerkin com diferentes ordens para o polinômio da função de forma, onde pode ser observado que um aumento da ordem de aproximação implica em uma maior quantidade de graus de liberdade por elemento, o que melhora a precisão da interpolação, porém ao custo de um maior tempo computacional. A Eq. (\ref{eq:galerkin}) aplicada a uma malha resulta em um conjunto de equações discretas na variável $p$, cuja solução pode ser obtida usando o métodos descrito na seção \ref{sc:multigrid}.
+onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$. Na Fig. \ref{fig:femtrilinear} são apresentados elementos triangulares para a formulação clássica de Galerkin com diferentes ordens para o polinômio da função de forma, onde pode ser observado que um aumento da ordem de aproximação implica em uma maior quantidade de graus de liberdade por elemento, o que melhora a precisão da interpolação, porém ao custo de um maior tempo computacional. A Eq. (\ref{eq:galerkin}) aplicada a uma malha computacional resulta em um conjunto de equações discretas na variável $p$, cuja solução pode ser obtida usando o métodos descrito na seção \ref{sc:multigrid}.
 
 \begin{figure}
 \centering
@@ -96,7 +96,7 @@ onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ p
 \end{figure}
 
 \section{Método dos Elementos Finitos Mistos} \label{sc:mfem}
-Na simulação de escoamentos em meios porosos é fundamental se obter uma boa aproximação para a variável de velocidade, pois esta será utilizada para o acoplamento entre as equações de pressão e saturação. Após a utilização de um método numérico como o descrito na seção anterior apenas a variável de pressão estará definida, sendo que esta aproximação será de segunda ordem para elementos triangulares lineares como os que foram usados na maior parte deste trabalho. Portanto, seria necessário calcular em uma etapa seguinte a velocidade a partir da pressão calculada. 
+Na simulação de escoamentos em meios porosos é fundamental se obter uma boa aproximação para a variável de velocidade, pois esta será utilizada para o acoplamento entre as equações de pressão e saturação. Após a utilização de um método numérico como o descrito na seção anterior apenas a variável de pressão estará definida, sendo que esta aproximação será de segunda ordem para elementos triangulares lineares como os que foram usados na maior parte deste trabalho. Portanto, seria necessário calcular, em uma etapa seguinte, a velocidade a partir da pressão calculada. 
 
 O modo mais direto de fazer isto seria usar diretamente a equação de Darcy (Eq. (\ref{eq:eq_darcy_general})), a qual permite obter o campo de velocidades a partir do gradiente de pressão. Porém, tal alternativa apresenta as grandes desvantagens de requerer a diferenciação do campo de pressão, diminuindo a ordem de convergência da aproximação e de não garantir a continuidade da velocidade nas fronteiras, já que um campo contínuo linear de pressão terá o seu gradiente representado como descontínuo entre elementos vizinhos. Uma alternativa utilizada por alguns autores \citep{Loula1995, Barbosa2009} é realizar um pós-processamento ao final do cálculo do campo de pressão para se obter um novo problema variacional na variável de velocidade, o qual ao ser resolvido garante uma melhor ordem de aproximação e a continuidade do campo entre os elementos.
 
@@ -104,7 +104,7 @@ Uma outra alternativa, a qual é apresentada nesta seção e utilizada neste trabal
 
 Entretanto, esta vantagem é obtida ao custo de uma maior complexidade da formulação, já que ao invés de um único espaço de elementos finitos o \ac{MEFM} requer dois espaços, os quais \emph{não} podem ser escolhidos arbitrariamente pois têm que satisfazer uma condição do tipo \emph{inf-sup} para serem estáveis \citep{Chen2006}.
 
-Em \cite{Raviart1977} foi proposta a primeira família de espaços de elementos finitos mistos que satisfazem a condição de estabilidade conhecida como \emph{Ladyshenskaja-Babuska-Brezzi Condition} (LBB) (ver \cite{Brezzi1991} para uma discussão detalhada sobre esta condição) para problemas elípticos de 2ª ordem como o representado pela equação da pressão (Eq. (\ref{eq:pressure_eq_form3})), sendo depois desta várias outras combinações de espaços já foram sugeridos na literatura \citep{Brezzi1985, Chen2006}.
+Em \cite{Raviart1977} foi proposta a primeira família de espaços de elementos finitos mistos que satisfazem a condição de estabilidade conhecida como \emph{Ladyshenskaja-Babuska-Brezzi Condition} (LBB) (ver \cite{Brezzi1991} para uma discussão detalhada sobre esta condição) para problemas elípticos de 2ª ordem como o representado pela equação da pressão (Eq. (\ref{eq:pressure_eq_form3})), sendo que, depois desta, várias outras combinações de espaços já foram sugeridos na literatura \citep{Brezzi1985, Chen2006}.
 
 De modo a ilustrar o procedimento para obtenção da forma fraca, consideremos inicialmente a equação da pressão desenvolvida na seção \ref{sc:press_eq}, a qual é reproduzida a seguir, onde os subíndices foram omitidos por questão de clareza:
 \begin{equation} \label{eq:pressure_eq_formMFEM}
@@ -120,7 +120,7 @@ De modo a garantir que a variável vetorial (velocidade $\mathbf{v}$) tenha compo
 \mathbf{H}(div, \Omega) = \{\mathbf{\zeta} = (\zeta_{1}, \zeta_{2}) \in (L_{2}(\Omega))^{2}; \nabla \cdot \mathbf{\zeta} \in L_{2}(\Omega) \}  
 \end{equation}
 
-Assim, podemos definir o espaço $\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}$ para garantir a condição de fluxo zero na fronteira e o $W = L_{2}(\Omega)$, onde é importante observar que funções em $W$ não necessariamente são contínuas.
+Assim, podemos definir o espaço $\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}$ para garantir a condição de fluxo zero na fronteira e o $W = L_{2}(\Omega)$, onde é importante observar que funções em $W$ não são necessariamente contínuas.
 
 Além disso, definimos a seguinte notação para o produto interno em $L_{2}(\Omega)$:
 \begin{equation} \label{eq:innerprod}
@@ -139,12 +139,12 @@ Logo, a Eq. (\ref{eq:pressure_eq_formMFEM}) se torna:
 
 Multiplicando-se a Eq. (\ref{eq:velocityMFEM}) por um $\zeta \in \mathbf{V}$, passando os termos de permeabilidade e mobilidade para o lado esquerdo da equação e integrando o resultado no domínio, usamos a definição de produto interno da Eq. (\ref{eq:innerprod}) para obter:
 \begin{equation} \label{eq:pressure_eq_formMFEM3}
-\left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) = - (\zeta, \nabla p)
+\left( (\mathbi{K}\lambda)^{-1} \mathbf{v}, \zeta \right) = - (\zeta, \nabla p)
 \end{equation}
 
-Aplicando o teorema de Green ao lado direito desta equação, obtemos:
+Aplicando integração por partes no lado direito desta equação, obtemos:
 \begin{equation} \label{eq:pressure_eq_formMFEM4}
-\left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) = (\nabla \cdot \zeta, p)
+\left( (\mathbi{K}\lambda)^{-1} \mathbf{v}, \zeta \right) = (\nabla \cdot \zeta, p)
 \end{equation}
 
 E multiplicando a Eq.(\ref{eq:pressure_eq_formMFEM2}) por um $w \in W$, temos:
@@ -166,7 +166,7 @@ com
 W = L_{2}(\Omega)
 \end{equation}
 \begin{equation} \label{eq:bilinearformhmfemch03}
-A(p,w,\mathbf{v},\zeta) = \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) -(\nabla \cdot \zeta, p) -(\nabla \cdot \mathbf{v}, w)
+A(p,w,\mathbf{v},\zeta) = \left( (\mathbi{K}\lambda)^{-1} \mathbf{v}, \zeta \right) -(\nabla \cdot \zeta, p) -(\nabla \cdot \mathbf{v}, w)
 \end{equation}
 \begin{equation} \label{eq:linearformhmfemch03}
 f(w) = - (Q, w)
@@ -211,7 +211,7 @@ A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = f(w_{h}) \quad \forall \zeta_{h} \in \
 \end{equation}
 com
 \begin{equation} \label{eq:bilinearformhmfemch03h}
-A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v_{h}}, \zeta_{h} \right) -(\nabla \cdot \zeta_{h}, p_{h}) -(\nabla \cdot \mathbf{v_{h}}, w_{h})
+A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = \left( (\mathbi{K}\lambda)^{-1} \mathbf{v_{h}}, \zeta_{h} \right) -(\nabla \cdot \zeta_{h}, p_{h}) -(\nabla \cdot \mathbf{v_{h}}, w_{h})
 \end{equation}
 \begin{equation} \label{eq:linearformhmfemch03h}
 f(w_{h}) = - (Q_{h}, w_{h})
@@ -219,11 +219,11 @@ f(w_{h}) = - (Q_{h}, w_{h})
 \end{problem}
 
 \section{Estabilização do \ac{MEF} via \ac{SUPG}} \label{sc:supg}
-O \ac{MEF} de Galerkin permite obter respostas bastantes acuradas para problemas com soluções suaves, como normalmente é o caso para equações essencialmente elípticas como a equação de pressão. Entretanto, o mesmo não se mostra adequado para a simulação de fenômenos dominados por termos advectivos, caso frequente de equações com características hiperbólicas como a equação de saturação descrita em \ref{sc:eq_sat}. Nestes casos a solução tende a se tornar instável na região de choque, sendo que tal instabilidade é transportada para todo o domínio, deteriorando rapidamente a acurácia global.
+O \ac{MEF} de Galerkin permite obter respostas bastantes acuradas para problemas com soluções suaves, como normalmente é o caso para equações essencialmente elípticas como a equação de pressão. Entretanto, o mesmo não se mostra adequado para a simulação de fenômenos dominados por termos advectivos, caso frequente de equações com características hiperbólicas como a equação de saturação descrita em \ref{sc:eq_sat}. Nestes casos a solução pode se tornar instável, sendo que tal instabilidade é transportada para todo o domínio, deteriorando rapidamente a acurácia global.
 
 Mesmo antes do aparecimento deste problema no contexto do \ac{MEF}, o mesmo já era bastante conhecido do estudo do \ac{MDF}, podendo ser explicado em ambos os casos pelo uso de aproximações que se baseiam no uso de discretizações centradas, ou seja, quando as contribuições vindo de todas as direções possuem o mesmo peso na solução. Inicialmente, uma das técnicas para se contornar este tipo de problema era adicionar um termo artificial de difusão diretamente nas \ac{EDP}s que se desejava aproximar \citep{Papastavrou1998}. Todavia, esta técnica apresenta a desvantagem fundamental de alterar a descrição matemática do problema, ocasionando assim uma perda de consistência, já que mesmo que se utilize uma discretização tendendo ao contínuo continuaria-se obtendo uma resposta que não tenderia à analítica.
 
-Uma solução proposta no contexto do \ac{MDF} consiste na ponderação da solução com um peso maior para a informação que segue a direção do fluxo (esta técnica é comumente conhecida como \emph{Upwinding}). No caso do \ac{MEF}, \cite{Brooks1982} propuseram um método no qual o espaço da função de ponderação não mais corresponde ao espaço da função tentativa utilizada (ou seja, um método do tipo Petrov-Galerkin), sendo adicionado um termo de perturbação com caráter difusivo que atua apenas na direção da linha de fluxo no nível do elemento. Este método, o qual se tornou conhecido pelo nome de \acf{SUPG}, foi extensamente utilizado na literatura para várias aplicações, inclusive na resolução da equação de saturação em escoamentos multifásicos \citep{Barbosa2009, Garcia1997, Loula1995}. Um exemplo desta função de ponderação modificada tem sua representação gráfica mostrada na Fig. \ref{fig:supgweightfunc}, onde se considera um fluxo da esquerda para a direita. Pode ser observado claramente na figura o maior peso considerado para o elemento que está a montante do escoamento quando comparado ao que se encontra a jusante. Isto implica que a modificação a ser efetuada na função de ponderação deve de alguma forma ser dependente da direção do escoamento.
+Uma solução proposta no contexto do \ac{MDF} consiste na ponderação da solução com um peso maior para a informação que segue o sentido do fluxo (esta técnica é comumente conhecida como \emph{Upwinding}). No caso do \ac{MEF}, \cite{Brooks1982} propuseram um método no qual o espaço da função de ponderação não mais corresponde ao espaço da função tentativa utilizada (ou seja, um método do tipo Petrov-Galerkin), sendo adicionado um termo de perturbação com caráter difusivo que atua apenas na direção da linha de fluxo no nível do elemento. Este método, o qual se tornou conhecido pelo nome de \acf{SUPG}, foi extensamente utilizado na literatura para várias aplicações, inclusive na resolução da equação de saturação em escoamentos multifásicos \citep{Barbosa2009, Garcia1997, Loula1995}. Um exemplo desta função de ponderação modificada tem sua representação gráfica mostrada na Fig. \ref{fig:supgweightfunc}, onde se considera um fluxo da esquerda para a direita. Pode ser observado claramente na figura o maior peso considerado para o elemento que está a montante do escoamento quando comparado ao que se encontra a jusante. Isto implica que a modificação a ser efetuada na função de ponderação deve de alguma forma ser dependente da direção e sentido do escoamento.
 
 \begin{figure} 
 \centering
@@ -239,7 +239,7 @@ w_{s} = w + \tau_{s} \mathbf{v} \cdot \nabla w
 \nomenclature[a1tau]{$\tau$}{Parâmetro de estabilização}%
 onde $\mathbf{v}$ representa o vetor velocidade, $w$ a função de ponderação original e $\tau_{s}$ um parâmetro de estabilização que depende do tamanho do elemento e do módulo da velocidade.
 
-Uma vez definida tal função, aplica-se um procedimento semelhante ao utilizado para a discretização pelo Método de Galerkin onde se integra a Eq. (\ref{eq:sateq4}), porém a multiplicação é pela função de ponderação modificada (Eq. (\ref{eq:supgweight})), para se obter depois de algum algebrismo e de modo totalmente consistente a seguinte forma variacional discreta para o problema da equação de saturação \citep{Wells2008}:
+Uma vez definida tal função, aplica-se um procedimento semelhante ao utilizado para a discretização pelo Método de Galerkin onde se integra a Eq. (\ref{eq:sateq4}), desprezando-se aqui o termo de fonte por simplicidade, porém a multiplicação é pela função de ponderação modificada (Eq. (\ref{eq:supgweight})), para se obter depois de algum algebrismo e de modo totalmente consistente a seguinte forma variacional discreta para o problema da equação de saturação \citep{Wells2008}:
 \begin{problem} [Discreto]
 Dados $S_{h}^{n+1}, f_{,S}$ e $\mathbf{v}_{h}$, encontre $S_{h}^{n+1}$ $\in$ $X_{h}$ tal que:
 \begin{equation} \label{eq:supgprob1}
@@ -268,7 +268,7 @@ r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+
 
 Ao se observar o problema acima, percebe-se que os dois primeiros termos do lado direito da Eq. (\ref{eq:supgprob4}) correspondem ao que seria obtido através de uma discretização via \ac{MEF} de Galerkin, sendo o terceiro termo o responsável pela estabilização do método através de um somatório das contribuições calculadas elemento por elemento. A consistência da formulação utilizada é garantida pelo fato do termo adicionado ser diretamente proporcional ao resíduo da solução, o qual tende a zero para a resposta exata, cancelando portanto qualquer difusão não-física que poderia ser adicionada neste caso.
 
-Existem diversas sugestões na literatura acerca do modo mais adequado de definir o parâmetro de estabilização $\tau_{s}$ \citep{Brooks1982, Barbosa2009, Papastavrou1998, Wells2008}. De um modo geral, este termo está relacionado a uma dimensão característica de malha e à velocidade de transporte, tendo portanto que ser calculado para cada elemento. Neste trabalho optou-se pelo uso da expressão apresentada a seguir, a qual, apesar de bastante simples comparada a outras encontradas na literatura, normalmente se mostra adequada para problemas altamente hiperbólicos como é o caso da equação da saturação ao se desprezar os termos de capilaridade e gravidade:
+Existem diversas sugestões na literatura acerca do modo mais adequado de definir o parâmetro de estabilização $\tau_{s}$ \citep{Brooks1982, Barbosa2009, Papastavrou1998, Wells2008}. De um modo geral, este termo está relacionado a uma dimensão característica de malha e à velocidade de transporte, tendo portanto que ser calculado para cada elemento. Neste trabalho optou-se pelo uso da expressão apresentada a seguir \citep{Wells2008}, a qual, apesar de bastante simples comparada a outras encontradas na literatura, normalmente se mostra adequada para problemas altamente hiperbólicos como é o caso da equação da saturação ao se desprezar os termos de capilaridade e gravidade:
 \begin{equation} \label{eq:supgstabterm}
 \tau_{s} = \frac{h}{2\vert\vert \mathbi{v} \vert\vert}
 \end{equation}
@@ -278,7 +278,7 @@ Apesar do \ac{SUPG} permitir a obtenção de soluções numéricas estáveis em compar
 
 Um meio para garantir uma alta precisão na região de solução suave e ao mesmo tempo evitar o aparecimento de oscilações espúrias na região de choque é utilizar métodos não-lineares, os quais dependem portanto da própria solução do problema. Isto se deve à condição estabelecida pelo teorema de Godunov de que métodos lineares e que preservem a monotonicidade podem ser no máximo de primeira ordem \citep{Leveque1992}.
 
-A ideia básica do uso de um termo de captura de choque é adicionar uma dissipação numérica (também chamada de viscosidade artificial) extra na região de descontinuidade. Neste trabalho foi utilizado um termo de dissipação isotrópico, ou seja, que acrescenta a mesma viscosidade em todas as direções \citep{Wells2008}. Todavia, existem na literatura exemplos de usos de termos anisotrópicos \citep{Codina1992, Papastavrou1998}, já que o uso do \ac{SUPG} implica na adição de uma certa viscosidade artificial na direção das linhas de corrente, sendo em princípio necessário acrescentar dissipação apenas na componente perpendicular ao fluxo em cada ponto. Em todo caso, é importante mencionar que assim como na estabilização via \ac{SUPG} a viscosidade artificial adicionada é proporcional ao resíduo da solução, garantindo assim a consistência do método. Sendo assim, podemos somar o termo seguinte à Eq. (\ref{eq:supgprob4}) para obter uma nova forma variacional discreta:
+A ideia básica do uso de um termo de captura de choque é adicionar uma dissipação numérica (também chamada de viscosidade artificial) extra na região de descontinuidade. Neste trabalho foi utilizado um termo de dissipação isotrópico, ou seja, que acrescenta a mesma viscosidade em todas as direções \citep{Wells2008}. Todavia, existem na literatura exemplos de usos de termos anisotrópicos \citep{Codina1992, Papastavrou1998}, já que o uso do \ac{SUPG} implica na adição de uma certa viscosidade artificial na direção das linhas de corrente, sendo em princípio necessário acrescentar dissipação apenas na componente perpendicular ao fluxo em cada ponto. Em todo caso, é importante mencionar que assim como na estabilização via \ac{SUPG} a viscosidade artificial adicionada é proporcional ao resíduo da solução, garantindo a consistência do método. Sendo assim, podemos somar o termo seguinte à Eq. (\ref{eq:supgprob4}) para obter uma nova forma variacional discreta:
 \begin{equation} \label{eq:viscartterm1}
 F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \cdot \nabla S_{h}^{n+1} d \Omega
 \end{equation}%
@@ -313,7 +313,7 @@ A solução analítica do problema apresentado é uma função degrau com altura $1$ q
 \label{fig:puregalerkin}
 \end{figure}
 
-De modo a estabilizar a solução aplicamos o método \ac{SUPG} descrito na seção \ref{sc:supg} e representado pela Eq. (\ref{eq:supgprob4}), obtendo o resultado mostrado na Fig. \ref{fig:supg}, onde pode-se perceber uma eliminação de grande parte da oscilação presente na aproximação numérica inicial. Entretanto, apesar de o choque ter permanecido com uma definição tão boa quanto na análise com o \ac{MEF} de Galerkin, ainda se percebe a existência de \emph{overshoots} e \emph{undershoots} na região de descontinuidade.
+De modo a estabilizar a solução aplicamos o método \ac{SUPG} descrito na seção \ref{sc:supg} e representado pela Eq. (\ref{eq:supgprob4}), obtendo o resultado mostrado na Fig. \ref{fig:supg}, onde pode-se perceber uma eliminação de grande parte da oscilação presente na aproximação numérica inicial. Entretanto, apesar de o choque ter permanecido com uma definição quase tão boa quanto na análise com o \ac{MEF} de Galerkin, ainda se percebe a existência de \emph{overshoots} e \emph{undershoots} na região de descontinuidade.
 
 \begin{figure} 
 \centering
