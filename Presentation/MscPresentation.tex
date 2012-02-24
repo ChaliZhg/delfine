@@ -1198,7 +1198,7 @@ def SUPG(self, delfineVar, parameter):
   Sw(x,0) = 0.0
   \end{equation*}
   \begin{equation*}
-  N_{o} = N_{w} = 4.0
+  N_{o} = N_{w} = 2.0
   \end{equation*}
   \begin{equation*}
   \mu = cte = 1.0
@@ -1233,21 +1233,11 @@ def SUPG(self, delfineVar, parameter):
   \frametitle{Buckley-Leverett 1-D}
   \begin{itemize}
   \item Resolução da Eq. de Buckley Leverett em 1-D com $v_{t}=1.0$
-  \end{itemize}
-  \begin{figure}
-  \centering
-  \includegraphics[width=0.75\textwidth]{figs/BL1D}
-  \end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Buckley-Leverett 1-D}
-  \begin{itemize}
   \item Comparação com sol. analítica da Eq. de Buckley Leverett em 1-D com $v_{t}=1.0$ e $t=0.3$
   \end{itemize}
   \begin{figure}
   \centering
-  \includegraphics[width=0.85\textwidth]{figs/BL1Dcomp}
+  \includegraphics[width=0.675\textwidth]{figs/BL1D}
   \end{figure}
 \end{frame}
 
@@ -1270,7 +1260,7 @@ def SUPG(self, delfineVar, parameter):
 \begin{frame}
   \frametitle{Trabalhos Futuros}
   \begin{itemize}
-  \item Adicionar estabilização anisotrópica.
+  \item Adicionar difusão artificial anisotrópica.
   \item Mais ``Física'': Capilaridade, Gravidade e Modelo Black-oil.
   \item Computação paralela (MPI/OpenMP).
   \end{itemize}
