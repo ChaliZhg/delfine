@@ -117,10 +117,10 @@ sendo que ela está sujeita à condição de fluxo zero em todas as fronteiras exter
 
 De modo a garantir que a variável vetorial (velocidade $\mathbf{v}$) tenha componentes contínuas em $\Omega$, podemos utilizar um Espaço de Sobolev para funções vetoriais definido por:
 \begin{equation} \label{eq:vectorsobolevspace}
-\mathbf{H}(div, \Omega) = \{\mathbf{\zeta} = (\zeta_{1}, \zeta_{2}) \in (L_{2}(\Omega))^{2}; \nabla \cdot \mathbf{\zeta} \in L_{2}(\Omega) \}  
+\mathbf{H}(div, \Omega) = \{\mathbf{\zeta} = (\zeta_{1}, \zeta_{2}) \in (L_{2}(\Omega)\times L_{2}(\Omega)); \nabla \cdot \mathbf{\zeta} \in L_{2}(\Omega) \}  
 \end{equation}
 
-Assim, podemos definir o espaço $\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}$ para garantir a condição de fluxo zero na fronteira e o $W = L_{2}(\Omega)$, onde é importante observar que funções em $W$ não são necessariamente contínuas.
+Assim, podemos definir o espaço $\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}$ para garantir a condição de fluxo zero na fronteira e o espaço $W = L_{2}(\Omega)$, onde é importante observar que funções em $W$ não são necessariamente contínuas.
 
 Além disso, definimos a seguinte notação para o produto interno em $L_{2}(\Omega)$:
 \begin{equation} \label{eq:innerprod}
@@ -175,7 +175,7 @@ f(w) = - (Q, w)
 
 De modo a se possibilitar a análise deste problema variacional via \ac{MEFM}, é necessário representar o mesmo na forma discreta. Para isto, precisamos definir espaços finitos que substituam os espaços $\mathbf{V}$ e $\mathbf{W}$ determinados conforme mostrado nas Eqs. (\ref{eq:funcspace1mfem}) e (\ref{eq:funcspace2mfem}). Neste trabalho foi utilizada a combinação conhecida como espaços \ac{BDM} \citep{Brezzi1985}, os quais têm a característica de permitir obter a mesma ordem de convergência do erro para a variável vetorial que os espaços de \emph{Raviart-Thomas} \citep{Raviart1977}, porém com a vantagem de terem uma dimensão menor. Os espaços \ac{BDM} podem ser definidos para cada elemento finito da malha do modo a seguir, considerando um $k \geq 1$ \citep{Chen2006}:
 \begin{equation} \label{eq:bdmspaces1}
-\mathbf{V}_{h}(E_{i}) = \left( \mathbf{P}^{k}(E_{i}) \right)^{2}
+\mathbf{V}_{h}(E_{i}) = \mathbf{P}^{k}(E_{i}) \times \mathbf{P}^{k}(E_{i})
 \end{equation}
 \begin{equation} \label{eq:bdmspaces2}
 \mathbf{W}_{h}(E_{i}) = \mathbf{P}^{k-1}(E_{i})
@@ -268,6 +268,8 @@ r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+
 
 Ao se observar o problema acima, percebe-se que os dois primeiros termos do lado direito da Eq. (\ref{eq:supgprob4}) correspondem ao que seria obtido através de uma discretização via \ac{MEF} de Galerkin, sendo o terceiro termo o responsável pela estabilização do método através de um somatório das contribuições calculadas elemento por elemento. A consistência da formulação utilizada é garantida pelo fato do termo adicionado ser diretamente proporcional ao resíduo da solução, o qual tende a zero para a resposta exata, cancelando portanto qualquer difusão não-física que poderia ser adicionada neste caso.
 
+O termo $f_{,S}$, que representa a derivada do fluxo fracional em relação à saturação, torna este problema não-linear. Esta não-linearidade pode ser tratada através de diversos métodos, entre eles os métodos de Newton-Raphson e de iteração de Picard. Todavia, neste trabalho foi adotada a mesma estratégia usada por outros autores \citep{Carvalho2005, Silva2008} de linearizar a equação de saturação através do uso do termo $f_{,S}$ calculado no passo de tempo anterior. Esta estratégia tem como vantagem a sua simplicidade, por outro lado requer o uso de passos de tempo pequenos o suficiente para evitar que a linearização do problema degrade a solução.
+
 Existem diversas sugestões na literatura acerca do modo mais adequado de definir o parâmetro de estabilização $\tau_{s}$ \citep{Brooks1982, Barbosa2009, Papastavrou1998, Wells2008}. De um modo geral, este termo está relacionado a uma dimensão característica de malha e à velocidade de transporte, tendo portanto que ser calculado para cada elemento. Neste trabalho optou-se pelo uso da expressão apresentada a seguir \citep{Wells2008}, a qual, apesar de bastante simples comparada a outras encontradas na literatura, normalmente se mostra adequada para problemas altamente hiperbólicos como é o caso da equação da saturação ao se desprezar os termos de capilaridade e gravidade:
 \begin{equation} \label{eq:supgstabterm}
 \tau_{s} = \frac{h}{2\vert\vert \mathbi{v} \vert\vert}
@@ -291,6 +293,7 @@ onde $\nu_{shock}$ é a viscosidade artificial definida por:
   0 & \textrm{caso contrário}
   \end{array} \right.
 \end{equation}
+onde $\beta$ é um parâmetro dependente do problema. Neste trabalho foi adotado o valor de $\beta=2.0$, conforme sugestão encontrada na literatura \citep{Wells2008} para problemas de escoamentos em meios porosos.
 
 De modo a exemplificar a influência dos termos tanto de estabilização como de captura de choque, são apresentados a seguir os resultados obtidos para a equação linear de adveção pura, a qual pode ser vista com uma versão simplificada da Eq. (\ref{eq:misc1}) com o tensor de difusão e o termo de reação nulos, sendo representada no caso unidimensional pela expressão a seguir:
 \begin{equation} \label{eq:hyperpde}

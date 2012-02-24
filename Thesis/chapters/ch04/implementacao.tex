@@ -182,11 +182,14 @@ def MixedFEM(self, delfineVar, parameter):
 \label{lst:arqpymfem}
 \end{listing}
 
-A formulação variacional para a equação da saturação utilizando o \ac{MEF} com estabilização via \ac{SUPG} é representada matematicamente da seguinte forma:
+A formulação variacional para a equação da saturação utilizando o \ac{MEF} com estabilização via \ac{SUPG} e termo de captura de choque para adição de difusão artificial é representada matematicamente da seguinte forma:
 \begin{equation} \label{eq:bilinearformhsupg2}
+\begin{array}{cc}
 F(S,w) = \int_{\Omega} \left( w \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
 \int_{\Omega} wf_{,S}\mathbf{v}^{n+1} \cdot \nabla S^{n+1} d \Omega +
-\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbf{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega + \\ 
+\sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \cdot \nabla S^{n+1} d \Omega
+\end{array}
 \end{equation}
 onde
 \begin{equation} \label{eq:residuumsupg2}
@@ -196,6 +199,13 @@ r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+
 com
 \begin{equation} \label{eq:stabtermsupg2}
 \tau_{s} = \frac{h}{2 \left| \left| \mathbf{v}^{n+1} \right| \right| }
+\end{equation}
+e
+\begin{equation} \label{eq:viscartterm2implem}
+\nu_{shock} = \left\{ \begin{array}{ll}
+  \frac{\beta h \vert r^{n+1} \vert}{2\vert\vert \nabla S^{n} \vert\vert} & \textrm{se $\vert\vert \nabla S^{n} \vert\vert \neq 0$}\\
+  0 & \textrm{caso contrário}
+  \end{array} \right.
 \end{equation}
 A codificação em \emph{Python} deste método pode ser vista na Listagem \ref{lst:arqpysupg}.
 \begin{listing}[H]
@@ -208,9 +218,18 @@ def SUPG(self, delfineVar, parameter):
         (w*fs*dot(v, grad(S))*dx
     # Residual
     r = phi*((S-S0)/dt) + fs*(dot(v, grad(S)))
-    # SUPG stabilization terms
+    # SUPG stabilization term
     tau = h/(2.0*sqrt(dot(v, v)))
     F += tau*dot(v, grad(w))*r*dx
+    # Add shock capturing term
+    beta = 2.0
+    snorm = sqrt(dot(grad(S0), grad(S0)))
+    tol = 1E-15
+    if (abs(snorm) > tol):
+        vshock = (beta*h*abs(r))/(2*snorm)
+    else:
+        vshock = 0.0
+    F += vshock*dot(grad(w), grad(S))*dx
     # Create bilinear and linear forms
     a = lhs(F)
     L = rhs(F)
