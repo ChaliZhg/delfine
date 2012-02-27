@@ -116,23 +116,23 @@
 %  \end{columns}
 %\end{frame}
 
-\begin{frame}
-  \frametitle{Conceitos}
-  \begin{columns}
-  \column{0.7\textwidth}
-    \begin{figure}[ht]
-    \begin{center}
-    \includegraphics[width=1.0\textwidth]{figs/MeioPorosoSaturado}
-    \end{center}
-    \end{figure}
-  \column{0.3\textwidth}
-    \begin{block}{Porosidade Efetiva}
-    \begin{displaymath} \label{eq:porosidade}
-    \phi = \frac{V_{p conec}}{V_{t}}
-    \end{displaymath}
-    \end{block}
-  \end{columns}
-\end{frame}
+%\begin{frame}
+%  \frametitle{Conceitos}
+%  \begin{columns}
+%  \column{0.7\textwidth}
+%    \begin{figure}[ht]
+%    \begin{center}
+%    \includegraphics[width=1.0\textwidth]{figs/MeioPorosoSaturado}
+%    \end{center}
+%    \end{figure}
+%  \column{0.3\textwidth}
+%    \begin{block}{Porosidade Efetiva}
+%    \begin{displaymath} \label{eq:porosidade}
+%    \phi = \frac{V_{p conec}}{V_{t}}
+%    \end{displaymath}
+%    \end{block}
+%  \end{columns}
+%\end{frame}
 
 %\begin{frame}
 %  \frametitle{Conceitos}
@@ -156,47 +156,47 @@
 %  \end{columns}
 %\end{frame}
 
-\begin{frame}
-  \frametitle{Conceitos}
-  \begin{columns}
-  \column{0.6\textwidth}
-    \begin{figure}[ht]
-    \begin{center}
-    \includegraphics[width=1.0\textwidth]{figs/relat_perm}
-    \end{center}
-    \end{figure}
-  \column{0.4\textwidth}
-    \begin{block}{Permeabilidade Relativa}
-    \begin{displaymath} \label{eq:permrel}
-    k_{r\alpha} = \frac{\mathbi{K}_{\alpha}}{\mathbi{K}} \leq 1
-    \end{displaymath}
-    \begin{displaymath} \label{eq:coreymodela}
-    k_{rw}(S_{wn}) = k_{rw}^{o}S_{wn}^{n_{w}}
-    \end{displaymath}
-    \begin{displaymath} \label{eq:coreymodelb}
-    k_{row}(S_{wn}) = \left(1 - S_{wn}\right)^{n_{w}}
-    \end{displaymath}
-    \end{block}
-  \end{columns}
-\end{frame}
+%\begin{frame}
+%  \frametitle{Conceitos}
+%  \begin{columns}
+%  \column{0.6\textwidth}
+%    \begin{figure}[ht]
+%    \begin{center}
+%    \includegraphics[width=1.0\textwidth]{figs/relat_perm}
+%    \end{center}
+%    \end{figure}
+%  \column{0.4\textwidth}
+%    \begin{block}{Permeabilidade Relativa}
+%    \begin{displaymath} \label{eq:permrel}
+%    k_{r\alpha} = \frac{\mathbi{K}_{\alpha}}{\mathbi{K}} \leq 1
+%    \end{displaymath}
+%    \begin{displaymath} \label{eq:coreymodela}
+%    k_{rw}(S_{wn}) = k_{rw}^{o}S_{wn}^{n_{w}}
+%    \end{displaymath}
+%    \begin{displaymath} \label{eq:coreymodelb}
+%    k_{row}(S_{wn}) = \left(1 - S_{wn}\right)^{n_{w}}
+%    \end{displaymath}
+%    \end{block}
+%  \end{columns}
+%\end{frame}
 
-\begin{frame}
-  \frametitle{Conceitos}
-  \begin{columns}
-  \column{0.6\textwidth}
-    \begin{figure}[ht]
-    \begin{center}
-    \includegraphics[width=1.0\textwidth]{figs/swnorm}
-    \end{center}
-    \end{figure}
-  \column{0.4\textwidth}
-    \begin{block}{Saturação Normalizada}
-    \begin{displaymath} \label{eq:satnorm}
-    S_{wn}(S_{w}) = \frac{S_{w} - S_{wi}}{1 - S_{wi} - S_{orw}}
-    \end{displaymath}
-    \end{block}
-  \end{columns}
-\end{frame}
+%\begin{frame}
+%  \frametitle{Conceitos}
+%  \begin{columns}
+%  \column{0.6\textwidth}
+%    \begin{figure}[ht]
+%    \begin{center}
+%    \includegraphics[width=1.0\textwidth]{figs/swnorm}
+%    \end{center}
+%    \end{figure}
+%  \column{0.4\textwidth}
+%    \begin{block}{Saturação Normalizada}
+%    \begin{displaymath} \label{eq:satnorm}
+%    S_{wn}(S_{w}) = \frac{S_{w} - S_{wi}}{1 - S_{wi} - S_{orw}}
+%    \end{displaymath}
+%    \end{block}
+%  \end{columns}
+%\end{frame}
 
 \begin{frame}
   \frametitle{Hipóteses Simplificadoras}
@@ -830,7 +830,8 @@ F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \
 \begin{itemize}
 \item <1-> FEniCS é um projeto colaborativo para automatização da solução de modelos matemáticos baseados em equações diferencias.
 \item <1-> Descrição matemática da forma variacional.
-\item <1-> Código UFL (altíssimo nível-\emph{Python}) bastante similar à essa descrição.
+\item <1-> Código UFL (altíssimo nível-\emph{Python}) bastante similar à descrição matemática.
+\item <1-> Vários operadores disponíveis: produto interno (\verb|dot()), produto vetorial (\verb|cross()), divergente (\verb|div()), gradiente (\verb|grad()), rotacional (\verb|curl()).
 \item <1-> Geração automática de código de baixo nível (\emph{C++}).
 \end{itemize}
   \begin{figure} 
@@ -936,6 +937,49 @@ def SUPG(self, delfineVar, parameter):
     # Create bilinear and linear forms
     a = lhs(F)
     L = rhs(F)
+\end{pythoncode}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Montagem do Sistema de Equações}
+  \begin{block}{Código Python}
+    \begin{pythoncode}
+    # Assemble system and apply boundary conditions
+    A, rhs = assemble_system(a, L)
+    bc.apply(A, rhs)
+\end{pythoncode}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Resolução do Sistema de Equações via AMG}
+\begin{itemize}
+\item <1-> PyAMG é uma coleção de resolvedores de equações lineares com interface \emph{Python}.
+\item <1-> Operações de maior custo compiladas em \emph{C++}.
+\item <1-> Excelente ferramenta para prototipagem rápida.
+\item <1-> Diversos métodos disponíveis: AMG clássico, AMG \emph{Smoothed Aggregation}.
+\item <1-> Vários tipos de ciclos disponíveis: V, W, Full Multigrid.
+\item <1-> Uso do AMG como pre-condicionador para CG, GMRES, etc.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Resolução do Sistema de Equações via AMG}
+  \begin{block}{Código Python}
+    \begin{pythoncode}
+def solve_withPyAMG(self, delfineVar, parameter):
+    # Get sparse matrix data
+    (r,c,data) = A.data()
+    n = A.size(0)
+    # Matrix in scipy/numpy format
+    As = csr_matrix((data,c.view(),r.view()),shape=(n,n))
+    # Get right-hand side vector(rhs) data
+    b = rhs.data()
+    res = []
+    # Solve with AMG as preconditionar for the CG Method
+    ml = smoothed_aggregation_solver(Asp,max_coarse=10)
+    x = ml.solve(b,tol=1e-10,accel='cg',residuals=res)
 \end{pythoncode}
   \end{block}
 \end{frame}
