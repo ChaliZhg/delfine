@@ -22,7 +22,7 @@
 
 \title[ ]{Modelagem Automática de Escoamentos em Meios Porosos via Método dos Elementos Finitos}
 \author[ ]{Mestrando: Bruno Luna \linebreak Orientador: Paulo Lyra \linebreak Co-orientador: Ramiro Willmersdorf}
-\institute{Seminário de Dissertação - Mestrado/PPGEM - UFPE}
+\institute{Defesa de Dissertação - Mestrado/PPGEM - UFPE}
 %%\titlegraphic{\includegraphics[width=40mm]{BIPHASE2D2}}
 \date{Fevereiro - 2012}
 \AtBeginSection[]
@@ -98,23 +98,23 @@
 %% SECTION 2 - Mathematical Formulation
 \section{Formulação Matemática}
 
-\begin{frame}
-  \frametitle{Conceitos}
-  \begin{columns}
-  \column{0.7\textwidth}
-    \begin{figure}[ht]
-    \begin{center}
-    \includegraphics[width=1.0\textwidth]{figs/MeioPoroso}
-    \end{center}
-    \end{figure}
-  \column{0.3\textwidth}
-    \begin{block}{Porosidade Absoluta}
-    \begin{displaymath} \label{eq:porosidade}
-    \phi = \frac{V_{p}}{V_{t}}
-    \end{displaymath}
-    \end{block}
-  \end{columns}
-\end{frame}
+%\begin{frame}
+%  \frametitle{Conceitos}
+%  \begin{columns}
+%  \column{0.7\textwidth}
+%    \begin{figure}[ht]
+%    \begin{center}
+%    \includegraphics[width=1.0\textwidth]{figs/MeioPoroso}
+%    \end{center}
+%    \end{figure}
+%  \column{0.3\textwidth}
+%    \begin{block}{Porosidade Absoluta}
+%    \begin{displaymath} \label{eq:porosidade}
+%    \phi = \frac{V_{p}}{V_{t}}
+%    \end{displaymath}
+%    \end{block}
+%  \end{columns}
+%\end{frame}
 
 \begin{frame}
   \frametitle{Conceitos}
@@ -134,27 +134,27 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Conceitos}
-  \begin{columns}
-  \column{0.6\textwidth}
-    \begin{figure}[ht]
-    \begin{center}
-    \includegraphics[width=0.8\textwidth, angle=270]{figs/PorosityPermModel}
-    \end{center}
-    \end{figure}
-  \column{0.4\textwidth}
-    \begin{block}{Permeabilidade Absoluta}
-    \begin{displaymath} \label{eq:permabs}
-    \mathbi{K} = \left( \begin{array}{ccc}
-    K_{xx} & K_{xy} & K_{xz} \\
-    K_{yx} & K_{yy} & K_{yz} \\
-    K_{zx} & K_{zy} & K_{zz}
-    \end{array} \right)
-    \end{displaymath}
-    \end{block}
-  \end{columns}
-\end{frame}
+%\begin{frame}
+%  \frametitle{Conceitos}
+%  \begin{columns}
+%  \column{0.6\textwidth}
+%    \begin{figure}[ht]
+%    \begin{center}
+%    \includegraphics[width=0.8\textwidth, angle=270]{figs/PorosityPermModel}
+%    \end{center}
+%    \end{figure}
+%  \column{0.4\textwidth}
+%    \begin{block}{Permeabilidade Absoluta}
+%    \begin{displaymath} \label{eq:permabs}
+%    \mathbi{K} = \left( \begin{array}{ccc}
+%    K_{xx} & K_{xy} & K_{xz} \\
+%    K_{yx} & K_{yy} & K_{yz} \\
+%    K_{zx} & K_{zy} & K_{zz}
+%    \end{array} \right)
+%    \end{displaymath}
+%    \end{block}
+%  \end{columns}
+%\end{frame}
 
 \begin{frame}
   \frametitle{Conceitos}
@@ -224,62 +224,68 @@
   \end{equation*}
   \end{block}
   
-  \begin{alertblock}{Sistema Acoplado para Escoamento Multifásico em Meios Porosos}<2->
-  \begin{equation*}
-\nabla \cdot \left(\frac{\rho_{\alpha}Kk_{r\alpha}}{\mu_{\alpha}} \nabla\left(p_{\alpha} - \rho_{\alpha}g\nabla z \right)\right) + q_{\alpha} =
-\frac{\partial \left(\phi \rho_{\alpha} S_{\alpha}\right)}{\partial t} 
-  \end{equation*}
-  \end{alertblock}
-\end{frame}
-
-\subsection{Equação da Pressão}
-
-\begin{frame}
-  \frametitle{Equação da Pressão }
-  \begin{block}{Expansão da Derivada Temporal}<1->
-\begin{equation*} \label{eq:twophase_system2a}
--\nabla \cdot \left(\rho_{\alpha} \mathbi{v}_{\alpha}\right) + q_{\alpha} =
-\rho_{\alpha}S_{\alpha}\frac{\partial \phi}{\partial t} + \phi S_{\alpha} \frac{d\rho_{\alpha}}{d p_{\alpha}} \frac{\partial p_{\alpha}}{\partial t} + \phi\rho_{\alpha}\frac{\partial S_{\alpha}}{\partial t}
-  \end{equation*}
-  \end{block}
-  
-  \begin{block}{Divisão por $\rho_{\alpha}$, hipótese de incompressibilidade e soma das eqs. das fases}<1->
+    \begin{block}{Divisão por $\rho_{\alpha}$, hipótese de incompressibilidade e soma das eqs. das fases}<1->
   \begin{equation*} \label{eq:twophase_oneequation}
 -\nabla \cdot \mathbi{v}_{t} + Q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
   \end{equation*}
   \end{block}
   
-  \begin{block}{$\sum_{\alpha=1}^n S_{\alpha} = 1 $ -$>$ Eq. da Pressão para escoamentos bifásicos}<2->
-  \begin{equation*}
-  \nabla \cdot \mathbi{v}_{t} = Q_{t}
-  \end{equation*}
-  \end{block}
+%  \begin{alertblock}{Sistema Acoplado para Escoamento Multifásico em Meios Porosos}<2->
+%  \begin{equation*}
+%\nabla \cdot \left(\frac{\rho_{\alpha}Kk_{r\alpha}}{\mu_{\alpha}} \nabla\left(p_{\alpha} - \rho_{\alpha}g\nabla z \right)\right) + q_{\alpha} =
+%\frac{\partial \left(\phi \rho_{\alpha} S_{\alpha}\right)}{\partial t} 
+%  \end{equation*}
+%  \end{alertblock}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Equação da Pressão}
-  \begin{block}{Definição de pressão média e capilar}<1->
-  \begin{equation*} \label{eq:average_press}
-  p_{avg} = \frac{p_{w} + p_{o}} {2}
-  \end{equation*}
-  \begin{equation*} \label{eq:phase_pressures}
-  p_{c} = p_{o} - p_{w}
-  \end{equation*}
-  \end{block}
+\subsection{Equação da Pressão}
+
+%\begin{frame}
+%  \frametitle{Equação da Pressão }
+%  \begin{block}{Expansão da Derivada Temporal}<1->
+%\begin{equation*} \label{eq:twophase_system2a}
+%-\nabla \cdot \left(\rho_{\alpha} \mathbi{v}_{\alpha}\right) + q_{\alpha} =
+%\rho_{\alpha}S_{\alpha}\frac{\partial \phi}{\partial t} + \phi S_{\alpha} \frac{d\rho_{\alpha}}%{d p_{\alpha}} \frac{\partial p_{\alpha}}{\partial t} + \phi\rho_{\alpha}\frac{\partial S_{\alpha}}{\partial t}
+%  \end{equation*}
+%  \end{block}
   
-  \begin{block}{Definição de mobilidade da fase $\alpha$}<1->
-  \begin{equation*} \label{eq:phase_mob}
-  \lambda_{\alpha} = \frac{k_{r\alpha}}{\mu_{\alpha}} 
-  \end{equation*}
-  \end{block}
+%  \begin{block}{Divisão por $\rho_{\alpha}$, hipótese de incompressibilidade e soma das eqs. das fases}<1->
+%  \begin{equation*} \label{eq:twophase_oneequation}
+%-\nabla \cdot \mathbi{v}_{t} + Q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
+%  \end{equation*}
+%  \end{block}
   
-  \begin{alertblock}{Forma expandida da Eq. da Pressão}<2->
-  \begin{equation*}
-\nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
-\left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = Q_{t}
-  \end{equation*}
-  \end{alertblock}
-\end{frame}
+%  \begin{block}{$\sum_{\alpha=1}^n S_{\alpha} = 1 $ -$>$ Eq. da Pressão para escoamentos bifásicos}<2->
+%  \begin{equation*}
+%  \nabla \cdot \mathbi{v}_{t} = Q_{t}
+%  \end{equation*}
+%  \end{block}
+%\end{frame}
+
+%\begin{frame}
+%  \frametitle{Equação da Pressão}
+%  \begin{block}{Definição de pressão média e capilar}<1->
+%  \begin{equation*} \label{eq:average_press}
+%  p_{avg} = \frac{p_{w} + p_{o}} {2}
+%  \end{equation*}
+%  \begin{equation*} \label{eq:phase_pressures}
+%  p_{c} = p_{o} - p_{w}
+%  \end{equation*}
+%  \end{block}
+%  
+%  \begin{block}{Definição de mobilidade da fase $\alpha$}<1->
+%  \begin{equation*} \label{eq:phase_mob}
+%  \lambda_{\alpha} = \frac{k_{r\alpha}}{\mu_{\alpha}} 
+%  \end{equation*}
+%  \end{block}
+%  
+%  \begin{alertblock}{Forma expandida da Eq. da Pressão}<2->
+%  \begin{equation*}
+%\nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} + %\frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
+%\left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = Q_{t}
+%  \end{equation*}
+%  \end{alertblock}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Equação da Pressão}
@@ -288,74 +294,63 @@
 \end{itemize}
 \begin{alertblock}{Forma segregada da Eq. da Pressão}
 \begin{equation*}
-- \nabla \cdot \left(\mathbi{K} \lambda_{t} \nabla p_{avg} \right) = Q_{t}
+- \nabla \cdot \left(\mathbi{K} \lambda_{t} \nabla p \right) = Q_{t}
 \end{equation*}
 \end{alertblock}
 \end{frame}
 
 \subsection{Equação da Saturação}
 
-\begin{frame}
-  \frametitle{Equação da Saturação}
-  \begin{block}{Considerando as velocidades para um caso bifásico mais geral}<1->
-  \begin{equation*} \label{eq:phase_velocitiesa}
-\mathbi{v}_{w} = - \mathbi{K}\lambda_{w} \left(\nabla p_{w} - \rho_{w}g\nabla z \right)
-  \end{equation*}
-  \begin{equation*} \label{eq:phase_velocitiesb}
-\mathbi{v}_{o} = - \mathbi{K}\lambda_{o} \left(\nabla p_{o} - \rho_{o}g\nabla z \right)
-  \end{equation*}
-  \end{block}
+%\begin{frame}
+%  \frametitle{Equação da Saturação}
+%  \begin{block}{Considerando as velocidades para um caso bifásico mais geral}<1->
+%  \begin{equation*} \label{eq:phase_velocitiesa}
+%\mathbi{v}_{w} = - \mathbi{K}\lambda_{w} \left(\nabla p_{w} - \rho_{w}g\nabla z \right)
+%  \end{equation*}
+%  \begin{equation*} \label{eq:phase_velocitiesb}
+%\mathbi{v}_{o} = - \mathbi{K}\lambda_{o} \left(\nabla p_{o} - \rho_{o}g\nabla z \right)
+%  \end{equation*}
+%  \end{block}
+%  
+%  \begin{block}{Utilizando pressão capilar, velocidade e mobilidade totais}<1->
+%\begin{equation*} \label{eq:phase_velocities3}
+%\lambda_{t}\mathbi{v}_{w} = \lambda_{w}\mathbi{v}_{t} + %\mathbi{K}\lambda_{o}\lambda_{w}\left(\nabla p_{c} + \left(\rho_{w} - \rho_{o}\right)g\nabla %z\right)
+%\end{equation*}
+%  \end{block}
   
-  \begin{block}{Utilizando pressão capilar, velocidade e mobilidade totais}<1->
-\begin{equation*} \label{eq:phase_velocities3}
-\lambda_{t}\mathbi{v}_{w} = \lambda_{w}\mathbi{v}_{t} + \mathbi{K}\lambda_{o}\lambda_{w}\left(\nabla p_{c} + \left(\rho_{w} - \rho_{o}\right)g\nabla z\right)
-\end{equation*}
-  \end{block}
-  
-  \begin{block}{Fluxo fracional e função da saturação para simplificar notação}<1->
-  \begin{equation*} \label{eq:fracflux}
-  f_{\alpha} = \frac{\lambda_{\alpha}}{\lambda_{t}}
-  \end{equation*}
-  \begin{equation*} \label{eq:derivcapsat}
-  h_{w} = - \frac{\lambda_{o}\lambda_{w}}{\lambda_{t}} \frac{d p_{c}}{d S_{w}}
-  \end{equation*}
-  \end{block}
+%  \begin{block}{Fluxo fracional e função da saturação para simplificar notação}<1->
+%  \begin{equation*} \label{eq:fracflux}
+%  f_{\alpha} = \frac{\lambda_{\alpha}}{\lambda_{t}}
+%  \end{equation*}
+%  \begin{equation*} \label{eq:derivcapsat}
+%  h_{w} = - \frac{\lambda_{o}\lambda_{w}}{\lambda_{t}} \frac{d p_{c}}{d S_{w}}
+%  \end{equation*}
+%  \end{block}
 
-\end{frame}
+%\end{frame}
+
+%\begin{frame}
+%\frametitle{Equação da Saturação}
+%\begin{itemize}
+%\item <1-> Manipulando a Eq. de Conservação e usando as definições anteriores:
+%\end{itemize}
+%\begin{block}{Forma expandida da Eq. da Saturação}
+%\begin{equation*} \label{eq:sateq}
+%\frac{\partial (\phi\rho_{w}S_{w})}{\partial t} = - \nabla\cdot\left(\rho_{w}\left(f_{w}\mathbi{v}_{t} - \mathbi{K}h_{w}\nabla S_{w} + \mathbi{K}\lambda_{o}f_{w}\left(\rho_{w} - \rho_{o}\right)g\nabla z\right)\right) + q_{w}
+%\end{equation*}
+%\end{block}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Equação da Saturação}
 \begin{itemize}
-\item <1-> Manipulando a Eq. de Conservação e usando as definições anteriores:
-\end{itemize}
-\begin{block}{Forma expandida da Eq. da Saturação}
-\begin{equation*} \label{eq:sateq}
-\frac{\partial (\phi\rho_{w}S_{w})}{\partial t} = - \nabla\cdot\left(\rho_{w}\left(f_{w}\mathbi{v}_{t} - \mathbi{K}h_{w}\nabla S_{w} + \mathbi{K}\lambda_{o}f_{w}\left(\rho_{w} - \rho_{o}\right)g\nabla z\right)\right) + q_{w}
-\end{equation*}
-\end{block}
-\end{frame}
-
-\begin{frame}
-\frametitle{Equação da Saturação}
-\begin{itemize}
-\item <1-> Assumindo novamente as hipóteses de incompressibilidade do meio e do fluido, desprezando a pressão capilar e considerando um fluxo horizontal:
+\item <1-> Desprezando a pressão capilar e considerando um fluxo horizontal:
 \end{itemize}
 \begin{alertblock}{Forma segregada da Eq. da Saturação}
 \begin{equation*} \label{eq:sateq4}
 \phi\frac{\partial S_{w}}{\partial t} = - \nabla\cdot\left(f_{w}\mathbi{v}_{t}\right) + Q_{w}
 \end{equation*}
 \end{alertblock}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Equação da Saturação}
-  \begin{itemize}
-\item <1-> Não-linearidade devido à função de fluxo fracional
-\end{itemize}
-  \begin{figure} 
-  \centering
-  \includegraphics[width=0.75\textwidth]{figs/fracflux}
-  \end{figure}
 \end{frame}
 
 %% SECTION 3 - Numerical Formulation
@@ -365,12 +360,15 @@
 
 \begin{frame}
   \frametitle{Método dos Elementos Finitos - Galerkin}
+\begin{itemize}
+\item <1-> Multiplicando a EDP por uma função de ponderação $w$, em seguida integrando no domínio $\Omega$ e utilizando integração por partes:
+\end{itemize}
  \begin{problem} [Contínuo - Forma Fraca da Eq. da Pressão]
-Encontre $p$ $\in$ $P$ tal que:
-\begin{equation*} \label{eq:variational}
-A(p,w) = f(w) \quad \forall w \in W
-\end{equation*}
-com
+%Encontre $p$ $\in$ $P$ tal que:
+%\begin{equation*} \label{eq:variational}
+%A(p,w) = f(w) \quad \forall w \in W
+%\end{equation*}
+%com
 \begin{equation*} \label{eq:funcspace1}
 P = \{ p \in H^{1}(\Omega); \textrm{$p = p_{D}$ em $\Gamma_{D}$} \}  
 \end{equation*}
@@ -378,11 +376,11 @@ P = \{ p \in H^{1}(\Omega); \textrm{$p = p_{D}$ em $\Gamma_{D}$} \}
 W = \{ w \in H^{1}(\Omega); \textrm{$w = 0$ em $\Gamma_{N}$} \}  
 \end{equation*}
 \begin{equation*} \label{eq:bilinearform}
-A(p,w) = \int_{\Omega} \lambda K \nabla p \cdot \nabla w d \Omega \quad \forall p,w \in P,W
+\int_{\Omega} \lambda K \nabla p \cdot \nabla w d \Omega = \int_{\Omega} Q_{t}w d \Omega
 \end{equation*}
-\begin{equation*} \label{eq:linearform}
-f(w) = \int_{\Omega} q_{t}w d \Omega \quad \forall w \in W
-\end{equation*}
+%\begin{equation*} \label{eq:linearform}
+%f(w) = \int_{\Omega} q_{t}w d \Omega \quad \forall w \in W
+%\end{equation*}
 \end{problem}
 \end{frame}
 
@@ -406,11 +404,11 @@ L_{2}(\Omega) = \{w | \int_{\Omega} w^{2} d \Omega < \infty \}
 \begin{frame}
   \frametitle{Método dos Elementos Finitos - Galerkin}
 \begin{problem} [Discreto - Forma fraca da Eq. da Pressão]
-Encontre $p_{h}$ $\in$ $P_{h}$ tal que:
-\begin{equation*} \label{eq:galerkin}
-A(p_{h},w_{h}) = f(w_{h}) \quad \forall w_{h} \in W_{h}
-\end{equation*}
-com
+%Encontre $p_{h}$ $\in$ $P_{h}$ tal que:
+%\begin{equation*} \label{eq:galerkin}
+%A(p_{h},w_{h}) = f(w_{h}) \quad \forall w_{h} \in W_{h}
+%\end{equation*}
+%com
 \begin{equation*} \label{eq:funcspace1h}
 P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}); p_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$p_{h} = p_{D}$ em $\Gamma_{D}$} \}  
 \end{equation*}
@@ -429,7 +427,7 @@ f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 \begin{frame}
   \frametitle{Método dos Elementos Finitos - Galerkin}
   \begin{itemize}
-\item <1-> $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$
+\item <1-> $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$.
 \end{itemize}
 \begin{figure}
 \centering
@@ -451,8 +449,8 @@ f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 \begin{frame}
   \frametitle{Método dos Elementos Finitos Mistos (MEFM)}
   \begin{itemize}
-\item <1-> Método de Galerkin calcula apenas a pressão
-\item <1-> Velocidade a partir da Lei de Darcy -$>$ Baixa convergência
+\item <1-> Método de Galerkin calcula apenas a pressão.
+\item <1-> Velocidade a partir da Lei de Darcy -$>$ Baixa convergência.
 \item <1-> Método dos Elementos Finitos Mistos calcula simultaneamente pressão e velocidade.
 \end{itemize}
 \end{frame}
@@ -464,17 +462,23 @@ f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 \nabla \cdot \mathbi{v} = Q
 \end{equation*}
   \end{block}
-  
-  \begin{block}{Espaço de Sobolev para funções vetorias}<1->
-\begin{equation*} \label{eq:vectorsobolevspace}
-\mathbf{H}(div, \Omega) = \{\mathbf{\zeta} = (\zeta_{1}, \zeta_{2}) \in (L_{2}(\Omega))^{2}; \nabla \cdot \mathbf{\zeta} \in L_{2}(\Omega) \}  
-\end{equation*}
-\begin{equation*} \label{eq:vectorsobolevspace2}
-\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}
+
+  \begin{block}{Equação da Velocidade}<1->
+\begin{equation*} \label{eq:vel_eq_formMFEM}
+\mathbf{v} = - \mathbi{K} \lambda \nabla p
 \end{equation*}
   \end{block}
+    
+  %\begin{block}{Espaço de Sobolev para funções vetorias}<1->
+%\begin{equation*} \label{eq:vectorsobolevspace}
+%\mathbf{H}(div, \Omega) = \{\mathbf{\zeta} = (\zeta_{1}, \zeta_{2}) \in (L_{2}(\Omega))^{2}; \nabla \cdot \mathbf{\zeta} \in L_{2}(\Omega) \}  
+%\end{equation*}
+%\begin{equation*} \label{eq:vectorsobolevspace2}
+%\mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}
+%\end{equation*}
+%  \end{block}
   
-  \begin{block}{Produto interno em $L_{2}(\Omega)$}<1->
+  \begin{block}{Definição para produto interno}<1->
 \begin{equation*} \label{eq:innerprod}
 (v,w) = \int_{\Omega} v(x)w(x) dx
 \end{equation*}
@@ -483,33 +487,33 @@ f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 
 \begin{frame}
   \frametitle{MEFM - Obtenção da Forma Fraca}
-  \begin{block}{Equação da velocidade}<1->
-\begin{equation*} \label{eq:pressure_eq_formMFEM}
-\mathbf{v} = - \mathbi{K} \lambda \nabla p
+%  \begin{block}{Equação da velocidade}<1->
+%\begin{equation*} \label{eq:pressure_eq_formMFEM}
+%\mathbf{v} = - \mathbi{K} \lambda \nabla p
+%\end{equation*}
+%  \end{block}
+
+\begin{itemize}
+\item <1-> Multiplicando as equações por funções de ponderação, integrando  e rearranjando os termos:
+\end{itemize}
+
+  \begin{block}{Equação da Pressão}<1->
+\begin{equation*} \label{eq:pressure_eq_formMFEM5}
+(\nabla \cdot \mathbf{v}, w) = (Q, w)
 \end{equation*}
   \end{block}
   
-  \begin{block}{Multiplicando a Eq. da velocidade por $\mathbf{\zeta} \in \mathbf{V}$ e rearranjando os termos}<1->
+  \begin{block}{Equação da Velocidade}<1->
 \begin{equation*} \label{eq:pressure_eq_formMFEM4}
 \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) = (\nabla \cdot \zeta, p)
 \end{equation*}
   \end{block}
   
-  \begin{block}{Multiplicando a Eq. da pressão por um $w \in W = L_{2}(\Omega)$}<1->
-\begin{equation*} \label{eq:pressure_eq_formMFEM5}
-(\nabla \cdot \mathbf{v}, w) = (Q, w)
-\end{equation*}
-  \end{block}
 \end{frame}
 
 \begin{frame}
   \frametitle{MEFM - Obtenção da Forma Fraca}
 \begin{problem} [Contínuo - Forma Fraca da Eq. da Pressão e Velocidade]
-Encontre $p$ $\in$ $W$ e $\mathbf{v}$ $\in$ $\mathbf{V}$ tal que:
-\begin{equation*} \label{eq:variationalmfem}
-A(p,w,\mathbf{v},\zeta) = f(w) \quad \forall \zeta \in \mathbf{V}, \quad \forall w \in W
-\end{equation*}
-com
 \begin{equation*} \label{eq:funcspace1mfem}
 \mathbf{V} = \{\mathbf{\zeta} \in \mathbf{H}(div, \Omega); \mathbf{\zeta} \cdot n = 0 \phantom{l} \textrm{em $\Gamma_{N}$} \}
 \end{equation*}
@@ -517,11 +521,11 @@ com
 W = L_{2}(\Omega)
 \end{equation*}
 \begin{equation*} \label{eq:bilinearformhmfemch03}
-A(p,w,\mathbf{v},\zeta) = \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) -(\nabla \cdot \zeta, p) -(\nabla \cdot \mathbf{v}, w)
+\left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v}, \zeta \right) -(\nabla \cdot \zeta, p) -(\nabla \cdot \mathbf{v}, w) = - (Q, w)
 \end{equation*}
-\begin{equation*} \label{eq:linearformhmfemch03}
-f(w) = - (Q, w)
-\end{equation*}
+%\begin{equation*} \label{eq:linearformhmfemch03}
+%f(w) = - (Q, w)
+%\end{equation*}
 \end{problem}
 \end{frame}
 
@@ -547,11 +551,11 @@ f(w) = - (Q, w)
 \begin{frame}
   \frametitle{MEFM - Discretização da Forma Fraca}
 \begin{problem} [Discreto - Forma fraca da Eq. da Pressão e Velocidade]
-Encontre $p_{h}$ $\in$ $W_{h}$ e $\mathbf{v_{h}}$ $\in$ $\mathbf{V_{h}}$ tal que:
-\begin{equation*} \label{eq:variationalmfemh}
-A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = f(w_{h}) \quad \forall \zeta_{h} \in \mathbf{V}_{h}, \quad \forall w \in W_{h}
-\end{equation*}
-com
+%Encontre $p_{h}$ $\in$ $W_{h}$ e $\mathbf{v_{h}}$ $\in$ $\mathbf{V_{h}}$ tal que:
+%\begin{equation*} \label{eq:variationalmfemh}
+%A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = f(w_{h}) \quad \forall \zeta_{h} \in \mathbf{V}_{h}, %\quad \forall w \in W_{h}
+%\end{equation*}
+%com
 \begin{equation*} \label{eq:bilinearformhmfemch03h}
 A(p_{h},w_{h},\mathbf{v_{h}},\zeta_{h}) = \left( \frac{\mathbi{K}^{-1}}{\lambda} \mathbf{v_{h}}, \zeta_{h} \right) -(\nabla \cdot \zeta_{h}, p_{h}) -(\nabla \cdot \mathbf{v_{h}}, w_{h})
 \end{equation*}
@@ -561,37 +565,37 @@ f(w_{h}) = - (Q_{h}, w_{h})
 \end{problem}
 \end{frame}
 
-\begin{frame}
-  \frametitle{MEFM - Discretização da Forma Fraca}
-  \begin{itemize}
-\item <1-> Para $k = 1$, $\mathbf{V}_{h}(E_{i}) = \{\mathbf{\zeta}_{h} =  \left( a_{E_{i}}^{1} + a_{E_{i}}^{2}x_{1} + a_{E_{i}}^{3}x_{2}, a_{E_{i}}^{4} + a_{E_{i}}^{5}x_{1} + a_{E_{i}}^{6}x_{2} \right) \}$
-\item <1->  Para $k = 1$, G.L. em $\mathbf{V}_{h}$ são os valores das componentes normais das funções em dois pontos diferentes para cada aresta do elemento
-\item <1-> Para $k = 1$, $\mathbf{W}_{h}$ é constante em cada elemento
-\end{itemize}
-\begin{figure}
-\centering
-\subfigure[Triângulo de Ordem 1]{
-\includegraphics[width=0.29\textwidth]{figs/BDMTri1}
-}
-\quad
-\subfigure[Triângulo de Ordem 2]{
-\includegraphics[width=0.29\textwidth]{figs/BDMTri2}
-}
-\quad
-\subfigure[Triângulo de Ordem 3]{
-\includegraphics[width=0.29\textwidth]{figs/BDMTri3}
-}
-\label{fig:mfemtriangles}
-\end{figure}
-\end{frame}
+%\begin{frame}
+%  \frametitle{MEFM - Discretização da Forma Fraca}
+%  \begin{itemize}
+%\item <1-> Para $k = 1$, $\mathbf{V}_{h}(E_{i}) = \{\mathbf{\zeta}_{h} =  \left( a_{E_{i}}^{1} + a_{E_{i}}^{2}x_{1} + a_{E_{i}}^{3}x_{2}, a_{E_{i}}^{4} + a_{E_{i}}^{5}x_{1} + a_{E_{i}}^{6}x_{2} \right) \}$
+%\item <1->  Para $k = 1$, G.L. em $\mathbf{V}_{h}$ são os valores das componentes normais das funções em dois pontos diferentes para cada aresta do elemento
+%\item <1-> Para $k = 1$, $\mathbf{W}_{h}$ é constante em cada elemento
+%\end{itemize}
+%\begin{figure}
+%\centering
+%\subfigure[Triângulo de Ordem 1]{
+%\includegraphics[width=0.29\textwidth]{figs/BDMTri1}
+%}
+%\quad
+%\subfigure[Triângulo de Ordem 2]{
+%\includegraphics[width=0.29\textwidth]{figs/BDMTri2}
+%}
+%\quad
+%\subfigure[Triângulo de Ordem 3]{
+%\includegraphics[width=0.29\textwidth]{figs/BDMTri3}
+%}
+%\label{fig:mfemtriangles}
+%\end{figure}
+%\end{frame}
 
 \begin{frame}
   \frametitle{MEF com Estabilização via SUPG}
   \begin{itemize}
 \item <1-> MEF de Galerkin acurado para soluções suaves.
-\item <1-> Presença de instabilidades para equações hiperbólicas. 
-\item <1-> Ponderação com peso maior na direção do fluxo (Idéia do \emph{Upwind})
-\item <1-> SUPG -$>$ Função de ponderação não mais corresponde ao espaço da função tentativa utilizada -$>$ $w_{s} = w + \tau_{s} \mathbf{v} \cdot \nabla w$
+\item <1-> Possíveis instabilidades para equações hiperbólicas. 
+\item <1-> Ponderação com peso maior no sentido do fluxo (Idéia do \emph{Upwind}).
+\item <1-> SUPG -$>$ Função de ponderação não mais corresponde ao espaço da função tentativa utilizada -$>$ $w_{s} = w + \tau_{s} \mathbf{v} \cdot \nabla w$.
 \end{itemize}
 \begin{figure} 
 \centering
@@ -607,17 +611,17 @@ f(w_{h}) = - (Q_{h}, w_{h})
 \item <1-> Aplicando procedimento parecido ao MEF de Galerkin, porém com função $w_{s}$:
 \end{itemize}
 \begin{problem} [Discreto - Forma fraca da Eq. da Saturação]
-Dados $S_{h}^{n+1}, f_{,S}$ e $\mathbf{v}_{h}$, encontre $S_{h}^{n+1}$ $\in$ $X_{h}$ tal que:
-\begin{equation*} \label{eq:supgprob1}
-F(S_{h}^{n+1}, w_{h}) = 0 \quad \forall w_{h} \in W_{h}
-\end{equation*}
-com
-\begin{equation*} \label{eq:supgprob2}
-X_{h} = \{ S_{h} \in H^{1}(\Omega_{h}); S_{h} \in \mathbf{P}^{1}(E_{i}); \textrm{$S_{h} = S_{D}$ em $\Gamma_{D}$} \}  
-\end{equation*}
-\begin{equation*} \label{eq:supgprob3}
-W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
-\end{equation*}
+%Dados $S_{h}^{n+1}, f_{,S}$ e $\mathbf{v}_{h}$, encontre $S_{h}^{n+1}$ $\in$ $X_{h}$ tal que:
+%\begin{equation*} \label{eq:supgprob1}
+%F(S_{h}^{n+1}, w_{h}) = 0 \quad \forall w_{h} \in W_{h}
+%\end{equation*}
+%com
+%\begin{equation*} \label{eq:supgprob2}
+%X_{h} = \{ S_{h} \in H^{1}(\Omega_{h}); S_{h} \in \mathbf{P}^{1}(E_{i}); \textrm{$S_{h} = S_{D}$ em $\Gamma_{D}$} \}  
+%\end{equation*}
+%\begin{equation*} \label{eq:supgprob3}
+%W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
+%\end{equation*}
 \begin{equation*} \label{eq:supgprob4}
 \begin{array}{cc}
 F(S_{h}^{n+1}, w_{h}) = \int_{\Omega} \left( w \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
@@ -644,9 +648,21 @@ r^{n+1} = \phi \frac{S^{n+1} - S^{n}}{\Delta t}+
 \end{frame}
 
 \begin{frame}
+  \frametitle{MEF com Estabilização via SUPG}
+  \begin{itemize}
+\item <1-> Não-linearidade devido à função de fluxo fracional.
+\item <1-> Linearizada usando resultado do passo anterior.
+\end{itemize}
+  \begin{figure} 
+  \centering
+  \includegraphics[width=0.7\textwidth]{figs/fracflux}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
   \frametitle{MEF com Estabilização via SUPG + Difusão Artificial}
   \begin{itemize}
-\item <1-> Utilizado termo de estabilização simples: $\tau_{s} = \frac{h}{2\vert\vert \mathbi{v} \vert\vert}$
+\item <1-> Utilizado termo de estabilização simples: $\tau_{s} = \frac{h}{2\vert\vert \mathbi{v} \vert\vert}$.
 \item <1-> SUPG não elimina todas as oscilações. 
 \item <1-> Adição de dissipação numérica artificial para diminuir oscilações espúrias.
 \end{itemize}
@@ -666,7 +682,7 @@ F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \
 \begin{frame}
   \frametitle{MEF com Estabilização via SUPG + Difusão Artificial}
   \begin{itemize}
-\item <1-> Exemplo para Advecção Linear: MEF Galerkin
+\item <1-> Exemplo para Advecção Linear: MEF Galerkin.
 \end{itemize}
   \begin{figure} 
   \centering
@@ -677,7 +693,7 @@ F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \
 \begin{frame}
   \frametitle{MEF com Estabilização via SUPG + Difusão Artificial}
   \begin{itemize}
-\item <1-> Exemplo para Advecção Linear: MEF + SUPG
+\item <1-> Exemplo para Advecção Linear: MEF + SUPG.
 \end{itemize}
   \begin{figure} 
   \centering
@@ -688,7 +704,7 @@ F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \
 \begin{frame}
   \frametitle{MEF com Estabilização via SUPG + Difusão Artificial}
   \begin{itemize}
-\item <1-> Exemplo para Advecção Linear: MEF + SUPG + Dif. Artificial
+\item <1-> Exemplo para Advecção Linear: MEF + SUPG + Dif. Artificial.
 \end{itemize}
   \begin{figure} 
   \centering
@@ -702,8 +718,35 @@ F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \
   \frametitle{Multigrid}
     \begin{figure} 
      \centering
-     \includegraphics[width=1.0\textwidth]{figs/GMGxAMG}
-     \caption{Comparação dos métodos Multigrid Geométrico e Algébrico (Trottenberg, 2001).}
+     \includegraphics[width=1.0\textwidth]{figs/Smoothing2}
+     \caption{Suavização do Erro (Weber, 2009).}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multigrid}
+    \begin{figure} 
+     \centering
+     \includegraphics[width=0.9\textwidth]{figs/Interp2}
+     \caption{Representação do Erro em Níveis Distintos (Weber, 2009).}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multigrid}
+    \begin{figure} 
+     \centering
+     \includegraphics[width=0.9\textwidth]{figs/RestrProlon}
+     \caption{Restrição e Prolongamento (Weber, 2009).}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Multigrid}
+    \begin{figure} 
+     \centering
+     \includegraphics[width=0.9\textwidth]{figs/CoarseCorrection}
+     \caption{Correção com Resultado da Malha Grosseira (Weber, 2009).}
     \end{figure}
 \end{frame}
 
@@ -742,6 +785,15 @@ F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \
   \end{columns}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Multigrid}
+    \begin{figure} 
+     \centering
+     \includegraphics[width=1.0\textwidth]{figs/GMGxAMG}
+     \caption{Comparação dos métodos Multigrid Geométrico e Algébrico (Trottenberg, 2001).}
+    \end{figure}
+\end{frame}
+
 %% SECTION 5 - Implementation
 \section{Implementação}
 
@@ -775,14 +827,34 @@ F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \
 
 \begin{frame}
   \frametitle{FEniCS/Dolfin (www.fenicsproject.org)}
+\begin{itemize}
+\item <1-> FEniCS é um projeto colaborativo para automatização da solução de modelos matemáticos baseados em equações diferencias.
+\item <1-> Descrição matemática da forma variacional.
+\item <1-> Código UFL (altíssimo nível-\emph{Python}) bastante similar à essa descrição.
+\item <1-> Geração automática de código de baixo nível (\emph{C++}).
+\end{itemize}
   \begin{figure} 
   \centering
-  \includegraphics[width=0.07\textwidth, angle=270]{figs/SequenceFenics}
+  \includegraphics[width=0.1\textwidth, angle=270]{figs/SequenceFenics}
   \end{figure}  
-  \begin{figure} 
-  \centering
-  \includegraphics[width=0.4\textwidth]{figs/ModulesDolfin}
-  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{FEniCS/Dolfin (www.fenicsproject.org)}
+  \begin{columns}
+  \column{0.5\textwidth}
+    \begin{figure}[ht]
+    \begin{center}
+    \includegraphics[width=0.9\textwidth]{figs/ModulesDolfin}
+    \end{center}
+    \end{figure}
+  \column{0.5\textwidth}
+\begin{itemize}
+\item <1-> Código de baixo nível acessado de modo transparente através do DOLFIN.
+\item <1-> DOLFIN monta matrizes e vetores que representam o problema.
+\item <1-> Interface simples com várias bibliotecas de álgebra linear.
+\end{itemize}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1232,8 +1304,8 @@ def SUPG(self, delfineVar, parameter):
 \begin{frame}
   \frametitle{Buckley-Leverett 1-D}
   \begin{itemize}
-  \item Resolução da Eq. de Buckley Leverett em 1-D com $v_{t}=1.0$
-  \item Comparação com sol. analítica da Eq. de Buckley Leverett em 1-D com $v_{t}=1.0$ e $t=0.3$
+  \item Resolução da Eq. de Buckley Leverett em 1-D com $v_{t}=1.0$.
+  \item Comparação com sol. analítica da Eq. de Buckley Leverett em 1-D com $v_{t}=1.0$ e $t=0.3$.
   \end{itemize}
   \begin{figure}
   \centering
@@ -1273,6 +1345,7 @@ def SUPG(self, delfineVar, parameter):
   \item FACEPE
   \item CNPQ
   \end{itemize}
+  \begin{center} {\LARGE Obrigado pela atenção!} \end{center}
 \end{frame}
 
 \end{document}
