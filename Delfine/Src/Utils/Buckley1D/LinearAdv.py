@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""This demo program solves the linear advection equation
+"""This demo program solves the non-linear advection equation
 
-    dS(x,t)/dt + v(x,t)dS(x,t)/dx = 0
+    dS(x,t)/dt + v(x,t)*dfw/dS(x,t)*dS(x,t)/dx = 0
 
 on the unit interval and boundary conditions given by
 
@@ -12,6 +12,8 @@ on the unit interval and boundary conditions given by
 # Copyright (C) 2011 Bruno Luna
 #
 # First added:  2011-12-10
+# TODO: THIS IS NOT THE FINAL VERSION
+# STILL TO CHECKIN THE CORRECTED FILE (still under tests)
 
 from dolfin import *
 import matplotlib.pyplot as plt
@@ -103,22 +105,20 @@ while t < T:
     uplot = u.vector().array()
     step += 1
     TPrint = 0.9
-    # Calculate analytical solution
-    x = np.linspace(0,1,110)
-    uanalytic = []
-    for xi in x:
-        if (xi < vel*TPrint):
-            uanalytic.append(1.0)
-        else:
-            uanalytic.append(0.0)
+    # Calculated analytical solution (for t =0.32)
+    #x = np.linspace(0,1,110)
+    x = [ 0,  0.037,  0.086,  0.147,  0.221,  0.307,  0.385,  0.386,  0.386,  0.386,  0.386,  0.386,  0.386,  0.386,  0.386,  0.386]
+    uanalytic = [1, 0.95, 0.9, 0.85, 0.8, 0.75, 0.708, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0, 0]
+    #for xi in x:
+    #    if (xi < vel*TPrint):
+    #        uanalytic.append(1.0)
+    #    else:
+    #        uanalytic.append(0.0)
     #if ((step%100) == 0):
     #if ((step) == (TPrint/(vel*dt))):
     if (t > TPrint*0.9999) and ((t < TPrint*1.0001)):
-        for i in range(len(uplot)):
-            if (uplot[i] < 0.1):
-                uplot[i] = uplot[i]/3.0
         plt.plot(mesh.coordinates(), uplot, 'bo-', label=u"Sol. Numérica", lw=2)
-        #plt.plot(x, uanalytic, 'k-', label=u"Sol. Analítica",  lw=2)
+        plt.plot(x, uanalytic, 'k-', label=u"Sol. Analítica",  lw=2)
         plt.xlabel("x")
         plt.ylabel("S(x)")
         plt.title(u"Buckley-Leverett")
