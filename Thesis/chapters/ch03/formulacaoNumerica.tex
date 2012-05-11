@@ -12,7 +12,7 @@ Neste trabalho, foram experimentados tanto o clássico Método de Elementos Finito
 \section{Método dos Elementos Finitos de Galerkin} \label{sc:fem}
 A fim de resolver o problema da equação da pressão utilizando o \ac{MEF}, é necessário inicialmente expressar o mesmo na chamada \emph{forma fraca}. O primeiro passo para obter esta nova formulação (também chamada de problema variacional) é multiplicar a \ac{EDP} por uma função $w$%
 \nomenclature[awf]{$w$}{Função de ponderação do \ac{MEF}}
-chamada de \emph{função de ponderação}, em seguida o resultado é integrado no domínio $\Omega$ e finalmente uma integração por partes é efetuada nos termos com derivadas de segunda ordem \citep{Hughes2000}. A função desconhecida (pressão $p$, por exemplo) é chamada de \emph{função tentativa}. Espaços de funções apropriados devem ser definidos tanto para função de ponderação quanto para a função tentativa.
+chamada de \emph{função de ponderação}, em seguida o resultado é integrado no domínio $\Omega$ e finalmente uma integração por partes é efetuada nos termos com derivadas de segunda ordem \citep{Hughes2000}. A função desconhecida (pressão $p$, por exemplo) é chamada de \emph{função tentativa} (ou de aproximação). Espaços de funções apropriados devem ser definidos tanto para função de ponderação quanto para a função tentativa.
 %Perform the steps above mentioned in a detailed step-by-step presenting the equations
 % See Fenics tutorial for reference on that
 
@@ -30,7 +30,7 @@ com
 P = \{ p \in H^{1}(\Omega); \textrm{$p = p_{D}$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:funcspace2}
-W = \{ w \in H^{1}(\Omega); \textrm{$w = 0$ em $\Gamma_{N}$} \}  
+W = \{ w \in H^{1}(\Omega); \textrm{$w = 0$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:bilinearform}
 A(p,w) = \int_{\Omega} \lambda K \nabla p \cdot \nabla w d \Omega \quad \forall p,w \in P,W
@@ -54,7 +54,7 @@ Isto significa que ao passo que a solução da \ac{EDP} tem que existir em um espa
 A existência e unicidade da solução deste problema é dada pelo lema de Lax e seu detalhamento completo pode ser encontrado em \cite{Garcia1997}.
 
 % Verify the statement about the velocity on well region and the assumptions made for simplification.
-Para a análise via elementos finitos deste problema variacional, é necessário transformar esta formulação contínua definida pela Eq. (\ref{eq:variational}) em um problema discreto. Considere o domínio $\Omega$, o qual é discretizado por $N$ elementos não sobrepostos $E_{i}$ de modo que $\Omega_{h} = \bigcup_{i=1}^{N}E_{i}$ e $E_{i} \cap E_{j} = \emptyset, i \not = j$, onde o subíndice $h$ denota um parâmetro de tamanho característico de malha que representa o problema discretizado.
+Para a análise usando elementos finitos deste problema variacional, é necessário transformar esta formulação contínua definida pela Eq. (\ref{eq:variational}) em um problema discreto. Considere o domínio $\Omega$, o qual é discretizado por $N$ elementos não sobrepostos $E_{i}$ de modo que $\Omega_{h} = \bigcup_{i=1}^{N}E_{i}$ e $E_{i} \cap E_{j} = \emptyset, i \not = j$, onde o subíndice $h$ representa um parâmetro de tamanho característico de malha que representa o problema discretizado.
 
 O problema variacional discreto para a equação de pressão utilizando a abordagem clássica de Galerkin descrita em \cite{Hughes2000} e adotada em vários outros trabalhos \citep{Wells2008, Barbosa2009} é:
 \begin{problem} [Discreto]
@@ -67,7 +67,7 @@ com
 P_{h} = \{ p_{h} \in H^{1}(\Omega_{h}); p_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$p_{h} = p_{D}$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:funcspace2h}
-W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:bilinearformh}
 A(p_{h},w_{h}) = \int_{\Omega_{h}} \lambda K \nabla p_{h} \cdot \nabla w_{h} d \Omega \quad \forall p_{h},w_{h} \in P_{h},W_{h}
@@ -76,7 +76,7 @@ A(p_{h},w_{h}) = \int_{\Omega_{h}} \lambda K \nabla p_{h} \cdot \nabla w_{h} d \
 f(w_{h}) = \int_{\Omega_{h}} Q_{t}w_{h} d \Omega \quad \forall w_{h} \in W_{h}
 \end{equation}
 \end{problem}
-onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ para o elemento finito $E_{i}$. Na Fig. \ref{fig:femtrilinear} são apresentados elementos triangulares para a formulação clássica de Galerkin com diferentes ordens para o polinômio da função de forma, onde pode ser observado que um aumento da ordem de aproximação implica em uma maior quantidade de graus de liberdade por elemento, o que melhora a precisão da interpolação, porém ao custo de um maior tempo computacional. A Eq. (\ref{eq:galerkin}) aplicada a uma malha computacional resulta em um conjunto de equações discretas na variável $p$, cuja solução pode ser obtida usando o métodos descrito na seção \ref{sc:multigrid}.
+onde $\mathbf{P}^{k}(E_{i})$ define funções de forma com ordem $k$ para o elemento finito $E_{i}$. Na Fig. \ref{fig:femtrilinear} são apresentados elementos triangulares para a formulação clássica de Galerkin com diferentes ordens para o polinômio da função de forma, onde pode ser observado que um aumento da ordem de aproximação implica em uma maior quantidade de graus de liberdade por elemento, o que melhora a precisão da interpolação, porém ao custo de um maior tempo computacional. A Eq. (\ref{eq:galerkin}) aplicada a uma malha computacional resulta em um conjunto de equações discretas na variável $p$, cuja solução pode ser obtida usando o métodos descrito na seção \ref{sc:multigrid}.
 
 \begin{figure}
 \centering
@@ -96,11 +96,11 @@ onde $\mathbf{P}^{k}(E_{i})$ define funções de forma de Lagrange com ordem $k$ p
 \end{figure}
 
 \section{Método dos Elementos Finitos Mistos} \label{sc:mfem}
-Na simulação de escoamentos em meios porosos é fundamental se obter uma boa aproximação para a variável de velocidade, pois esta será utilizada para o acoplamento entre as equações de pressão e saturação. Após a utilização de um método numérico como o descrito na seção anterior apenas a variável de pressão estará definida, sendo que esta aproximação será de segunda ordem para elementos triangulares lineares como os que foram usados na maior parte deste trabalho. Portanto, seria necessário calcular, em uma etapa seguinte, a velocidade a partir da pressão calculada. 
+Na simulação de escoamentos em meios porosos é fundamental se obter uma boa aproximação para a variável de velocidade, pois esta será utilizada para o acoplamento entre as equações de pressão e saturação. Após a utilização de um método numérico como o descrito na seção anterior apenas a variável de pressão estará definida, sendo que esta aproximação será de segunda ordem para elementos triangulares lineares como os que foram usados na maior parte deste trabalho. Portanto, seria necessário calcular em uma etapa seguinte a velocidade a partir da pressão calculada. 
 
 O modo mais direto de fazer isto seria usar diretamente a equação de Darcy (Eq. (\ref{eq:eq_darcy_general})), a qual permite obter o campo de velocidades a partir do gradiente de pressão. Porém, tal alternativa apresenta as grandes desvantagens de requerer a diferenciação do campo de pressão, diminuindo a ordem de convergência da aproximação e de não garantir a continuidade da velocidade nas fronteiras, já que um campo contínuo linear de pressão terá o seu gradiente representado como descontínuo entre elementos vizinhos. Uma alternativa utilizada por alguns autores \citep{Loula1995, Barbosa2009} é realizar um pós-processamento ao final do cálculo do campo de pressão para se obter um novo problema variacional na variável de velocidade, o qual ao ser resolvido garante uma melhor ordem de aproximação e a continuidade do campo entre os elementos.
 
-Uma outra alternativa, a qual é apresentada nesta seção e utilizada neste trabalho, é o uso de uma formulação mista. A maior motivação para o desenvolvimento e uso do \acf{MEFM} é que em algumas aplicações, como no caso da simulação de escoamentos em meios porosos, uma variável vetorial (ex: velocidade de um fluido) é a variável de interesse, sendo que os métodos do tipo \ac{MEFM} foram desenvolvidos para aproximar tanto esta variável quanto a escalar (ex: pressão) simultaneamente e fornecer aproximações de alta ordem para ambas as variáveis.
+Uma outra alternativa, a qual é apresentada nesta seção e utilizada neste trabalho, é o uso de uma formulação mista. A maior motivação para o desenvolvimento e uso do \acf{MEFM} é que em algumas aplicações, como no caso da simulação de escoamentos em meios porosos, uma variável vetorial (ex: velocidade de um fluido) também é de interesse, sendo que os métodos do tipo \ac{MEFM} foram desenvolvidos para aproximar tanto esta variável quanto a escalar (ex: pressão) simultaneamente e fornecer aproximações de alta ordem para ambas as variáveis.
 
 Entretanto, esta vantagem é obtida ao custo de uma maior complexidade da formulação, já que ao invés de um único espaço de elementos finitos o \ac{MEFM} requer dois espaços, os quais \emph{não} podem ser escolhidos arbitrariamente pois têm que satisfazer uma condição do tipo \emph{inf-sup} para serem estáveis \citep{Chen2006}.
 
@@ -219,7 +219,7 @@ f(w_{h}) = - (Q_{h}, w_{h})
 \end{problem}
 
 \section{Estabilização do \ac{MEF} via \ac{SUPG}} \label{sc:supg}
-O \ac{MEF} de Galerkin permite obter respostas bastantes acuradas para problemas com soluções suaves, como normalmente é o caso para equações essencialmente elípticas como a equação de pressão. Entretanto, o mesmo não se mostra adequado para a simulação de fenômenos dominados por termos advectivos, caso frequente de equações com características hiperbólicas como a equação de saturação descrita em \ref{sc:eq_sat}. Nestes casos a solução pode se tornar instável, sendo que tal instabilidade é transportada para todo o domínio, deteriorando rapidamente a acurácia global.
+O \ac{MEF} de Galerkin permite obter respostas bastantes acuradas para problemas com soluções suaves, como normalmente é o caso para equações essencialmente elípticas como a equação de pressão. Entretanto, ele não se mostra adequado para a simulação de fenômenos dominados por termos advectivos, caso frequente de equações com características hiperbólicas como a equação de saturação descrita em \ref{sc:eq_sat}. Nestes casos a solução pode se tornar instável, sendo que tal instabilidade é transportada para todo o domínio, deteriorando rapidamente a acurácia global.
 
 Mesmo antes do aparecimento deste problema no contexto do \ac{MEF}, o mesmo já era bastante conhecido do estudo do \ac{MDF}, podendo ser explicado em ambos os casos pelo uso de aproximações que se baseiam no uso de discretizações centradas, ou seja, quando as contribuições vindo de todas as direções possuem o mesmo peso na solução. Inicialmente, uma das técnicas para se contornar este tipo de problema era adicionar um termo artificial de difusão diretamente nas \ac{EDP}s que se desejava aproximar \citep{Papastavrou1998}. Todavia, esta técnica apresenta a desvantagem fundamental de alterar a descrição matemática do problema, ocasionando assim uma perda de consistência, já que mesmo que se utilize uma discretização tendendo ao contínuo continuaria-se obtendo uma resposta que não tenderia à analítica.
 
@@ -241,7 +241,7 @@ onde $\mathbf{v}$ representa o vetor velocidade, $w$ a função de ponderação orig
 
 Uma vez definida tal função, aplica-se um procedimento semelhante ao utilizado para a discretização pelo Método de Galerkin onde se integra a Eq. (\ref{eq:sateq4}), desprezando-se aqui o termo de fonte por simplicidade, porém a multiplicação é pela função de ponderação modificada (Eq. (\ref{eq:supgweight})), para se obter depois de algum algebrismo e de modo totalmente consistente a seguinte forma variacional discreta para o problema da equação de saturação \citep{Wells2008}:
 \begin{problem} [Discreto]
-Dados $S_{h}^{n+1}, f_{,S}$ e $\mathbf{v}_{h}$, encontre $S_{h}^{n+1}$ $\in$ $X_{h}$ tal que:
+Dados $S_{h}^{n}, f_{,S}$ e $\mathbf{v}_{h}$, encontre $S_{h}^{n+1}$ $\in$ $X_{h}$ tal que:
 \begin{equation} \label{eq:supgprob1}
 F(S_{h}^{n+1}, w_{h}) = 0 \quad \forall w_{h} \in W_{h}
 \end{equation}
@@ -250,7 +250,7 @@ com
 X_{h} = \{ S_{h} \in H^{1}(\Omega_{h}); S_{h} \in \mathbf{P}^{1}(E_{i}); \textrm{$S_{h} = S_{D}$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:supgprob3}
-W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{N}$} \}  
+W_{h} = \{ w_{h} \in H^{1}(\Omega_{h}); w_{h} \in \mathbf{P}^{k}(E_{i}); \textrm{$w_{h} = 0$ em $\Gamma_{D}$} \}  
 \end{equation}
 \begin{equation} \label{eq:supgprob4}
 \begin{array}{cc}
@@ -278,11 +278,15 @@ Existem diversas sugestões na literatura acerca do modo mais adequado de definir
 \subsection{Termo de Captura de Choque}
 Apesar do \ac{SUPG} permitir a obtenção de soluções numéricas estáveis em comparação ao \ac{MEF} de Galerkin, o mesmo não garante a inexistência de oscilações em regiões próximas às descontinuidades da solução exata. Isto se explica pelo fato deste método não ser do tipo monótono ou preservador de monotonicidade. Métodos monótonos são aqueles nos quais a solução numérica mantém ao longo do tempo o seu sinal para todos os nós da malha \citep{Codina1992, Papastavrou1998}.
 
-Um meio para garantir uma alta precisão na região de solução suave e ao mesmo tempo evitar o aparecimento de oscilações espúrias na região de choque é utilizar métodos não-lineares, os quais dependem portanto da própria solução do problema. Isto se deve à condição estabelecida pelo teorema de Godunov de que métodos lineares e que preservem a monotonicidade podem ser no máximo de primeira ordem \citep{Leveque1992}.
+Um meio para garantir uma alta precisão na região de solução suave e ao mesmo tempo evitar o aparecimento de oscilações espúrias na região de choque é utilizar métodos não-lineares, os quais dependem portanto da própria solução do problema. Isto se deve à condição estabelecida pelo teorema de Godunov de que métodos lineares e que preservem a monotonicidade podem ter no máximo uma convergência de primeira ordem \citep{Leveque1992}.
 
 A ideia básica do uso de um termo de captura de choque é adicionar uma dissipação numérica (também chamada de viscosidade artificial) extra na região de descontinuidade. Neste trabalho foi utilizado um termo de dissipação isotrópico, ou seja, que acrescenta a mesma viscosidade em todas as direções \citep{Wells2008}. Todavia, existem na literatura exemplos de usos de termos anisotrópicos \citep{Codina1992, Papastavrou1998}, já que o uso do \ac{SUPG} implica na adição de uma certa viscosidade artificial na direção das linhas de corrente, sendo em princípio necessário acrescentar dissipação apenas na componente perpendicular ao fluxo em cada ponto. Em todo caso, é importante mencionar que assim como na estabilização via \ac{SUPG} a viscosidade artificial adicionada é proporcional ao resíduo da solução, garantindo a consistência do método. Sendo assim, podemos somar o termo seguinte à Eq. (\ref{eq:supgprob4}) para obter uma nova forma variacional discreta:
 \begin{equation} \label{eq:viscartterm1}
-F(S_{h}^{n+1}, w_{h}) += \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \cdot \nabla S_{h}^{n+1} d \Omega
+\begin{array}{cc}
+F(S_{h}^{n+1}, w_{h}) = \int_{\Omega} \left( w \phi \frac{S^{n+1} - S^{n}}{\Delta t} \right) d \Omega + 
+\int_{\Omega} wf_{,S}\mathbi{v}^{n+1} \cdot \nabla S^{n+1} d \Omega + \\
+\sum\limits_{E_{i}} \int_{E_{i}} \left(\mathbi{v}^{n+1} \cdot \nabla w \right) \tau_{s} r^{n+1} d \Omega + \sum\limits_{E_{i}} \int_{E_{i}} \nu_{shock} \nabla w \cdot \nabla S_{h}^{n+1} d \Omega
+\end{array}
 \end{equation}%
 \nomenclature[a1nu]{$\nu$}{Viscosidade artificial}%
 onde $\nu_{shock}$ é a viscosidade artificial definida por:
@@ -295,7 +299,7 @@ onde $\nu_{shock}$ é a viscosidade artificial definida por:
 \end{equation}
 onde $\beta$ é um parâmetro dependente do problema. Neste trabalho foi adotado o valor de $\beta=2.0$, conforme sugestão encontrada na literatura \citep{Wells2008} para problemas de escoamentos em meios porosos.
 
-De modo a exemplificar a influência dos termos tanto de estabilização como de captura de choque, são apresentados a seguir os resultados obtidos para a equação linear de adveção pura, a qual pode ser vista com uma versão simplificada da Eq. (\ref{eq:misc1}) com o tensor de difusão e o termo de reação nulos, sendo representada no caso unidimensional pela expressão a seguir:
+De modo a exemplificar a influência dos termos tanto de estabilização como de captura de choque, são apresentados a seguir os resultados obtidos para a equação linear de adveção, a qual pode ser vista com uma versão simplificada da Eq. (\ref{eq:misc1}) com o tensor de difusão e o termo de reação nulos, sendo representada no caso unidimensional pela expressão a seguir:
 \begin{equation} \label{eq:hyperpde}
 \frac{\partial C(x,t)}{\partial t} = - \mathbi{v}\frac{\partial C(x,t)}{\partial x}
 \end{equation}
@@ -307,7 +311,7 @@ C(x,t) = 1.0 \quad \textrm{em $x=0$} \\
 \end{array} \right.
 \end{equation}
 
-A solução analítica do problema apresentado é uma função degrau com altura $1$ que se desloca na direção positiva do eixo $x$. A Fig. \ref{fig:puregalerkin} apresenta a solução numérica obtida para o instante de tempo $t=0.5s$ utilizando exclusivamente o \ac{MEF} de Galerkin conforme descrito na seção \ref{sc:fem} em uma malha unidimensional com 500 elementos lineares. Como esperado, a localização da descontinuidade foi resolvida com precisão por este método para este exemplo simples, porém verifica-se o surgimento de oscilações espúrias completamente inaceitáveis na região do choque.
+A solução analítica do problema apresentado é uma função degrau com altura $1$ que se desloca na direção positiva do eixo $x$. A Fig. \ref{fig:puregalerkin} apresenta a solução numérica obtida para o instante de tempo $t=0.5s$ utilizando exclusivamente o \ac{MEF} de Galerkin conforme descrito na seção \ref{sc:fem} em uma malha unidimensional com 500 elementos lineares. Como esperado, a localização da descontinuidade foi resolvida com precisão por este método para este exemplo simples, porém verifica-se o surgimento de oscilações espúrias na região do choque.
 
 \begin{figure} 
 \centering
@@ -336,14 +340,14 @@ Por fim, acrescentamos à formulação o termo de captura de choque com adição de v
 
 \section{Multigrid} \label{sc:multigrid}
 % Relatorios de IC / Trottenberg/ Briggs / Mavriplis
-A ideia básica dos métodos Multigrid é acelerar a solução de sistemas de equações em uma malha fina usando correções calculadas em uma malha grosseira. A motivação para esta abordagem vem da observação do comportamento do erro da solução numérica no domínio da frequência. Erros de alta frequência, os quais estão associados à variações locais da solução, são bem resolvidos por métodos iterativos convencionais (Gauss-Seidel, Gradientes Conjugados, etc.). Entretanto, erros de baixa frequência, associados à variação global das soluções, são muito mais insensíveis a esses métodos.
+A ideia básica dos métodos Multigrid é acelerar a solução de sistemas de equações em uma malha fina usando correções calculadas em uma malha menos refinada. A motivação para esta abordagem vem da observação do comportamento do erro da solução numérica no domínio da frequência. Erros de alta frequência, os quais estão associados à variações locais da solução, são bem resolvidos por métodos iterativos convencionais (Gauss-Seidel, Gradientes Conjugados, etc.). Entretanto, erros de baixa frequência, associados à variação global das soluções, são muito mais insensíveis a esses métodos.
 
-Um esquema Multigrid começa amortecendo os erros de alta frequência associados à solução inicial na malha fina, usando algum tipo de método de relaxação (usualmente um método iterativo que seria usado isoladamente). Uma vez atingido este objetivo inicial, efetuar mais iterações iria apenas resultar em uma pior convergência. Sendo assim, o resíduo é transferido para uma malha grosseira, onde os modos de baixa frequência da malha fina se comportam como de alta frequência, sendo, portanto, facilmente eliminados usando algum tipo de método direto, no caso da malha ser grosseira o suficiente, ou mesmo usando o mesmo método de relaxação aplicado na malha mais fina. As correções são então calculadas na malha grosseira e transferidos de volta para a malha fina de modo a atualizar a solução. Este procedimento pode ser aplicado recursivamente em uma sequência de malhas cada vez mais grosseiras, a fim de que cada nível nesta hierarquia seja responsável pela eliminação de uma faixa de frequência de erro \citep{Briggs2000}. 
+Um método Multigrid começa amortecendo os erros de alta frequência associados à solução inicial na malha fina, usando algum tipo de método de relaxação (usualmente um método iterativo que seria usado isoladamente). Uma vez atingido este objetivo inicial, efetuar mais iterações iria apenas resultar em uma pior convergência. Sendo assim, o resíduo é transferido para uma malha menos refinada, onde os modos de baixa frequência da malha fina se comportam como de alta frequência, sendo, portanto, facilmente eliminados usando algum tipo de método direto, no caso da malha possuir uma quantidade suficientemente pequena de nós, ou mesmo usando o mesmo método de relaxação aplicado na malha mais fina. As correções são então calculadas na malha menos refinada e transferidos de volta para a malha fina de modo a atualizar a solução. Este procedimento pode ser aplicado recursivamente em uma sequência de malhas cada vez menos refinadas, a fim de que cada nível nesta hierarquia seja responsável pela eliminação de uma faixa de frequência de erro \citep{Briggs2000}. 
 % 1- Explicar matematica do multigrid (Relatorio IC) 2 - Explicar GMGxAMG e AMG(Sorensen / Trottenberg)!!
 
 Existem dois tipos principais de método Multigrid: o \ac{GMG}, o qual trabalha diretamente nas malhas que representam o domínio discreto, e o Multigrid Algébrico (AMG), o qual opera apenas no sistema de equações lineares resultantes da aplicação de uma formulação numérica, não tendo portanto uma interpretação geométrica direta.
 
-A maior motivação para o desenvolvimento do \ac{AMG} foi a necessidade de métodos robustos e flexíveis para acelerar a convergência sem a exigência de calibração fina para cada problema, como é frequentemente o caso para métodos \ac{GMG}, o qual requer atenção especial na geração da sequência de malhas grosseiras, principalmente na presença de geometrias complexas \citep{Trottenberg2001}. Esta robustez é alcançada porque o \ac{AMG} conta com um processo totalmente automático para gerar os ``subproblemas'' mais grosseiros, o qual pode agir apenas nas direções nas quais a relaxação irá efetivamente suavizar o erro para o problema dado, enquanto o \ac{GMG} requer uma hierarquia fixa pré-determinada antes de começar o ciclo. A Fig. \ref{fig:gmgxamg} apresenta uma comparação gráfica destes dois métodos.
+A maior motivação para o desenvolvimento do \ac{AMG} foi a necessidade de métodos robustos e flexíveis para acelerar a convergência sem a exigência de calibração fina para cada problema, como é frequentemente o caso para métodos \ac{GMG}, o qual requer atenção especial na geração da sequência de malhas menos refinadas, principalmente na presença de geometrias complexas \citep{Trottenberg2001}. Esta robustez é alcançada porque o \ac{AMG} conta com um processo totalmente automático para gerar os ``subproblemas'' menos refinados, o qual pode agir apenas nas direções nas quais a relaxação irá efetivamente suavizar o erro para o problema dado, enquanto o \ac{GMG} requer uma hierarquia fixa pré-determinada antes de começar o ciclo. A Fig. \ref{fig:gmgxamg} apresenta uma comparação gráfica destes dois métodos.
 
 \begin{figure} 
 \centering
@@ -377,19 +381,19 @@ e se o operador $\mathbi{A}$ for linear, esta equação pode ser apresentada como 
 \mathbi{A}_{f}\Delta p_{f}= - r_{f}
 \end{equation}
 
-Assumindo, como já mencionado, que os modos de alta frequência do erro foram amortecidos depois da relaxação no nível mais refinado, o erro remanescente irá conter basicamente modos de baixa frequência que devem ser resolvidos, mas de modo a alcançar tal objetivo é necessário restringir tais modos ao nível grosseiro, onde os mesmos irão se comportar como modos de alta frequência, ou seja:
+Assumindo, como já mencionado, que os modos de alta frequência do erro foram amortecidos depois da relaxação no nível mais refinado, o erro remanescente irá conter basicamente modos de baixa frequência que devem ser resolvidos, mas de modo a alcançar tal objetivo é necessário restringir tais modos ao nível menos refinado, onde os mesmos irão se comportar como modos de alta frequência, ou seja:
 \begin{equation} \label{eq:mg5}
 \mathbi{A}_{c}\Delta p_{c}= - \mathbi{I}_{f}^{c}r_{f}
 \end{equation}
-Na Eq. (\ref{eq:mg5}) $\mathbi{I}_{f}^{c}$ %
+Na Eq. (\ref{eq:mg5}), $\mathbi{I}_{f}^{c}$ %
 \nomenclature[cio]{$\mathbi{I}$}{Operador de transferência entre níveis}%
-representa o operador de restrição, o qual transfere valores do resíduo do nível refinado $f$ para o nível grosseiro $c$%
+representa o operador de restrição, o qual transfere valores do resíduo do nível refinado $f$ para o nível menos refinado $c$%
 \nomenclature[dc]{$c$}{Relativo ao nível menos refinado}
-. Uma vez que a Eq. (\ref{eq:mg5}) é resolvida adequadamente (frequentemente, se o nível for muito grosseiro, um resolvedor direto será suficiente, já que este nível apresenta menores exigência de processamento e armazenamento), sua solução pode ser interpolada de volta para o nível refinado usando um operador de prolongamento $\mathbi{I}_{c}^{f}$ e a aproximação original no nível refinado pode então ser corrigida:
+. Uma vez que a Eq. (\ref{eq:mg5}) é resolvida adequadamente (frequentemente, se o nível for pouco refinado, um resolvedor direto será suficiente, já que este nível apresenta menores exigência de processamento e armazenamento), sua solução pode ser interpolada de volta para o nível refinado usando um operador de prolongamento $\mathbi{I}_{c}^{f}$ e a aproximação original no nível refinado pode então ser corrigida:
 \begin{equation} \label{eq:mg6}
 \hat{p_{f}^{\phantom{.}\ast}} = \hat{p_{f}} + \mathbi{I}_{c}^{f} \Delta p_{c}
 \end{equation}
-onde $\hat{p_{f}^{\phantom{.}\ast}}$ é a solução atualizada no nível refinado. É importante observar que este procedimento é intrinsecamente recursivo, podendo o sistema no nível grosseiro ser visto como um novo nível refinado, sendo suavizado novamente até que seja atingido um nível no qual as contribuições das correções nos níveis grosseiros sejam trazidas de volta para os seus respectivos níveis refinados. Existem diversos tipos de esquemas para lidar com esta estratégia, entre eles estão os ciclos V, W e F. A Fig. \ref{fig:mgcycles} mostra uma representação gráfica destes ciclos em um esquema Multigrid de 4 níveis, ver \cite{Briggs2000} ou \cite{Trottenberg2001} para uma explicação mais detalhada de cada um destes ciclos.
+onde $\hat{p_{f}^{\phantom{.}\ast}}$ é a solução atualizada no nível refinado. É importante observar que este procedimento é intrinsecamente recursivo, podendo o sistema no nível menos refinado ser visto como um novo nível refinado, sendo suavizado novamente até que seja atingido um nível no qual as contribuições das correções nos níveis menos refinados sejam trazidas de volta para os seus respectivos níveis refinados. Existem diversos tipos de esquemas para lidar com esta estratégia, entre eles estão os ciclos V, W e F. A Fig. \ref{fig:mgcycles} mostra uma representação gráfica destes ciclos em um esquema Multigrid de 4 níveis, ver \cite{Briggs2000} ou \cite{Trottenberg2001} para uma explicação mais detalhada de cada um destes ciclos.
 % Keep the references, but explain in the thesis also much more about the cycles (see Sorensen for examples, has also some
 % estimation of computing and storage requirements for each cycle).
 
