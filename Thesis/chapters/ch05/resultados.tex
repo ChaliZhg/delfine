@@ -5,7 +5,7 @@ Neste capítulo serão apresentados exemplos e resultados obtidos utilizando a met
 
 \section{Problemas Elípticos}
 \label{sc:elipticos}
-Esta seção tem por objetivo avaliar os métodos utilizados para a resolução da equação da pressão em meios porosos, a qual para o estado estacionário pode ser considerada uma típica equação elíptica. Devido a essa característica, a metodologia utilizada pode ser analisada utilizando-se de problemas modelos que compartilham das mesmas propriedades matemáticas. Uma particularidade comum aos problemas regidos por equações elípticas é que todo o domínio de interesse $\Omega$ é afetado por qualquer mudança no valor da variável em um ponto qualquer no interior de $\Omega$, ou em sua fronteira $\Gamma$ \citep{Fortuna2000}. Isto significa que uma perturbação em um ponto irá ter influência sobre todo o domínio, sendo que a mesma diminui com o aumento da distância em relação ao ponto originador de tal perturbação. Sendo assim, tais problemas tendem, em geral, a apresentar soluções suaves ao longo do domínio. Entretanto, é importante mencionar que na área da simulação de escoamentos em meios poroso é comum o aparecimento de singularidades ou gradientes elevados no campo de pressão, devido, por exemplo, a existência de poços ou de grandes descontinuidades na permeabilidade. Além da equação de pressão, outros exemplos de aplicação deste tipo de equação são o cálculo do potencial elétrico, da difusão de calor em uma chapa metálica e de escoamentos incompressíveis, invíscidos e irrotacionais (também conhecidos como escoamentos potenciais).
+Esta seção tem por objetivo avaliar os métodos utilizados para a resolução da equação da pressão em meios porosos, a qual para o estado estacionário pode ser considerada uma típica equação elíptica. Devido a essa característica, a metodologia utilizada pode ser analisada utilizando-se de problemas modelos que compartilham das mesmas propriedades matemáticas. Uma particularidade comum aos problemas regidos por equações elípticas é que todo o domínio de interesse $\Omega$ é afetado por qualquer mudança no valor da variável em um ponto qualquer no interior de $\Omega$, ou em sua fronteira $\Gamma$ \citep{Fortuna2000}. Isto significa que uma perturbação em um ponto irá ter influência sobre todo o domínio, sendo que a mesma diminui com o aumento da distância em relação ao ponto originador de tal perturbação. Sendo assim, tais problemas tendem, em geral, a apresentar soluções suaves ao longo do domínio. Entretanto, é importante mencionar que na área da simulação de escoamentos em meios poroso é comum o aparecimento de singularidades ou gradientes elevados no campo de pressão, devido, por exemplo, a existência de poços nodalmente aplicados, de grandes descontinuidades na permeabilidade ou de mudanças nas condições de contorno. Além da equação de pressão, outros exemplos de aplicação deste tipo de equação são o cálculo do potencial elétrico, da difusão de calor em uma chapa metálica e de escoamentos incompressíveis, invíscidos e irrotacionais (também conhecidos como escoamentos potenciais).
 
 A equação normalmente utilizada como modelo para testar metodologias de resolução de equações elípticas pode ser descrita como:
 \begin{equation} \label{eq:poi}
@@ -124,10 +124,12 @@ Para uma sequência de malhas formadas por triângulos lineares, se espera uma tax
 
 Para a resolução do sistema de equações lineares provenientes da discretização do problema foram testadas três diferentes alternativas:
 \begin{itemize}
-\item Métodos dos Gradientes Conjugados (CG) aplicado isoladamente.
+\item Método dos Gradientes Conjugados (CG) aplicado isoladamente.
 \item Método do Multigrid Algébrico (AMG) aplicado isoladamente.
 \item Multigrid Algébrico aplicado como pré-condicionador para o método dos Gradientes Conjugados (AMG+CG).
 \end{itemize}
+
+É importante mencionar que a utilização de métodos iterativos normalmente pressupõe o uso de algum tipo de pré-condicionador, logo a não aplicação de pré-condicionadores em alguns dos testes realizados teve como objetivo apenas realçar as diferenças entre os métodos analisados.
 
 Para a realização dos testes, foi utilizada uma malha de 32x32 elementos triangulares de 1ª ordem. Para todos os casos foi considerado como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
 
@@ -146,7 +148,7 @@ Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg200
 \label{sc:homogeneoaniso}
 Este problema foi originalmente proposto em \cite{Crumpton1995}, onde foi resolvido utilizando um método de volumes finitos centrado na célula (\emph{Flux Continuous Finite Volume} - FCFV), tendo também sido estudado em \cite{Carvalho2005} e \cite{Silva2008} utilizando o já mencionado método dos volumes finitos baseado em arestas (EBFV).
 
-Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores diagonais ou ``cheios'' para representar o parâmetro $\mathbi{K}$. O problema proposto pode ser descrito através da Eq. (\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
+Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores não-diagonais para representar o parâmetro $\mathbi{K}$. O problema proposto pode ser descrito através da Eq. (\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
 \begin{equation} \label{eq:homogeneoaniso}
 \nabla(\mathbi{K} \nabla u) = -2(1 + x^2 + xy + y^2)e^{xy}
 \end{equation}
@@ -224,8 +226,8 @@ Pode-se observar pelos resultados obtidos que novamente o MEF se comportou como 
 
 Assim como para o primeiro exemplo, também neste fizemos um estudo a respeito do desempenho de diferentes métodos iterativos para a resolução do sistema de equações lineares provenientes da discretização do problema. Cinco diferentes alternativas foram testadas:
 \begin{itemize}
-\item Métodos dos Gradientes Conjugados (CG) aplicado isoladamente.
-\item Métodos do Resíduo Mínimo Generalizado (GMRES) aplicado isoladamente.
+\item Método dos Gradientes Conjugados (CG) aplicado isoladamente.
+\item Método do Resíduo Mínimo Generalizado (GMRES) aplicado isoladamente.
 \item Método do Multigrid Algébrico (AMG) aplicado isoladamente.
 \item Multigrid Algébrico aplicado como pré-condicionador para o método dos Gradientes Conjugados (AMG+CG).
 \item Multigrid Algébrico aplicado como pré-condicionador para o método do Resíduo Mínimo Generalizado (AMG+GMRES).
@@ -437,7 +439,7 @@ S_{w}(x,t) = 1.0 \quad \textrm{em $x=0$} \\
 \end{array} \right.
 \end{equation}
 
-Devido às características essencialmente hiperbólicas deste problema, foi utilizado para sua solução o \ac{MEF} com estabilização via \ac{SUPG} e adição de viscosidade artificial para diminuir as oscilações. Na Fig. \ref{fig:bl1dfemsupg} são apresentadas as soluções analítica e numérica para um $t=0.3$ em domínio como comprimento unitário e considerando uma malha uniforme com 500 subdivisões. 
+Devido às características essencialmente hiperbólicas deste problema, foi utilizado para sua solução o \ac{MEF} com estabilização via \ac{SUPG} e adição de viscosidade artificial para diminuir as oscilações. Na Fig. \ref{fig:bl1dfemsupg} são apresentadas as soluções analítica e numérica para um $t=0.3$ em domínio como comprimento unitário e considerando uma malha com 500 subdivisões uniformemente distribuídas. 
 
 Como pode ser observado, na região de gradiente mais suave as soluções são praticamente coincidentes. Além disso, a posição do choque é corretamente capturada pela solução numérica. Entretanto, observa-se a existência de uma região de oscilação logo após o choque, mesmo ao se utilizar difusão artificial. Uma alternativa seria aumentar a quantidade de difusão adicionada, porém isto teria o efeito colateral de causar uma maior dispersão na região de choque, o que não é desejado. De um modo geral, consideramos os resultados satisfatórios, porém os mesmos são dependentes de termos para estabilização e captura de choque que contém parâmetros que devem ser calibrados para cada problema.
 
@@ -475,7 +477,7 @@ Para a solução numérica deste problema utilizamos uma malha não-estruturada com 
 \label{fig:biphase2description}
 \end{figure}
 
-Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo de saturação extrudado para o tempo $t = 0.3$ PVI(Porous Volume Injected). Pode ser observado nesta figura que a região de baixa permabilidade é "contornada" pelo campo de velocidade, o que era esperado devido à razão entre as permeabilidades de 10000. Nota-se também de modo qualitativo que as maiores velocidades são obtidas próximas aos poços injetores e produtos, como era de se esperar.
+Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo de saturação (extrudado para fins de visualização) para o tempo $t = 0.3$ PVI (Porous Volume Injected). Pode ser observado nesta figura que a região de baixa permeabilidade é ``contornada'' pelo campo de velocidade, o que era esperado devido à razão entre as permeabilidades de 10000. Nota-se também de modo qualitativo que as maiores velocidades são obtidas próximas aos poços injetores e produtos, como era de se esperar.
 
 \begin{figure}
 \centering
@@ -484,7 +486,7 @@ Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo
 \label{fig:biphase2dextrude}
 \end{figure}
 
-Na Fig. \ref{fig:biphase2dprofile} é apresentado o campo de saturação e o seu perfil traçado na diagonal entre os poços injetores e produtores. Percebe-se que a frente de saturação não atravessa a região de baixa permeabilidade, ou seja, praticamente não há entrada de água na mesma. De um modo geral, o uso de difusão artificial foi suficiente para reduzir bastante a presença de oscilações não-físicas, porém percebe-se na representação do perfil de saturação ao longo da diagonal que ainda assim existem algumas oscilações espúrias após a frente de saturação na solução numérica.
+Na Fig. \ref{fig:biphase2dprofile} é apresentado o campo de saturação e o seu perfil traçado na diagonal entre os poços injetores e produtores. Percebe-se que a frente de saturação não atravessa a região de baixa permeabilidade, ou seja, praticamente não há entrada de água nela. De um modo geral, o uso de difusão artificial foi suficiente para reduzir bastante a presença de oscilações não-físicas, porém percebe-se na representação do perfil de saturação ao longo da diagonal que ainda assim existem algumas oscilações espúrias após a frente de saturação na solução numérica.
 
 \begin{figure}
 \centering
