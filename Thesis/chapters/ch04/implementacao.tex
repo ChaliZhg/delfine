@@ -22,7 +22,7 @@ Esta divisão também foi considerada no desenvolvimento do \emph{Delfine}, sendo 
 \section{Pré-Processamento}
 \label{sc:pre-proc}
 
-Na Fig. \ref{fig:preprocessadorflux} pode ser visto um fluxograma representando os vários passos necessários para a obtenção, a partir de um problema real, de um problema discreto passível de ser analisado numericamente.
+Na Fig.~\ref{fig:preprocessadorflux} pode ser visto um fluxograma representando os vários passos necessários para a obtenção, a partir de um problema real, de um problema discreto passível de ser analisado numericamente.
 
 Inicialmente, é necessário por parte do usuário ter uma descrição o mais precisa possível do problema de interesse, envolvendo a etapa da modelagem geométrica. De posse da mesma, parte-se para as etapas de discretização do domínio (i.e., geração da malha) e de definição de uma arquivo de entrada de dados.
 
@@ -84,7 +84,7 @@ Sendo assim, de modo a aumentar a robustez da entrada de dados se optou pelo uso
 
 Uma vez lidos na etapa de pré-processamento os arquivos necessários para a execução da análise, tem início a etapa de processamento, a qual foi implementada neste trabalho de acordo com os fluxogramas apresentados nas Figs. \ref{fig:ellipticflux} e \ref{fig:hyperbolicflux}.
 
-Considerando uma formulação não-monolítica (i.e. segregada), conforme descrito no capítulo \ref{ch:form_mat}, o fluxograma da Fig. \ref{fig:ellipticflux} representa os passos necessário para resolver a parte elíptica do problema de escoamentos multifásicos em meios porosos. As formulações matemática e numérica deste problema adotadas neste trabalho podem ser consultadas nas seções \ref{sc:press_eq} e \ref{sc:fem}, respectivamente.
+Considerando uma formulação não-monolítica (i.e. segregada), conforme descrito no capítulo \ref{ch:form_mat}, o fluxograma da Fig.~\ref{fig:ellipticflux} representa os passos necessário para resolver a parte elíptica do problema de escoamentos multifásicos em meios porosos. As formulações matemática e numérica deste problema adotadas neste trabalho podem ser consultadas nas seções \ref{sc:press_eq} e \ref{sc:fem}, respectivamente.
 
 \begin{figure} 
 \centering
@@ -93,7 +93,7 @@ Considerando uma formulação não-monolítica (i.e. segregada), conforme descrito n
 \label{fig:ellipticflux}
 \end{figure}
 
-A parte parabólica/hiperbólica do problema é descrita pelo fluxograma apresentado na Fig. \ref{fig:hyperbolicflux}. As formulações matemática e numérica deste problema adotadas neste trabalho podem ser consultadas nas seções \ref{sc:eq_sat} e \ref{sc:supg}, respectivamente.
+A parte parabólica/hiperbólica do problema é descrita pelo fluxograma apresentado na Fig.~\ref{fig:hyperbolicflux}. As formulações matemática e numérica deste problema adotadas neste trabalho podem ser consultadas nas seções \ref{sc:eq_sat} e \ref{sc:supg}, respectivamente.
 
 \begin{figure} 
 \centering
@@ -108,11 +108,11 @@ O usuário tem a sua disposição duas alternativas de métodos numéricos para resol
 \label{sc:fenics}
 O \emph{FEniCS} é um projeto colaborativo em código aberto iniciado em 2003 com o objetivo de automatizar a solução de modelos matemáticos baseados em equações diferenciais \citep{Logg2011}, tendo todos os seus componentes sido desenvolvidos buscando generalidade, eficiência e simplicidade.
 
-De um modo geral, o desenvolvedor tem acesso direto principalmente ao \emph{DOLFIN}, o qual é uma biblioteca que permite a interface com o usuário através de diversas classes acessíveis via programas em \emph{C++} ou em \emph{Python}. Para facilitar a compreensão, a Fig. \ref{fig:sequencefenics} apresenta de modo esquemático a sequência na qual os diversos componentes do projeto \emph{FEniCS} são executados, e como eles interagem para permitir a resolução do problema.
+De um modo geral, o desenvolvedor tem acesso direto principalmente ao \emph{DOLFIN}, o qual é uma biblioteca que permite a interface com o usuário através de diversas classes acessíveis via programas em \emph{C++} ou em \emph{Python}. Para facilitar a compreensão, a Fig.~\ref{fig:sequencefenics} apresenta de modo esquemático a sequência na qual os diversos componentes do projeto \emph{FEniCS} são executados, e como eles interagem para permitir a resolução do problema.
 
 Inicialmente, o problema tem que ser descrito matematicamente na sua forma variacional (ou fraca). Em seguida, esta deve ser implementada utilizando a \ac{UFL} \citep{Logg2011}, a qual é uma linguagem específica de domínio para declaração da discretização via \ac{MEF} de formas variacionais e funcionais. Para o caso de programas escritos em \emph{Python}, a descrição via \ac{UFL} é embutida dentro do próprio script, já no caso do \emph{C++} é necessário criar um arquivo externo para definição da forma fraca do problema, sendo o mesmo importado para o programa principal.
 
-Em seguida, tais formas são compiladas utilizando o \ac{FFC} \citep{Logg2011}, o qual é o responsável de fato pela geração automática do código otimizado em linguagem de baixo-nível. Este código estará automaticamente conforme o padrão do \ac{UFC} e pode ser acessado de modo transparente através de classes da biblioteca \emph{DOLFIN}, a qual será responsável pela montagem de todos os tensores necessários para a resolução numérica do problema dentro do programa definido pelo usuário (\emph{Delfine} no caso deste trabalho, como representado na Fig. \ref{fig:sequencefenics}).
+Em seguida, tais formas são compiladas utilizando o \ac{FFC} \citep{Logg2011}, o qual é o responsável de fato pela geração automática do código otimizado em linguagem de baixo-nível (quando comparada à utilizada para a descrição do problema). Este código estará automaticamente conforme o padrão do \ac{UFC} e pode ser acessado de modo transparente através de classes da biblioteca \emph{DOLFIN}, a qual será responsável pela montagem de todos os tensores necessários para a resolução numérica do problema dentro do programa definido pelo usuário (\emph{Delfine} no caso deste trabalho, como representado na Fig.~\ref{fig:sequencefenics}).
 
 \begin{figure}[hbp]
 \centering
@@ -122,7 +122,7 @@ Em seguida, tais formas são compiladas utilizando o \ac{FFC} \citep{Logg2011}, o
 \end{figure}
 
 O \emph{DOLFIN} \citep{Logg2010} automatiza a montagem dos sistemas lineares ou não-lineares provenientes da discretização via \ac{MEF} de \ac{EDP}s expressas na forma variacional.
-Na Fig. \ref{fig:moduledolfin} é apresentada a estrutura modular da biblioteca, onde os dados de entrada fornecidos pelo usuário para um problema específico são a malha, a forma variacional e os tipos de elementos finitos adotados. De posse destes dados, o \emph{DOLFIN} gera as matrizes e vetores necessários para resolução do sistema de equações provenientes da discretização. Como mostrado na figura, o \emph{DOLFIN} contém interfaces para as bibliotecas de álgebra linear computacional \emph{PETSc}, \emph{Epetra}, \emph{uBLAS} e \emph{MTL4}, além de permitir que o usuário utilize um outro programa qualquer, desde que o mesmo tenha suporte para matrizes no formato do \emph{SciPy} \citep{Jones2001}, como é o caso do \emph{PyAMG} usado neste trabalho.
+Na Fig.~\ref{fig:moduledolfin} é apresentada a estrutura modular da biblioteca, onde os dados de entrada fornecidos pelo usuário para um problema específico são a malha, a forma variacional e os tipos de elementos finitos adotados. De posse destes dados, o \emph{DOLFIN} gera as matrizes e vetores necessários para resolução do sistema de equações provenientes da discretização. Como mostrado na figura, o \emph{DOLFIN} contém interfaces para as bibliotecas de álgebra linear computacional \emph{PETSc}, \emph{Epetra}, \emph{uBLAS} e \emph{MTL4}, além de permitir que o usuário utilize um outro programa qualquer, desde que o mesmo tenha suporte para matrizes no formato do \emph{SciPy} \citep{Jones2001}, como é o caso do \emph{PyAMG} usado neste trabalho.
 
 \begin{figure} 
 \centering
@@ -284,7 +284,7 @@ def solve_withPyAMG(self, delfineVar, parameter):
 \section{Pós-Processamento}
 \label{sc:pos-proc}
 
-Uma vez finalizada a etapa de processamento, é necessário analisar os resultados obtidos. Em termos de implementação computacional esta é a fase que envolve menos componentes, como pode ser visto na Fig. \ref{fig:posprocessadorflux}.
+Uma vez finalizada a etapa de processamento, é necessário analisar os resultados obtidos. Em termos de implementação computacional esta é a fase que envolve menos componentes, como pode ser visto na Fig.~\ref{fig:posprocessadorflux}.
 
 O \emph{DOLFIN} dispões de funções para impressão em formato \ac{XML} dos dados armazenados (como malhas, propriedades, etc.) e resultados gerados durante a análise. Esta funcionalidade pode ser utilizada de modo bastante direto no programa devido ao uso de operadores sobrecarregados. A Listagem \ref{lst:satoutput} apresenta um exemplo de impressão do campo de saturação $S$ em um passo de tempo $t$. O formato utilizado (\verb|.vtk|) nada mais é do que um arquivo \ac{XML} formatado para seguir um padrão definido que pode ser lido por vários programas de visulaziação. Neste trabalho foi utilizado prioritariamente o \emph{Paraview} \citep{Henderson2007}, porém o arquivo também poderia ter sido visualizado em outros programas de visualização, como o \emph{VisIt} ou o \emph{TecPlot}. Além disso, o \emph{DOLFIN} permite a visualização rápida de resultados durante a própria simulação utilizando uma ferramenta própria chamada \emph{Viper}.
 

@@ -47,12 +47,12 @@ u = -\cos(\pi x) & \textrm{para } 0<x<1 \textrm{ e } y=1}  \\
 \end{array} \right.
 \end{equation}
 
-Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas estruturadas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. O uso de malhas estruturadas se deu apenas para fins de comparação de erros e obtenção de ordens de convergência, já que a metodologia utilizada é perfeitamente capaz de lidar com malhas não-estruturadas bi- e tridimensionais. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema, a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A Fig. \ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de 64x64 elementos triangulares lineares, a qual já permite obter uma excelente concordância com a solução analítica.
+Resolvemos o problema elíptico descrito utilizando a formulação detalhada no capítulo \ref{ch:form_num}, considerando diferentes malhas estruturadas sucessivamente refinadas e formadas por elementos triangulares de 1ª e 2ª ordem. O uso de malhas estruturadas se deu apenas para fins de comparação de erros e obtenção de ordens de convergência, já que a metodologia utilizada é perfeitamente capaz de lidar com malhas não-estruturadas bi- e tridimensionais. Para avaliação da acurácia do método utilizado, os resultados foram comparados com a solução analítica deste problema, a qual é representada pela função $u(x,y) = \cos(\pi x)\cos(\pi y)$. A Fig.~\ref{fig:HomogeneoIsotropico_N=64} mostra o campo escalar $u$ obtido para a malha de $64\times64$ elementos triangulares lineares, a qual já permite obter uma excelente concordância com a solução analítica.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{chapters/ch05/HomogeneoIsotropico_N=64}
-\caption[Caso homogêneo e isotrópico. Campo escalar para malha 64x64]{Campo escalar obtido utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
+\caption[Caso homogêneo e isotrópico. Campo escalar para malha $64\times64$]{Campo escalar obtido utilizando o MEF com malha de $64\times64$ discretizada por triângulos lineares.}
 \label{fig:HomogeneoIsotropico_N=64}
 \end{figure}
 
@@ -131,16 +131,16 @@ Para a resolução do sistema de equações lineares provenientes da discretização d
 
 É importante mencionar que a utilização de métodos iterativos normalmente pressupõe o uso de algum tipo de pré-condicionador, logo a não aplicação de pré-condicionadores em alguns dos testes realizados teve como objetivo apenas realçar as diferenças entre os métodos analisados.
 
-Para a realização dos testes, foi utilizada uma malha de 32x32 elementos triangulares de 1ª ordem. Para todos os casos foi considerado como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
+Para a realização dos testes, foi utilizada uma malha de $32\times32$ elementos triangulares de 1ª ordem. Para todos os casos foi considerado como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Para os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras . É importante apenas lembrar que o método AMG não depende de malhas grosseiras propriamente ditas, apenas das matrizes que representam o sistema de equações, sendo tais matrizes manipuladas algebricamente de modo a se obter os níveis mais grosseiros \citep{Trottenberg2001}. 
 
-Como pode ser observado na Fig. \ref{fig:residualHomogeneoIsotropico_N=32}, os esquemas utilizando o método multigrid (AMG e AMG+CG) apresentaram resultados bastante superiores em relação ao método CG, o qual utiliza apenas um único sistema de equações lineares (ou seja, uma única ``malha''). Enquanto o método AMG+CG reduz o resíduo em aproximadamente uma ordem de grandeza por iteração, o método CG necessita de aproximadamente 10 vezes mais iterações para reduzir o resíduo na mesma proporção. É interessante comparar também os resultados obtidos ao utilizar-se o AMG isoladamente e ao usá-lo como um pré-condicionador para o método dos Gradientes Conjugados. Percebe-se que nas primeiras iterações os dois métodos apresentam fatores de convergência para o resíduo praticamente idênticos, porém a medida que se prossegue com as iterações, o AMG usado isoladamente tende a apresentar uma piora na taxa de convergência, enquanto o método que utiliza a combinação AMG+CG mantém o excelente fator de convergência obtido inicialmente.
+Como pode ser observado na Fig.~\ref{fig:residualHomogeneoIsotropico_N=32}, os esquemas utilizando o método multigrid (AMG e AMG+CG) apresentaram resultados bastante superiores em relação ao método CG, o qual utiliza apenas um único sistema de equações lineares (ou seja, uma única ``malha''). Enquanto o método AMG+CG reduz o resíduo em aproximadamente uma ordem de grandeza por iteração, o método CG necessita de aproximadamente 10 vezes mais iterações para reduzir o resíduo na mesma proporção. É interessante comparar também os resultados obtidos ao utilizar-se o AMG isoladamente e ao usá-lo como um pré-condicionador para o método dos Gradientes Conjugados. Percebe-se que nas primeiras iterações os dois métodos apresentam fatores de convergência para o resíduo praticamente idênticos, porém a medida que se prossegue com as iterações, o AMG usado isoladamente tende a apresentar uma piora na taxa de convergência, enquanto o método que utiliza a combinação AMG+CG mantém o excelente fator de convergência obtido inicialmente.
 
-Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg2001,Oosterlee1998,Mavriplis2001} no qual um único ou poucos autovalores da matriz representante do operador de iteração Multigrid estão com um valor muito acima daquele obtido para os demais autovalores. Sendo que o autovalor máximo (também chamado de raio espectral) do operador de iteração indica em última análise o fator de convergência assimptótica para o problema \citep{Briggs2000}, limitando portanto a taxa de convergência possível de ser obtida. Um modo de contornar tal problema é justamento utilizar algum dos métodos de subespaço de Krylov, como é o caso do método CG, os quais têm a característica de em poucas iterações amortecer os autovetores relacionados aos poucos autovalores elevados \citep{Trottenberg2001}.
+Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg2001,Oosterlee1998,Mavriplis2001} no qual um único ou poucos autovalores da matriz representante do operador de iteração Multigrid estão com um valor muito acima daquele obtido para os demais autovalores. A magnitude do autovalor máximo (também chamado de raio espectral) do operador de iteração indica em última análise o fator de convergência assimptótica para o problema \citep{Briggs2000}, limitando portanto a taxa de convergência possível de ser obtida. Um modo de contornar tal problema é justamente utilizar algum dos métodos de subespaço de Krylov, como é o caso do método CG, os quais têm a característica de em poucas iterações amortecer os autovetores relacionados aos poucos autovalores elevados \citep{Trottenberg2001}.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch05/residualHomogeneoIsotropico_N=32}
-\caption[Caso homogêneo e isotrópico. Comparação da evolução dos resíduos para malha 32x32]{Caso homogêneo e isotrópico. Comparação da evolução dos resíduos para malha 32x32 discretizada por triângulos lineares.}
+\caption[Caso homogêneo e isotrópico. Comparação da evolução dos resíduos para malha $32\times32$]{Caso homogêneo e isotrópico. Comparação da evolução dos resíduos para malha $32\times32$ discretizada por triângulos lineares.}
 \label{fig:residualHomogeneoIsotropico_N=32}
 \end{figure}
 
@@ -148,7 +148,7 @@ Isto se deve a um aspecto bastante observado na literatura \citep{Trottenberg200
 \label{sc:homogeneoaniso}
 Este problema foi originalmente proposto em \cite{Crumpton1995}, onde foi resolvido utilizando um método de volumes finitos centrado na célula (\emph{Flux Continuous Finite Volume} - FCFV), tendo também sido estudado em \cite{Carvalho2005} e \cite{Silva2008} utilizando o já mencionado método dos volumes finitos baseado em arestas (EBFV).
 
-Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores não-diagonais para representar o parâmetro $\mathbi{K}$. O problema proposto pode ser descrito através da Eq. (\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
+Neste segundo exemplo, buscamos explorar a flexibilidade da metodologia utilizada, a qual permite considerar tensores não-diagonais para representar o parâmetro $\mathbi{K}$. O problema proposto pode ser descrito através da Eq.~(\ref{eq:homogeneoaniso}) aplicada em um domínio $\Omega = (0,1)x(0,1)$.
 \begin{equation} \label{eq:homogeneoaniso}
 \nabla(\mathbi{K} \nabla u) = -2(1 + x^2 + xy + y^2)e^{xy}
 \end{equation}
@@ -162,12 +162,12 @@ onde $\mathbi{K}$ é uma matriz simétrica e não-diagonal representada por:
 
 A descrição deste problema está completa ao definir-se a condição de fronteira em todo o contorno $\Gamma$ como $u(x,y)=e^{xy}$.
 
-Na Fig. \ref{fig:HomogeneoAnisotropico_N=64} pode ser observado o campo escalar para a variável $u$, considerando uma discretização do domínio $\Omega$ com uma malha de 64x64 elementos triangulares de 1ª ordem.
+Na Fig.~\ref{fig:HomogeneoAnisotropico_N=64} pode ser observado o campo escalar para a variável $u$, considerando uma discretização do domínio $\Omega$ com uma malha de $64\times64$ elementos triangulares de 1ª ordem.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{chapters/ch05/HomogeneoAnisotropico_N=64}
-\caption[Caso homogêneo e anisotrópico. Campo escalar para malha 64x64]{Caso homogêneo e anisotrópico. Campo escalar obtido utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
+\caption[Caso homogêneo e anisotrópico. Campo escalar para malha $64\times64$]{Caso homogêneo e anisotrópico. Campo escalar obtido utilizando o MEF com malha de $64\times64$ discretizada por triângulos lineares.}
 \label{fig:HomogeneoAnisotropico_N=64}
 \end{figure}
 
@@ -238,11 +238,11 @@ Assim como para o primeiro exemplo, também neste fizemos um estudo a respeito do
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch05/residualHomoAniso_N=64}
-\caption[Caso homogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64]{Caso homogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64 discretizada por triângulos lineares.}
+\caption[Caso homogêneo e anisotrópico. Comparação da evolução dos resíduos para malha $64\times64$]{Caso homogêneo e anisotrópico. Comparação da evolução dos resíduos para malha $64\times64$ discretizada por triângulos lineares.}
 \label{fig:residualHomogeneoAnisotropico_N=64}
 \end{figure}
 
-Para a realização dos testes, foi utilizada uma malha de 64x64 elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Em todos os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras. Um gráfico mostrando a evolução do resíduo normalizado para todos os métodos testados pode ser observado na Fig. \ref{fig:residualHomogeneoAnisotropico_N=64}, onde fica claro novamente a grande superioridade dos métodos que utilizam aceleração de convergência via multigrid em comparação com os outros métodos. É interessante notar também que para este exemplo os métodos CG e GMRES tiveram desempenhos bastante próximos, tanto isoladamente quanto em conjunto com o AMG usado como pré-condicionador.
+Para a realização dos testes, foi utilizada uma malha de $64\times64$ elementos triangulares de 1ª ordem. Para todos os casos foi considerada como critério de parada uma tolerância $\epsilon = 10^{-10}$, com um número máximo de 200 iterações. Em todos os casos nos quais o método AMG foi utilizado como forma de acelerar a convergência, considerou-se ciclos do tipo $V$ em uma hierarquia de 4 ``malhas'' sucessivamente mais grosseiras. Um gráfico mostrando a evolução do resíduo normalizado para todos os métodos testados pode ser observado na Fig.~\ref{fig:residualHomogeneoAnisotropico_N=64}, onde fica claro novamente a grande superioridade dos métodos que utilizam aceleração de convergência via multigrid em comparação com os outros métodos. É interessante notar também que para este exemplo os métodos CG e GMRES tiveram desempenhos bastante próximos, tanto isoladamente quanto em conjunto com o AMG usado como pré-condicionador.
 
 
 
@@ -284,17 +284,17 @@ f(x,y) = \left\{ \begin{array}{ll}
   \end{array} \right.
 \end{equation}
 
-Para a resolução deste problema e obtenção de taxas de convergência, consideramos uma sequência de malhas sucessivamente refinadas com dimensões aproximadas de $(8x8), (16x16), (32x32), (64x64)$ e $(128x128)$.
-A malha não-estruturada utilizada com aproximadamente $(8x8)$ elementos e a divisão dos subdomínios em $x=0$ pode ser observada na Fig. \ref{fig:HeterogeneoAnisoMaterials_N=8}.
+Para a resolução deste problema e obtenção de taxas de convergência, consideramos uma sequência de malhas sucessivamente refinadas com dimensões aproximadas de $(8\times8), (16\times16), (32\times32), (64\times64)$ e $(128\times128)$.
+A malha não-estruturada utilizada com aproximadamente $8\times8$ elementos e a divisão dos subdomínios em $x=0$ pode ser observada na Fig.~\ref{fig:HeterogeneoAnisoMaterials_N=8}.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.6\textwidth]{chapters/ch05/HeterogeneoAnisoMaterials_N=8}
-\caption[Caso heterogêneo e anisotrópico. Malha não-estruturada e heterogeneidade]{Domínio utilizado e malha não-estruturada com aproximadamente $(8x8)$ elementos e heterogeneidade em $x=0$.}
+\caption[Caso heterogêneo e anisotrópico. Malha não-estruturada e heterogeneidade]{Domínio utilizado e malha não-estruturada com aproximadamente $8\times8$ elementos e heterogeneidade em $x=0$.}
 \label{fig:HeterogeneoAnisoMaterials_N=8}
 \end{figure}
 
-Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da descontinuidade na linha $x=0$, efeito este que se torna mais pronunciado ao aumentarmos o valor do parâmetro $\psi$. Os valores para os erros da solução numérica quando comparada com a analítica para as normas do máximo e $L2$ são apresentados na Tabela \ref{tab:heteroiso}, onde pode ser visto que um aumento na descontinuidade do tensor $\mathbi{K}$ para os diferentes sub-domínios causa um aumento nos valores absolutos dos erros obtidos.
+Pode ser observado na Fig.~\ref{fig:HeterogeneoAnisoContour_N=64} o efeito da descontinuidade na linha $x=0$, efeito este que se torna mais pronunciado ao aumentarmos o valor do parâmetro $\psi$. Os valores para os erros da solução numérica quando comparada com a analítica para as normas do máximo e $L2$ são apresentados na Tabela \ref{tab:heteroiso}, onde pode ser visto que um aumento na descontinuidade do tensor $\mathbi{K}$ para os diferentes sub-domínios causa um aumento nos valores absolutos dos erros obtidos.
 
 \begin{figure}
 \centering
@@ -313,7 +313,7 @@ Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da de
 \subfigure[$\psi=1000$]{
 \includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoContour_N=64_alpha=1000}
 }
-\caption[Caso heterogêneo e anisotrópico. Campo escalar para malha de 64x64.]{Campo escalar obtido para diferentes fatores de descontinuidade $\psi$ utilizando o MEF com malha de 64x64 discretizada por triângulos lineares.}
+\caption[Caso heterogêneo e anisotrópico. Campo escalar para malha de $64\times64$.]{Campo escalar obtido para diferentes fatores de descontinuidade $\psi$ utilizando o MEF com malha de $64\times64$ discretizada por triângulos lineares.}
 \label{fig:HeterogeneoAnisoContour_N=64}
 \end{figure}
 
@@ -381,7 +381,7 @@ Pode ser observado na Fig. \ref{fig:HeterogeneoAnisoContour_N=64} o efeito da de
 Um fato interessante que pode ser constatado a partir dos valores obtidos para os erros da solução numérica obtida é que os mesmos apresentam uma taxa de convergência na norma $L2$ em torno de 1 para $\psi = 1$ e $10$, sendo que esta taxa se aproxima de 2 quando aumentamos o fator de descontinuidade ($\psi = 100$ e $1000$).
 Ao compararmos tais resultados com a literatura \citep{Crumpton1995,Hyman1997,Carvalho2005,Silva2008} percebemos que os métodos apresentados nos referidos trabalhos que fazem uma avaliação local dos fluxos tendem a obter uma convergência de ordem 2, enquanto métodos que trabalham apenas com a variável nodal (neste caso, $u(x,y)$) apresentam ordem 1 para o erro, tanto na norma do máximo quanto para a $L2$.
 
-%Um aspecto a ser notado que pode contribuir para a compreensão deste comportamento é a distribuição do erro ao longo do domínio para diferentes valores de $\psi$. Na Fig. \ref{fig:HeterogeneoAnisoError_N=64} pode ser visto que o erro varia suavemente para $\psi = 1$ e $\psi = 10$, sendo que o mesmo está concentrado na região de descontinuidade em $x=0$. Já para $\psi = 100$ e $\psi = 1000$, o erro para a malha de $N \simeq 64$ apresenta modos de frequência muito mais alta, estando também concentrado em um dos lados do domínio.
+%Um aspecto a ser notado que pode contribuir para a compreensão deste comportamento é a distribuição do erro ao longo do domínio para diferentes valores de $\psi$. Na Fig.~\ref{fig:HeterogeneoAnisoError_N=64} pode ser visto que o erro varia suavemente para $\psi = 1$ e $\psi = 10$, sendo que o mesmo está concentrado na região de descontinuidade em $x=0$. Já para $\psi = 100$ e $\psi = 1000$, o erro para a malha de $N \simeq 64$ apresenta modos de frequência muito mais alta, estando também concentrado em um dos lados do domínio.
 
 %Foi realizado o experimento numérico para este caso específico de que aiores valores de $\psi$ temos uma intensidade maior de descontinuidade para o mesmo tamanho de malha, o que pode ser visto como equivalente a manter o valor do coeficiente de descontinuidade e engrossar a malha, levando portanto os componentes do erro a se apresentarem como de mais alta frequência, independente da magnitude dos mesmos \citep{Trottenberg2001}.
 
@@ -402,27 +402,27 @@ Ao compararmos tais resultados com a literatura \citep{Crumpton1995,Hyman1997,Ca
 %\subfigure[$\psi=1000$]{
 %\includegraphics[width=0.45\textwidth]{chapters/ch05/HeterogeneoAnisoError_N=64_alpha=1000}
 %}
-%\caption[Caso heterogêneo e anisotrópico. Erro obtido para malha 64x64.]{Caso heterogêneo e anisotrópico. Distribuição do erro obtido para %malha com $N \simeq 64$ discretizada por triângulos lineares.}
+%\caption[Caso heterogêneo e anisotrópico. Erro obtido para malha $64\times64$.]{Caso heterogêneo e anisotrópico. Distribuição do erro obtido para %malha com $N \simeq 64$ discretizada por triângulos lineares.}
 %\label{fig:HeterogeneoAnisoError_N=64}
 %\end{figure}
 
 Para a resolução do sistema de equações lineares resultante da discretização foi novamente verificado o desempenho para diferentes tipos de métodos, mesmo sabendo de antemão que este problema é representado por uma matriz simétrica positiva-definida, sendo portanto um candidato natural a ser resolvido usando métodos do tipo gradiente conjugado, seja isoladamente ou com o multigrid algébrico como pré-condicionador.
 
-Os resultados obtidos para a evolução dos resíduos podem ser verificados na Fig. \ref{fig:residualHeterogeneoAniso_N=64_alpha=1}, onde mais uma vez é constatada a superioridade dos métodos que utilizam multigrid, mesmo para este problema que apresenta sub-domínios com propriedades diferentes.
+Os resultados obtidos para a evolução dos resíduos podem ser verificados na Fig.~\ref{fig:residualHeterogeneoAniso_N=64_alpha=1}, onde mais uma vez é constatada a superioridade dos métodos que utilizam multigrid, mesmo para este problema que apresenta sub-domínios com propriedades diferentes.
 
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch05/residualHeterogeneoAniso_N=64_alpha=1}
-\caption[Caso heterogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64.]{Caso heterogêneo e anisotrópico. Comparação da evolução dos resíduos para malha 64x64 discretizada por triângulos lineares e com $\psi = 1$.}
+\caption[Caso heterogêneo e anisotrópico. Comparação da evolução dos resíduos para malha $64\times64$.]{Caso heterogêneo e anisotrópico. Comparação da evolução dos resíduos para malha $64\times64$ discretizada por triângulos lineares e com $\psi = 1$.}
 \label{fig:residualHeterogeneoAniso_N=64_alpha=1}
 \end{figure}
 
-\section{Problemas de Escoamentos Bifásicos em Meios Porosos}
+\section{Escoamentos Bifásicos em Meios Porosos}
 \label{sc:escoabifasico}
 %Ao se considerar também a equação de saturação, o problema do deslocamento de fluidos em meios porosos passa a ter também um componente %altamente hiperbólico.
 \subsection{Buckley-Leverett 1-D}
 \label{sc:bl1D}
-Este exemplo trata do deslocamento imiscível de óleo por água em um meio poroso rígido unidimensional e homogêneo, onde foram desprezados os efeitos da gravidade e capilaridade (ver Fig. \ref{fig:bl1dmodel}). O modelo para representar este fenômeno foi proposto originalmente por \cite{Buckley1942} e sua representação matemática está descrita na seção \ref{sc:buckleyeq} deste trabalho. 
+Este exemplo trata do deslocamento imiscível de óleo por água em um meio poroso rígido unidimensional e homogêneo, onde foram desprezados os efeitos da gravidade e capilaridade (ver Fig.~\ref{fig:bl1dmodel}). O modelo para representar este fenômeno foi proposto originalmente por \cite{Buckley1942} e sua representação matemática está descrita na seção \ref{sc:buckleyeq} deste trabalho. 
 
 \begin{figure}
 \centering
@@ -439,7 +439,7 @@ S_{w}(x,t) = 1.0 \quad \textrm{em $x=0$} \\
 \end{array} \right.
 \end{equation}
 
-Devido às características essencialmente hiperbólicas deste problema, foi utilizado para sua solução o \ac{MEF} com estabilização via \ac{SUPG} e adição de viscosidade artificial para diminuir as oscilações. Na Fig. \ref{fig:bl1dfemsupg} são apresentadas as soluções analítica e numérica para um $t=0.3$ em domínio como comprimento unitário e considerando uma malha com 500 subdivisões uniformemente distribuídas. 
+Devido às características essencialmente hiperbólicas deste problema, foi utilizado para sua solução o \ac{MEF} com estabilização via \ac{SUPG} e adição de viscosidade artificial para diminuir as oscilações. Na Fig.~\ref{fig:bl1dfemsupg} são apresentadas as soluções analítica e numérica para um $t=0.3$ em domínio como comprimento unitário e considerando uma malha com 500 subdivisões uniformemente distribuídas. 
 
 Como pode ser observado, na região de gradiente mais suave as soluções são praticamente coincidentes. Além disso, a posição do choque é corretamente capturada pela solução numérica. Entretanto, observa-se a existência de uma região de oscilação logo após o choque, mesmo ao se utilizar difusão artificial. Uma alternativa seria aumentar a quantidade de difusão adicionada, porém isto teria o efeito colateral de causar uma maior dispersão na região de choque, o que não é desejado. De um modo geral, consideramos os resultados satisfatórios, porém os mesmos são dependentes de termos para estabilização e captura de choque que contém parâmetros que devem ser calibrados para cada problema.
 
@@ -477,7 +477,7 @@ Para a solução numérica deste problema utilizamos uma malha não-estruturada com 
 \label{fig:biphase2description}
 \end{figure}
 
-Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo de saturação (extrudado para fins de visualização) para o tempo $t = 0.3$ PVI (Porous Volume Injected). Pode ser observado nesta figura que a região de baixa permeabilidade é ``contornada'' pelo campo de velocidade, o que era esperado devido à razão entre as permeabilidades de 10000. Nota-se também de modo qualitativo que as maiores velocidades são obtidas próximas aos poços injetores e produtos, como era de se esperar.
+Na Fig.~\ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo de saturação (extrudado para fins de visualização) para o tempo $t = 0.3$ PVI (Porous Volume Injected). Pode ser observado nesta figura que a região de baixa permeabilidade é ``contornada'' pelo campo de velocidade, o que era esperado devido à razão entre as permeabilidades de 10000. Nota-se também de modo qualitativo que as maiores velocidades são obtidas próximas aos poços injetores e produtos, como era de se esperar.
 
 \begin{figure}
 \centering
@@ -486,7 +486,7 @@ Na Fig. \ref{fig:biphase2dextrude} é apresentado o campo de velocidade e o campo
 \label{fig:biphase2dextrude}
 \end{figure}
 
-Na Fig. \ref{fig:biphase2dprofile} é apresentado o campo de saturação e o seu perfil traçado na diagonal entre os poços injetores e produtores. Percebe-se que a frente de saturação não atravessa a região de baixa permeabilidade, ou seja, praticamente não há entrada de água nela. De um modo geral, o uso de difusão artificial foi suficiente para reduzir bastante a presença de oscilações não-físicas, porém percebe-se na representação do perfil de saturação ao longo da diagonal que ainda assim existem algumas oscilações espúrias após a frente de saturação na solução numérica.
+Na Fig.~\ref{fig:biphase2dprofile} é apresentado o campo de saturação e o seu perfil traçado na diagonal entre os poços injetores e produtores. Percebe-se que a frente de saturação não atravessa a região de baixa permeabilidade, ou seja, praticamente não há entrada de água nela. De um modo geral, o uso de difusão artificial foi suficiente para reduzir bastante a presença de oscilações não-físicas, porém percebe-se na representação do perfil de saturação ao longo da diagonal que ainda assim existem algumas oscilações espúrias após a frente de saturação na solução numérica.
 
 \begin{figure}
 \centering

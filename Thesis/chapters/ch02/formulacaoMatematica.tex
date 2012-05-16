@@ -29,7 +29,7 @@ Entretanto, é válido comentar que esta descrição macroscópica do meio poroso apr
 Apesar do grande aumento na capacidade computacional do \emph{hardware} disponível e também do uso de técnicas avançadas para extrair o máximo de desempenho de tais computadores, os modelos de reservatório a serem analisados na prática frequentemente têm que contar com o uso de técnicas de \emph{Upscaling} \citep{Menezes2009}, ou seja, uma restrição dos parâmetros geofísicos obtidos em modelos geológicos para malhas tipicamente dezenas ou centenas de vezes menos refinadas que serão então analisadas via algum método numérico \citep{Aarnes2007}.
 
 \subsection{Porosidade}
-Uma rocha, para ter a capacidade de armazenar um fluido, por exemplo petróleo, deve possuir vazios no seu interior, os quais são chamados de poros. Além disso, para que haja fluxo dentro desta rocha-reservatório é necessário que tais poros estejam interconectados para que existam caminhos que os fluidos possam percorrer. Para efeitos de cálculo de porosidade, existe uma diferença entre a porosidade \emph{absoluta}, a qual abrange todos os poros, estejam eles interconectados ou não, e a porosidade \emph{efetiva}, onde apenas os poros ligados entre si são considerados. Apenas esse segundo tipo de porosidade será usado neste trabalho, já que é o de maior interesse para a análise de escoamentos. Portanto, sempre que houver referência à porosidade, pode-se entender como a variante efetiva da mesma.
+Uma rocha, para ter a capacidade de armazenar um fluido, por exemplo petróleo, deve possuir vazios no seu interior, os quais são chamados de poros. Além disso, para que haja fluxo dentro desta rocha-reservatório é necessário que tais poros estejam interconectados para que existam caminhos que os fluidos possam percorrer. Para efeitos de cálculo de porosidade, existe uma diferença entre a porosidade \emph{absoluta}, a qual abrange todos os poros, estejam eles interconectados ou não, e a porosidade \emph{efetiva}, onde apenas os poros ligados entre si são considerados \citep{Thomas2001, Hyne2001}. Apenas esse segundo tipo de porosidade será usado neste trabalho, já que é o de maior interesse para a análise de escoamentos. Portanto, sempre que houver referência à porosidade, pode-se entender como a variante efetiva da mesma.
 
 A porosidade de uma rocha-reservatório é definida matematicamente como a razão entre o volume dos espaços vazios existentes na rocha e o volume total da amostra \citep{Thomas2001}. Logo, podemos descrever a porosidade $\phi$%
 \nomenclature[a1phi]{$\phi$}{Porosidade efetiva}
@@ -39,9 +39,9 @@ como:
 \phi = \frac{V_{p}}{V_{t}}
 \end{equation}%
 \nomenclature[av]{$V$}{Volume}%
-onde o volume total é $V_{t} = V_{p} + V_{s}$, com $V_{p}$ o volume poroso e $V_{s}$ o volume da matriz sólida. Segundo a abordagem macroscópica adotada, a porosidade será uma função contínua no espaço. Logo, se está assumindo que o valor calculado pela Eq. (\ref{eq:porosidade}) representará a média de um volume representativo com dimensão pequena quando comparada ao meio poroso como um todo, porém grande em comparação com as dimensões características dos poros.
+onde o volume total é $V_{t} = V_{p} + V_{s}$, com $V_{p}$ o volume poroso e $V_{s}$ o volume da matriz sólida. Segundo a abordagem macroscópica adotada, a porosidade será uma função contínua no espaço. Logo, se está assumindo que o valor calculado pela Eq.~(\ref{eq:porosidade}) representará a média de um volume representativo com dimensão pequena quando comparada ao meio poroso como um todo, porém grande em comparação com as dimensões características dos poros.
 
-A Fig. \ref{fig:meioporoso} apresenta esquematicamente uma amostra de meio poroso, com uma aproximação em uma parte dela onde se pode observar claramente os conceitos de volume poroso e de matriz sólida representados. A caracterização das fases em um escoamento bifásico é vista na Fig. \ref{fig:meioporososat}.
+A Fig.~\ref{fig:meioporoso} apresenta esquematicamente uma amostra de meio poroso, com uma aproximação em uma parte dela onde se pode observar claramente os conceitos de volume poroso e de matriz sólida representados. A caracterização das fases em um escoamento bifásico é vista na Fig.~\ref{fig:meioporososat}.
 
 \begin{figure} 
 \centering
@@ -58,7 +58,7 @@ A Fig. \ref{fig:meioporoso} apresenta esquematicamente uma amostra de meio poros
 \end{figure}
 
 \subsection{Permeabilidade Absoluta}
-A permeabilidade absoluta é uma medida da capacidade de uma única fase escoar em um meio poroso sob certas condições. Esta é uma propriedade mais difícil de ser medida do que a porosidade, porém mais importante no que tange ao escoamento de fluidos. Não necessariamente irá existir uma proporcionalidade direta entre estes dois parâmetros, já que para a permeabilidade importa não apenas a quantidade de poros interconectados, mas também o modo como eles estão conectados e a tortuosidade do caminho formado por eles. Existe também a possibilidade de se ter rochas com baixíssimas porosidades, como muitas vezes é o caso de algumas rochas carbonáticas, que porém apresentam uma alta permeabilidade devido à presença de fraturas ou falhas. Todavia, normalmente são geradas correlações entre as duas propriedades, como pode ser visto na Fig. \ref{fig:poropermcorrelation} \citep{Schneider2003}.
+A permeabilidade absoluta é uma medida da capacidade de uma única fase escoar em um meio poroso sob certas condições. Esta é uma propriedade mais difícil de ser medida do que a porosidade, porém mais importante no que tange ao escoamento de fluidos. Não necessariamente irá existir uma proporcionalidade direta entre estes dois parâmetros, já que para a permeabilidade importa não apenas a quantidade de poros interconectados, mas também o modo como eles estão conectados e a tortuosidade do caminho formado por eles. Existe também a possibilidade de se ter rochas com baixíssimas porosidades, como muitas vezes é o caso de algumas rochas carbonáticas, que porém apresentam uma alta permeabilidade devido à presença de fraturas ou falhas \citep{Hyne2001}. Todavia, normalmente são geradas correlações entre as duas propriedades, como pode ser visto na Fig.~\ref{fig:poropermcorrelation} \citep{Schneider2003}.
 
 Normalmente, a permeabilidade é representada matematicamente através de um tensor de 2ª ordem, denominado de $\mathbi{K}$%
 \nomenclature[cp]{$\mathbi{K}$}{Permeabilidade absoluta}
@@ -90,7 +90,7 @@ estão relacionadas através da seguinte expressão:
 
 Dada a complexidade envolvida na interação entre a rocha e as diferentes fases na escala dos poros durante o escoamento, os valores para a permeabilidade relativa em função das propriedades dos fluidos e dos meios porosos são difíceis de serem obtidos. De um modo geral, depende-se de modelos semi-empíricos para uso em simulações de reservatórios de petróleo.
 
-Um exemplo típico de curva de permeabilidade relativa tanto da fase água quanto da fase óleo em função da saturação da água normalizada ($S_{wn}$) é obtido usando o modelo de Corey \citep{Chen2006, Carvalho2005, Silva2008}, o qual foi utilizado neste trabalho. A saturação normalizada pode ser definida utilizando os valores das saturações irredutíveis de água ($S_{wir}$) e residual de óleo ($S_{orw}$). $S_{wir}$ representa a menor saturação possível para a fase água em um processo mecânico, já $S_{orw}$ representa a menor saturação da fase óleo depois do varrido pela fase água. Uma representação gráfica da saturação normalizada pode ser vista na Fig. \ref{fig:swnorm} e a expressão para o cálculo da mesma é mostrada a seguir:
+Um exemplo típico de curva de permeabilidade relativa tanto da fase água quanto da fase óleo em função da saturação da água normalizada ($S_{wn}$) é obtido usando o modelo de Corey \citep{Chen2006, Carvalho2005, Silva2008}, o qual foi utilizado neste trabalho. A saturação normalizada pode ser definida utilizando os valores das saturações irredutíveis de água ($S_{wir}$) e residual de óleo ($S_{orw}$). $S_{wir}$ representa a menor saturação possível para a fase água em um processo mecânico, já $S_{orw}$ representa a menor saturação da fase óleo depois do varrido pela fase água. Uma representação gráfica da saturação normalizada pode ser vista na Fig.~\ref{fig:swnorm} e a expressão para o cálculo da mesma é mostrada a seguir:
 
 \begin{equation} \label{eq:normsat}
 S_{wn}(S_{w}) = \frac{S_{w} - S_{wir}}{1 - S_{wir} - S_{orw}}
@@ -103,7 +103,7 @@ S_{wn}(S_{w}) = \frac{S_{w} - S_{wir}}{1 - S_{wir} - S_{orw}}
 \label{fig:swnorm}
 \end{figure}
 
-Uma vez obtido o valor para a saturação normalizada, as permeabilidade relativas para as fases são calculadas de acordo com a expressão a seguir. Um exemplo do uso do modelo de Corey para o cálculo das permeabilidades relativas é apresentado na Fig. \ref{fig:relat_perm}, onde $k_{rw}^{o}$ representa o valor máximo da permeabilidade relativa da água.
+Uma vez obtido o valor para a saturação normalizada, as permeabilidade relativas para as fases são calculadas de acordo com a expressão a seguir. Um exemplo do uso do modelo de Corey para o cálculo das permeabilidades relativas é apresentado na Fig.~\ref{fig:relat_perm}, onde $k_{rw}^{o}$ representa o valor máximo da permeabilidade relativa da água.
 
 \begin{subequations} \label{eq:coreymodel}
 \begin{equation} \label{eq:coreymodela}
@@ -113,6 +113,8 @@ k_{rw}(S_{wn}) = k_{rw}^{o}S_{wn}^{n_{w}}
 k_{row}(S_{wn}) = \left(1 - S_{wn}\right)^{n_{w}}
 \end{equation}
 \end{subequations}
+
+Neste modelo, $k_{rw}$, $k_{row}$ e $n_{w}$  representam a permeabilidade relativa da água, a permeabilidade relativa do óleo e um expoente de forma da curva, respectivamente. O expoente $n_{w}$ é usualmente determinado através do método dos mínimos quadrados para ajuste da curva à resultados experimentais. Como exemplo, podemos citar o caso do deslocamento de óleo por gás em rochas homogêneas, para o qual o valor de $n_{w}=4.0$ se apresenta adequado. Porém, dependendo do grau de consolidação da rocha, outros valores podem resultar em melhores ajustes aos dados empíricos \citep{Ahmed2006}.
 
 \begin{figure} 
 \centering
@@ -150,7 +152,7 @@ A equação de conservação para cada fase é descrita como em \cite{Peaceman1977}:
 \end{equation}
 \nomenclature[aqf]{$q$}{Termo fonte/sumidouro}%
 \nomenclature[ate]{$t$}{Tempo}%
-Os termos $q_{\alpha}$, $\phi$ e $t$ representam termos fontes/sumidores da fase $\alpha$ (por exemplo, poços), porosidade efetiva da rocha e o tempo, respectivamente. Além disso, se forem consideradas duas fases, uma molhante (aquosa) e uma não-molhante (oleosa), combinando as Eqs. (\ref{eq:eq_darcy_general}) e (\ref{eq:cons_eq}), e usando a definição dada na Eq. (\ref{eq:relat_perm}), é obtido o seguinte sistema de equações diferenciais parciais que resolve o problema do escoamento bifásico dadas as hipóteses já mencionadas:
+Os termos $q_{\alpha}$, $\phi$ e $t$ representam termos fontes/sumidores da fase $\alpha$ (por exemplo, poços), porosidade efetiva da rocha e o tempo, respectivamente. Além disso, se forem consideradas duas fases, uma molhante (aquosa) e uma não-molhante (oleosa), combinando as Eqs. (\ref{eq:eq_darcy_general}) e (\ref{eq:cons_eq}), e usando a definição dada na Eq.~(\ref{eq:relat_perm}), é obtido o seguinte sistema de equações diferenciais parciais que resolve o problema do escoamento bifásico dadas as hipóteses já mencionadas:
 \begin{subequations} \label{eq:twophase_system}
   \begin{equation} \label{eq:twophase_systema}
 \nabla \cdot \left(\frac{\rho_{w}\mathbi{K}k_{rw}}{\mu_{w}} \nabla\left(p_{w} - \rho_{w}g\nabla z \right)\right) + q_{w} =
@@ -166,7 +168,7 @@ Os termos $q_{\alpha}$, $\phi$ e $t$ representam termos fontes/sumidores da fase
 Nas Eqs. (\ref{eq:twophase_systema}) e (\ref{eq:twophase_systemb}), os campos de pressão e saturação são acoplados em ambas as equações. Estas possuem uma descrição matemática semelhante à da equação de condução de calor e por isso espera-se que tenham um comportamento essencialmente parabólico. Esta assertiva não é necessariamente verdadeira e pode ser avaliada através da obtenção de um par de equações que seja dependente ou da pressão ou da saturação. A dedução de tais equações é apresentada na seção seguinte.
 
 \section{Equação da Pressão} \label{sc:press_eq}
-A abordagem utilizada para se obter a equação da pressão é eliminar a derivada temporal da saturação apresentada na Eq. (\ref{eq:cons_eq}). Primeiramente, as derivadas temporais são expandidas para se obter:
+A abordagem utilizada para se obter a equação da pressão é eliminar a derivada temporal da saturação apresentada na Eq.~(\ref{eq:cons_eq}). Primeiramente, as derivadas temporais são expandidas para se obter:
 \begin{subequations} \label{eq:twophase_system2}
   \begin{equation} \label{eq:twophase_system2a}
 -\nabla \cdot \left(\rho_{w} \mathbi{v}_{w}\right) + q_{w} =
@@ -181,14 +183,14 @@ A abordagem utilizada para se obter a equação da pressão é eliminar a derivada t
 Então, dividindo a primeira equação por $\rho_{w}$, a segunda por $\rho_{o}$ e levando ainda em consideração as hipóteses feitas anteriormente de que fluidos e rochas são incompressíveis e finalmente adicionando as equações resultantes, obtêm-se:
 % [6] This step mentioned in the previous paragraph can be explained in more 'substeps' in the thesis for clarity
 \begin{equation} \label{eq:twophase_oneequation}
--\nabla \cdot \mathbi{v}_{t} + q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
+-\nabla \cdot \mathbi{v}_{t} + Q_{t} = \phi \frac{\partial \left(S_{w} + S_{o}\right)}{\partial t}
 \end{equation}
-onde $\mathbi{v}_{t} = \mathbi{v}_{w} + \mathbi{v}_{o}$ é denominada de velocidade total e $Q_{t} = (q_{w}/\rho_{w}) + (q_{o}/\rho_{o})$ é a taxa volumétrica total. Além disso, considerando a Eq. (\ref{eq:eq_const_sat}) e rearranjando os termos, nós obtemos a equação de pressão para o escoamento bifásico em meios porosos:
+onde $\mathbi{v}_{t} = \mathbi{v}_{w} + \mathbi{v}_{o}$ é denominada de velocidade total e $Q_{t} = (q_{w}/\rho_{w}) + (q_{o}/\rho_{o})$ é a taxa volumétrica total. Além disso, considerando a Eq.~(\ref{eq:eq_const_sat}) e rearranjando os termos, nós obtemos a equação de pressão para o escoamento bifásico em meios porosos:
 \begin{equation} \label{eq:pressure_eq_form1}
 \nabla \cdot \mathbi{v}_{t} = Q_{t}
 \end{equation}
 
-De modo a apresentar a Eq. (\ref{eq:pressure_eq_form1}) em relação a apenas uma única variável de pressão, pode-se definir uma pressão média por:
+De modo a apresentar a Eq.~(\ref{eq:pressure_eq_form1}) em relação a apenas uma única variável de pressão, pode-se definir uma pressão média por:
 \begin{equation} \label{eq:average_press}
 p_{avg} = \frac{p_{w} + p_{o}} {2}
 \end{equation}
@@ -210,13 +212,13 @@ As mobilidades das fases são definidas como a relação entre a permeabilidade rel
 \end{equation}%
 \nomenclature[a1lambda]{$\lambda$}{Mobilidade}%
 
-Finalmente, reescrevendo a Eq. (\ref{eq:pressure_eq_form1}) utilizando pressões médias e capilares pode-se obter, depois de um rearranjo dos termos, a seguinte expressão:
+Finalmente, reescrevendo a Eq.~(\ref{eq:pressure_eq_form1}) utilizando pressões médias e capilares pode-se obter, depois de um rearranjo dos termos, a seguinte expressão:
 \begin{equation} \label{eq:pressure_eq_form2}
 \nabla \cdot \left(-\mathbi{K} \left( \left(\lambda_{w} + \lambda_{o} \right)\nabla p_{avg} + \frac{\lambda_{w} - \lambda_{o}}{2}\nabla p_{c} - 
 \left(\lambda_{w}\rho_{w} + \lambda_{o}\rho_{o} \right)g\nabla z \right) \right) = Q_{t}
 \end{equation}
 
-Logo, pode ser observado que a Eq. (\ref{eq:pressure_eq_form2}), considerando as hipóteses feitas, tem uma natureza elíptica. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão. Definindo-se a mobilidade total como $\lambda_{t} = \lambda_{w} + \lambda_{o}$, a forma simplificada da equação de pressão pode ser apresentada como:
+Logo, pode ser observado que a Eq.~(\ref{eq:pressure_eq_form2}), considerando as hipóteses feitas, tem uma natureza elíptica. Outrossim, foi considerada neste trabalho a hipótese de fluxo horizontal (sem influência da gravidade) e com pressão capilar negligenciável. Deste modo foi possível se concentrar nas características elípticas da equação de pressão. Definindo-se a mobilidade total como $\lambda_{t} = \lambda_{w} + \lambda_{o}$, a forma simplificada da equação de pressão pode ser apresentada como:
 \begin{equation} \label{eq:pressure_eq_form3}
 - \nabla \cdot \left(\mathbi{K} \lambda_{t} \nabla p_{avg} \right) = Q_{t}
 \end{equation}
@@ -225,7 +227,7 @@ Logo, pode ser observado que a Eq. (\ref{eq:pressure_eq_form2}), considerando as
 \label{sc:eq_sat}
 A equação de saturação pode ser deduzida usando uma manipulação algébrica similar à utilizada na seção anterior de modo a completar o modelo de pressão-saturação para um escoamento bifásico água-óleo em meios porosos. Para a dedução desta equação faz-se necessário definir qual das fases (molhante ou não-molhante) servirá de referência. Neste trabalho foi escolhida a fase aquosa seguindo a prática usual da literatura \citep{Peaceman1977, Ewing1983, Carvalho2005, Silva2008}.
 
-Consideraremos a princípio que tenha sido obtida uma solução para um caso mais geral representado pela Eq. (\ref{eq:pressure_eq_form2}), sendo portanto conhecida $p_{avg}$. Logo, as pressões das fases água $(p_{w})$ e óleo $(p_{o})$ podem ser calculadas a partir da Eq. (\ref{eq:phase_pressures_cap}) e utilizando a Eq. (\ref{eq:eq_darcy_general}) podemos calcular as velocidades das duas fases, obtendo:
+Consideraremos a princípio que tenha sido obtida uma solução para um caso mais geral representado pela Eq.~(\ref{eq:pressure_eq_form2}), sendo portanto conhecida $p_{avg}$. Logo, as pressões das fases água $(p_{w})$ e óleo $(p_{o})$ podem ser calculadas a partir da Eq.~(\ref{eq:phase_pressures_cap}) e utilizando a Eq.~(\ref{eq:eq_darcy_general}) podemos calcular as velocidades das duas fases, obtendo:
 \begin{subequations} \label{eq:phase_velocities}
   \begin{equation} \label{eq:phase_velocitiesa}
 \mathbi{v}_{w} = - \mathbi{K}\lambda_{w} \left(\nabla p_{w} - \rho_{w}g\nabla z \right)
@@ -235,7 +237,7 @@ Consideraremos a princípio que tenha sido obtida uma solução para um caso mais g
   \end{equation}
 \end{subequations}
 
-Multiplicando a Eq. (\ref{eq:phase_velocitiesa}) por $\lambda_{o}$, a Eq. (\ref{eq:phase_velocitiesb}) por $\lambda_{w}$, subtraindo uma da outra e utilizando a definição de pressão capilar, pode-se obter:
+Multiplicando a Eq.~(\ref{eq:phase_velocitiesa}) por $\lambda_{o}$, a Eq.~(\ref{eq:phase_velocitiesb}) por $\lambda_{w}$, subtraindo uma da outra e utilizando a definição de pressão capilar, pode-se obter:
 \begin{equation} \label{eq:phase_velocities2}
 - \lambda_{w}\mathbi{v}_{o} + \lambda_{o}\mathbi{v}_{w} = \mathbi{K}\lambda_{o}\lambda_{w}\nabla p_{c} - \mathbi{K}\lambda_{o}\lambda_{w}\left(\rho_{o} - \rho_{w}\right)g\nabla z
 \end{equation}
@@ -254,7 +256,7 @@ e utilizando-se a seguinte função da saturação para simplificar a notação:
 \begin{equation} \label{eq:derivcapsat}
 h_{w} = - \frac{\lambda_{o}\lambda_{w}}{\lambda_{t}} \frac{d p_{c}}{d S_{w}}
 \end{equation}
-podemos obter uma expressão na qual a velocidade da fase água é expressa em função da velocidade total. Substituindo as Eqs. (\ref{eq:fracflux}) e (\ref{eq:derivcapsat}) na Eq. (\ref{eq:phase_velocities3}) e inserindo esta na Eq. (\ref{eq:cons_eq}), podemos escrever a seguinte expressão para a saturação da fase água:
+podemos obter uma expressão na qual a velocidade da fase água é expressa em função da velocidade total. Substituindo as Eqs. (\ref{eq:fracflux}) e (\ref{eq:derivcapsat}) na Eq.~(\ref{eq:phase_velocities3}) e inserindo esta na Eq.~(\ref{eq:cons_eq}), podemos escrever a seguinte expressão para a saturação da fase água:
 \begin{equation} \label{eq:sateq}
 \frac{\partial (\phi\rho_{w}S_{w})}{\partial t} = - \nabla\cdot\left(\rho_{w}\left(f_{w}\mathbi{v}_{t} - \mathbi{K}h_{w}\nabla S_{w} + \mathbi{K}\lambda_{o}f_{w}\left(\rho_{w} - \rho_{o}\right)g\nabla z\right)\right) + q_{w}
 \end{equation}
@@ -270,31 +272,31 @@ Além disso, dividindo a Eq. \ref{eq:sateq2} por $\rho_{w}$ e considerando a defi
 \end{equation}
 
 
-A Eq. (\ref{eq:sateq3}) permite obter a saturação da fase água em um meio poroso considerando as hipóteses básicas descritas no início deste capítulo. Esta equação apresenta um comportamento essencialmente parabólico-hiperbólico, a não ser que o termo de capilaridade seja desprezível comparado com os termos advectivos, o que é verdade especialmente para casos como na vizinhança de poços ou em áreas do reservatório onde a velocidade total seja alta \citep{Carvalho2005}. Considerando esta última condição como válida e supondo um escoamento horizontal, obtemos a forma simplificada para a saturação da fase água em um meio poroso:
+A Eq.~(\ref{eq:sateq3}) permite obter a saturação da fase água em um meio poroso considerando as hipóteses básicas descritas no início deste capítulo. Esta equação apresenta um comportamento essencialmente parabólico-hiperbólico, a não ser que o termo de capilaridade seja desprezível comparado com os termos advectivos, o que é verdade especialmente para casos como na vizinhança de poços ou em áreas do reservatório onde a velocidade total seja alta \citep{Carvalho2005}. Considerando esta última condição como válida e supondo um escoamento horizontal, obtemos a forma simplificada para a saturação da fase água em um meio poroso:
 \begin{equation} \label{eq:sateq4}
 \phi\frac{\partial S_{w}}{\partial t} = - \nabla\cdot\left(f_{w}\mathbi{v}_{t}\right) + Q_{w}
 \end{equation}
 
-A Eq. (\ref{eq:sateq4}) apresenta características essencialmente hiperbólicas e não-lineares devido ao termo de fluxo fracional. Um modo de estudar os fenômenos principais associados a esta equação é utilizar modelos que isolem apenas algumas das características de interesse. Sendo assim, serão apresentadas a seguir duas variações das equações apresentadas para a saturação. A primeira delas considera um escoamento unidimensional e sem termo de fonte, onde o principal objetivo é analisar o efeito da não-linearidade decorrente do fluxo fracional. A segunda variação considera uma versão linear da Eq. (\ref{eq:sateq3}), a qual nada mais é do que a conhecida equação de difusão-convecção e que neste caso governa o escoamento multidimensional de fluidos miscíveis \citep{Peaceman1977, Barbosa2009, Loula1995}.
+A Eq.~(\ref{eq:sateq4}) apresenta características essencialmente hiperbólicas e não-lineares devido ao termo de fluxo fracional. Um modo de estudar os fenômenos principais associados a esta equação é utilizar modelos que isolem apenas algumas das características de interesse. Sendo assim, serão apresentadas a seguir duas variações das equações apresentadas para a saturação. A primeira delas considera um escoamento unidimensional e sem termo de fonte, onde o principal objetivo é analisar o efeito da não-linearidade decorrente do fluxo fracional. A segunda variação considera uma versão linear da Eq.~(\ref{eq:sateq3}), a qual nada mais é do que a conhecida equação de difusão-convecção e que neste caso governa o escoamento multidimensional de fluidos miscíveis \citep{Peaceman1977, Barbosa2009, Loula1995}.
 
 \subsection{Equação de Buckley-Leverett}
 \label{sc:buckleyeq}
-\cite{Buckley1942} propuseram um modelo para representar o deslocamento imiscível de óleo por água em meios porosos rígidos unidimensionais, considerando os termos de gravidade e capilaridade desprezíveis. Partindo da Eq. (\ref{eq:sateq4}), eliminamos o termo de fonte, já que neste modelo injeção e produção são manuseadas nas condições de contorno. Assim, para o caso unidimensional podemos obter:
+\cite{Buckley1942} propuseram um modelo para representar o deslocamento imiscível de óleo por água em meios porosos rígidos unidimensionais, considerando os termos de gravidade e capilaridade desprezíveis. Partindo da Eq.~(\ref{eq:sateq4}), eliminamos o termo de fonte, já que neste modelo injeção e produção são manuseadas nas condições de contorno. Assim, para o caso unidimensional podemos obter:
 \begin{equation} \label{eq:buclev1}
 \phi\frac{\partial S_{w}}{\partial t} + \frac{\partial \left(f_{w}\mathbi{v}_{t}\right)}{\partial x}= 0
 \end{equation}
 
-Expandindo o segundo termo da Eq. (\ref{eq:buclev1}) utilizando a regra de derivada do produto, chegamos a:
+Expandindo o segundo termo da Eq.~(\ref{eq:buclev1}) utilizando a regra de derivada do produto, chegamos a:
 \begin{equation} \label{eq:buclev2}
 \phi\frac{\partial S_{w}}{\partial t} + \mathbi{v}_{t}\frac{\partial f_{w}}{\partial x} + f_{w}\frac{\partial \mathbi{v}_{t}}{\partial x}= 0
 \end{equation}
 
-Sendo que a derivada parcial do terceiro termo desta equação necessariamente tem que ser igual a zero se consideramos a imposição de continuidade dada pela Eq. (\ref{eq:pressure_eq_form1}) e utilizando um termo de fonte nulo. Além disso, podemos expandir o segundo termo usando a regra da cadeia, obtendo assim a equação de Buckley-Leverett:
+Sendo que a derivada parcial do terceiro termo desta equação necessariamente tem que ser igual a zero se consideramos a imposição de continuidade dada pela Eq.~(\ref{eq:pressure_eq_form1}) e utilizando um termo de fonte nulo. Além disso, podemos expandir o segundo termo usando a regra da cadeia, obtendo assim a equação de Buckley-Leverett:
 \begin{equation} \label{eq:buclev3}
 \phi\frac{\partial S_{w}}{\partial t} + \mathbi{v}_{t}\frac{d f_{w}}{d S_{w}}\frac{\partial S_{w}}{\partial x}= 0
 \end{equation}
 
-Esta é uma equação hiperbólica de transporte não-linear, pois o coeficiente que multiplica o termo $\partial S_{w}/\partial x$ é uma função não-linear de $S_{w}$ \citep{Carvalho2005}. A análise do comportamento desta função permite inferir um série de propriedades comuns aos escoamentos mais complexos. Um exemplo de representação da função de fluxo fracional e de sua derivada em relação à saturação pode ser observado na Fig. \ref{fig:fracflux}. No Capítulo \ref{ch:resultados} serão apresentados e discutidos resultados para esta equação modelo.
+Esta é uma equação hiperbólica de transporte não-linear, pois o coeficiente que multiplica o termo $\partial S_{w}/\partial x$ é uma função não-linear de $S_{w}$ \citep{Carvalho2005}. A análise do comportamento desta função permite inferir um série de propriedades comuns aos escoamentos mais complexos. Um exemplo de representação da função de fluxo fracional e de sua derivada em relação à saturação pode ser observado na Fig.~\ref{fig:fracflux}. No Capítulo \ref{ch:resultados} serão apresentados e discutidos resultados para esta equação modelo.
 \begin{figure} 
 \centering
 \includegraphics[width=0.7\textwidth]{chapters/ch02/fracflux}
@@ -317,7 +319,7 @@ representa o tensor de dispersão-difusividade, $Q$ é o termo fonte/sumidouro nos
 
 O tensor $\mathbi{D}$ combina os efeitos de dispersão mecânica e difusão molecular, onde o primeiro é normalmente proporcional à velocidade e possui componentes tanto na direção longitudinal quanto transversal do escoamento. Já o termo de difusão pode ser calculado pela Lei de Fick, a qual permite obter um fluxo difusivo a partir do gradiente de concentração do soluto $C$. Uma excelente discussão a respeito dos detalhes sobre este tensor e a interpretação física de seus componentes pode ser encontrada em \cite{Ewing1983}.
 
-No Capítulo \ref{ch:form_num} a versão unidimensional em meio homogêneo da Eq. (\ref{eq:misc1}) será utilizada para a apresentação de alguns dos métodos numéricos utilizados neste trabalho.
+No Capítulo \ref{ch:form_num} a versão unidimensional em meio homogêneo da Eq.~(\ref{eq:misc1}) será utilizada para a apresentação de alguns dos métodos numéricos utilizados neste trabalho.
 
 \section{Condições Iniciais e de Contorno}
 \label{sc:cond_ini_bc}
@@ -365,7 +367,7 @@ S_{w}(\mathbi{x},t) = S^{I}_{w} \quad \textrm{em $\Gamma_{I}$} \\
 \end{array} \right.
 \end{equation}
 
-Para a equação da concentração de um soluto em um fluido solvente, ver Eq. (\ref{eq:misc1}), as condições iniciais e de contorno são definidas de modo similar:
+Para a equação da concentração de um soluto em um fluido solvente, ver Eq.~(\ref{eq:misc1}), as condições iniciais e de contorno são definidas de modo similar:
 \begin{equation} \label{eq:coninibc}
 \left. \begin{array}{lll}
 C(\mathbi{x},0) = C^{t=0} \quad \textrm{em $\Omega$} \\
