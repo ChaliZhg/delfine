@@ -366,7 +366,7 @@ onde $\mathbi{A}_{f}$%
 \nomenclature[cam]{$\mathbi{A}$}{Matriz resultante da discretização via \ac{MEF}}%
 \nomenclature[bfc]{$\mathbi{f}$}{Vetor de carregamentos}%
 \nomenclature[df]{$f$}{Relativo ao nível mais refinado}
- é a matriz resultante dos procedimentos descritos na seções \ref{sc:fem} a \ref{sc:supg} e o subíndice $f$ representa valores no nível refinado. Depois de efetuadas algumas iterações com um método de relaxação, o erro estará suavizado e seu resíduo $r_{h}$ %
+ é a matriz resultante dos procedimentos descritos na seções \ref{sc:fem} a \ref{sc:supg} e o subíndice $f$ representa valores no nível refinado. Depois de efetuadas algumas iterações com um método de relaxação, o erro estará suavizado e seu resíduo $r_{f}$ %
 \nomenclature[are]{$r$}{Resíduo da solução aproximada}%
 será: 
 \begin{equation} \label{eq:mg2}
@@ -393,9 +393,45 @@ representa o operador de restrição, o qual transfere valores do resíduo do nível
 \begin{equation} \label{eq:mg6}
 \hat{p_{f}^{\phantom{.}\ast}} = \hat{p_{f}} + \mathbi{I}_{c}^{f} \Delta p_{c}
 \end{equation}
-onde $\hat{p_{f}^{\phantom{.}\ast}}$ é a solução atualizada no nível refinado. É importante observar que este procedimento é intrinsecamente recursivo, podendo o sistema no nível menos refinado ser visto como um novo nível refinado, sendo suavizado novamente até que seja atingido um nível no qual as contribuições das correções nos níveis menos refinados sejam trazidas de volta para os seus respectivos níveis refinados. Existem diversos tipos de esquemas para lidar com esta estratégia, entre eles estão os ciclos V, W e F. A Fig.~\ref{fig:mgcycles} mostra uma representação gráfica destes ciclos em um esquema Multigrid de 4 níveis, ver \cite{Briggs2000} ou \cite{Trottenberg2001} para uma explicação mais detalhada de cada um destes ciclos.
-% Keep the references, but explain in the thesis also much more about the cycles (see Sorensen for examples, has also some
-% estimation of computing and storage requirements for each cycle).
+onde $\hat{p_{f}^{\phantom{.}\ast}}$ é a solução atualizada no nível refinado. É importante observar que este procedimento é intrinsecamente recursivo, podendo o sistema no nível menos refinado ser visto como um novo nível refinado, sendo suavizado novamente até que seja atingido um nível no qual as contribuições das correções nos níveis menos refinados sejam trazidas de volta para os seus respectivos níveis refinados. Existem diversos tipos de esquemas para lidar com esta estratégia, entre eles estão os ciclos $V$, $W$ e $F$. 
+
+O Algoritmo \ref{alg1} apresenta de modo recursivo e em pseudo-código o ciclo $V$, onde $\Omega_{F}$ e $\Omega_{C}$ representam as malhas mais e menos refinadas da sequência de modo absoluto. Já $\Omega_{f}$ e $\Omega_{c}$ representam as malhas mais e menos refinadas de modo relativo, ou seja, apenas em relação ao par e não à sequência. 
+
+\begin{algorithm}
+  \caption{Ciclo $V$: $p_{F} \leftarrow V_{F} \left(p_{F}, \mathbi{f}_{F} \right)$}
+  \label{alg1}
+  \begin{algorithmic}
+    \STATE {Iterar} $n_{1}$ {vezes em} $\mathbi{A}_{f}p_{f} = \mathbi{f}_{f}$
+    \WHILE{$\Omega_{f} \neq \Omega_{C}$}
+       \STATE $r_{f} \leftarrow f_{f} - \mathbi{A}_{f}p_{f}$
+       \STATE $f_{c} \leftarrow \mathbi{I}_{f}^{c}r_{f}$
+       \STATE $p_{c} \leftarrow 0$
+       \STATE $p_{c} \leftarrow V_{c} \left(p_{c}, \phantom{.} \mathbi{f}_{c} \right)$
+    \ENDWHILE
+    \STATE $p_{f} \leftarrow p_{f} + \mathbi{I}_{c}^{f} p_{c}$
+    \STATE {Iterar} $n_{2}$ {vezes em} $\mathbi{A}_{f}p_{f} = \mathbi{f}_{f}$
+  \end{algorithmic}
+\end{algorithm}
+
+O Algoritmo \ref{alg2} apresenta de modo recursivo e em pseudo-código o ciclo $W$, onde a principal diferença é o parâmetro $m$, o qual indica quantas vezes a recursão deve ser aplicada para cada nível. Na prática, se utilizam os valores de $m=1$ (que equivale ao uso do ciclo $V$) e $m=2$ \citep{Briggs2000}.
+
+\begin{algorithm}
+  \caption{Ciclo $W$: $p_{F} \leftarrow W_{F} \left(p_{F}, \mathbi{f}_{F} \right)$}
+  \label{alg2}
+  \begin{algorithmic}
+    \STATE {Iterar} $n_{1}$ {vezes em} $\mathbi{A}_{f}p_{f} = \mathbi{f}_{f}$
+    \WHILE{$\Omega_{f} \neq \Omega_{C}$}
+       \STATE $r_{f} \leftarrow f_{f} - \mathbi{A}_{f}p_{f}$
+       \STATE $f_{c} \leftarrow \mathbi{I}_{f}^{c}r_{f}$
+       \STATE $p_{c} \leftarrow 0$
+       \STATE $p_{c} \leftarrow W_{c} \left(p_{c}, \phantom{.} \mathbi{f}_{c} \right)$ $m$ vezes
+    \ENDWHILE
+    \STATE $p_{f} \leftarrow p_{f} + \mathbi{I}_{c}^{f} p_{c}$
+    \STATE {Iterar} $n_{2}$ {vezes em} $\mathbi{A}_{f}p_{f} = \mathbi{f}_{f}$
+  \end{algorithmic}
+\end{algorithm}
+
+A Fig.~\ref{fig:mgcycles} mostra uma representação gráfica destes ciclos em um esquema Multigrid de 4 níveis, ver \cite{Briggs2000} ou \cite{Trottenberg2001} para uma explicação mais detalhada de cada um destes ciclos.
 
 \begin{figure} 
 \centering
