@@ -1,10 +1,22 @@
 \chapter{Delfine - Manual do usuário}
 \label{ch:manual}
 
-Manual do usário do Delfine.
+Ao longo desta dissertação foi discutido todo o arcabouço matemático, numérico e computacional necessário para a obtenção dos resultados apresentados. Entretanto, como comentado no Cap.~\ref{ch:implementacao}, todo este trabalho só foi possível de ser realizado graças às inúmeras ferramentas computacionais disponibilizadas publicamente na internet através de licenças livres. Sendo assim, este apêndice tem o objetivo de servir como manual prático para obtenção e uso do programa desenvolvido, na esperança de que assim este possa ser mais útil para outrem e assim fornecer uma pequena contribuição à comunidade.
 
-\section{Instalação do Programa}
-\label{sc:estrutura}
+\section{\emph{Download} e Instalação do Programa}
+\label{sc:instalacao}
+O \emph{software} foi todo desenvolvido na distribuição Ubuntu 10.04 do sistema operacional GNU/Linux, logo a descrição do procedimento de instalação e uso do programa será focada neste ambiente. Em todo caso, os comandos e pacotes aqui descritos poderiam ser executados ou instalados com alterações mínimas em qualquer outra distribuição recente do GNU/Linux.
+
+\begin{listing}[H]
+\begin{bash}
+	# Downloading from repository
+	svn checkout http://delfine.googlecode.com/svn/trunk/ delfine-read-only
+\end{bash}
+\label{lst:checkout}
+\end{listing}
+
+Para o gerenciamento do 
+
 Mostrar onde o programa pode ser baixado. Descrever dependências do mesmo. Focar em uma instalação do Ubuntu. Descrição da estrutura geral do programa.
 
 \section{Dados de Entrada}
