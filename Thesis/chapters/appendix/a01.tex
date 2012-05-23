@@ -1,23 +1,30 @@
 \chapter{Delfine - Manual do usuário}
 \label{ch:manual}
 
-Ao longo desta dissertação foi discutido todo o arcabouço matemático, numérico e computacional necessário para a obtenção dos resultados apresentados. Entretanto, como comentado no Cap.~\ref{ch:implementacao}, todo este trabalho só foi possível de ser realizado graças às inúmeras ferramentas computacionais disponibilizadas publicamente na internet através de licenças livres. Sendo assim, este apêndice tem o objetivo de servir como manual prático para obtenção e uso do programa desenvolvido, na esperança de que assim este possa ser mais útil para outrem e assim fornecer uma pequena contribuição à comunidade.
+Ao longo desta dissertação foi discutido todo o arcabouço matemático, numérico e computacional necessário para a obtenção dos resultados apresentados. Entretanto, como comentado no Cap.~\ref{ch:implementacao}, todo este trabalho só foi possível de ser realizado graças às inúmeras ferramentas computacionais disponibilizadas publicamente na internet através de licenças livres. Sendo assim, este apêndice tem o objetivo de servir como manual prático para obtenção e uso do programa desenvolvido, na esperança de que possa ser mais útil para outrem e assim fornecer uma pequena contribuição à comunidade.
 
-\section{\emph{Download} e Instalação do Programa}
+\section{Dependências e \emph{Download} do Programa}
 \label{sc:instalacao}
-O \emph{software} foi todo desenvolvido na distribuição Ubuntu 10.04 do sistema operacional GNU/Linux, logo a descrição do procedimento de instalação e uso do programa será focada neste ambiente. Em todo caso, os comandos e pacotes aqui descritos poderiam ser executados ou instalados com alterações mínimas em qualquer outra distribuição recente do GNU/Linux.
+O \emph{software} foi todo desenvolvido na distribuição Ubuntu 10.04 do sistema operacional GNU/Linux, logo a descrição do procedimento de instalação e uso do programa será focada neste ambiente. Em todo caso, os comandos e pacotes aqui descritos podem ser executados ou instalados com alterações mínimas em qualquer outra distribuição recente do GNU/Linux.
 
+Para uso do \emph{Delfine}, é necessário que alguns programas já estejam instalados no sistema. A lista a seguir indica quais são este pré-requisitos e onde eles podem ser obtidos. Obviamente, qualquer programa gerenciador de pacotes (\emph{apt-get}, \emph{rpm}, etc.) pode ser utilizado para agilizar o processo de instalação deles.
+\begin{itemize}
+\item \emph{FEniCS} (\url{www.fenicsproject.org}): Biblioteca para automação da solução de \ac{EDP}s.
+\item \emph{Python 2.x} (\url{www.python.org}): Linguagem de programação interpretada utilizada neste trabalho.
+\item \emph{Scipy} (\url{www.scipy.org}): Biblioteca para computação científica em \emph{Python}.
+\item \emph{PyAmg} (\url{www.code.google.com/p/pyamg}): Biblioteca de resolvedores \ac{AMG} com interface para \emph{Python}.
+\item \emph{RNV} (\url{www.davidashen.net/rnv.html}): Validador de arquivos \emph{XML}.
+\end{itemize}
+
+O próximo passo é a obtenção do código-fonte do \emph{Delfine}. O serviço de hospedagem de projetos da Google (\emph{Google Codes}) foi utilizado em conjunto com o sistema de controle de versão \emph{Apache Subversion} para gerenciamento do código. O comando para baixar a versão mais recente do programa é mostrado a seguir.
 \begin{listing}[H]
-\begin{bash}
-	# Downloading from repository
-	svn checkout http://delfine.googlecode.com/svn/trunk/ delfine-read-only
-\end{bash}
+\begin{bashcode}
+$ svn checkout http://delfine.googlecode.com/\
+svn/trunk/delfine
+\end{bashcode}
+\caption{\emph{Download} do programa a partir de repositório \emph{svn}.}
 \label{lst:checkout}
-\end{listing}
-
-Para o gerenciamento do 
-
-Mostrar onde o programa pode ser baixado. Descrever dependências do mesmo. Focar em uma instalação do Ubuntu. Descrição da estrutura geral do programa.
+\end{listing} %$
 
 \section{Dados de Entrada}
 \label{sc:entrada}
