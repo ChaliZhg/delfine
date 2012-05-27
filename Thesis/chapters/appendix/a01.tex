@@ -5,18 +5,25 @@ Ao longo desta dissertação foi discutido todo o arcabouço matemático, numérico e
 
 \section{Dependências e \emph{Download} do Programa}
 \label{sc:instalacao}
-O \emph{software} foi todo desenvolvido na distribuição Ubuntu 10.04 do sistema operacional GNU/Linux, logo a descrição do procedimento de instalação e uso do programa será focada neste ambiente. Em todo caso, os comandos e pacotes aqui descritos podem ser executados ou instalados com alterações mínimas em qualquer outra distribuição recente do GNU/Linux.
+O \emph{software} foi todo desenvolvido na distribuição \emph{Ubuntu 10.04} do sistema operacional \emph{GNU/Linux}, logo a descrição do procedimento de instalação e uso do programa será focada neste ambiente. Em todo caso, os comandos e pacotes aqui descritos podem ser executados ou instalados com alterações mínimas em qualquer outra distribuição recente do \emph{GNU/Linux}.
 
-Para uso do \emph{Delfine}, é necessário que alguns programas já estejam instalados no sistema. A lista a seguir indica quais são este pré-requisitos e onde eles podem ser obtidos. Obviamente, qualquer programa gerenciador de pacotes (\emph{apt-get}, \emph{rpm}, etc.) pode ser utilizado para agilizar o processo de instalação deles.
+Para uso do \emph{Delfine} é necessário que alguns programas já estejam instalados no sistema. A lista a seguir indica quais são este pré-requisitos e onde eles podem ser obtidos. Obviamente, qualquer programa gerenciador de pacotes (\emph{apt-get}, \emph{rpm}, etc.) pode ser utilizado para agilizar o processo de instalação deles.
 \begin{itemize}
-\item \emph{FEniCS} (\url{www.fenicsproject.org}): Biblioteca para automação da solução de \ac{EDP}s.
+\item \emph{FEniCS} (\url{www.fenicsproject.org}): Biblioteca para automação da solução de \ac{EDP}s. O \emph{Dolfin} é parte integrante dela.
 \item \emph{Python 2.x} (\url{www.python.org}): Linguagem de programação interpretada utilizada neste trabalho.
 \item \emph{Scipy} (\url{www.scipy.org}): Biblioteca para computação científica em \emph{Python}.
 \item \emph{PyAmg} (\url{www.code.google.com/p/pyamg}): Biblioteca de resolvedores \ac{AMG} com interface para \emph{Python}.
 \item \emph{RNV} (\url{www.davidashen.net/rnv.html}): Validador de arquivos \emph{XML}.
 \end{itemize}
 
-O próximo passo é a obtenção do código-fonte do \emph{Delfine}. O serviço de hospedagem de projetos da Google (\emph{Google Codes}) foi utilizado em conjunto com o sistema de controle de versão \emph{Apache Subversion} para gerenciamento do código. O comando para baixar a versão mais recente do programa é mostrado a seguir.
+Além destas dependências, os programas listados a seguir foram usados ao longo deste trabalho em conjunto com o \emph{Delfine} para a geração dos modelos e análise dos resultados obtidos, logo recomenda-se a instalação e uso deles.
+\begin{itemize}
+\item \emph{Gmsh} (\url{www.geuz.org/gmsh}): Programa para geração de malhas estruturadas e não-estruturadas em 2 ou 3 dimensões.
+\item \emph{Paraview} (\url{www.paraview.org}): Programa para visualização dos resultados.
+\item \emph{Matplotlib} (\url{http://matplotlib.sourceforge.net/}): Biblioteca para geração de gráficos.
+\end{itemize}
+
+O próximo passo é a obtenção do código-fonte do \emph{Delfine}. O serviço de hospedagem de projetos da Google (\emph{Google Codes}) foi utilizado em conjunto com o sistema de controle de versão \emph{Apache Subversion} para gerenciamento do código. Na página deste projeto na internet (\url{http://code.google.com/p/delfine}) estão disponíveis, além do código em si, vários documentos, como a versão digital desta dissertação, artigos e apresentações utilizados em congressos, entre outros. A seguir é mostrado o comando a ser digitado no terminal em uma pasta qualquer para baixar a versão mais recente do programa.
 \begin{listing}[H]
 \begin{bashcode}
 $ svn checkout http://delfine.googlecode.com/\
@@ -28,10 +35,254 @@ svn/trunk/delfine
 
 \section{Dados de Entrada}
 \label{sc:entrada}
-Descrição detalhada do arquivo .xml de entrada. Também descrever as possibilidades de geração de malha(gmsh com conversão, funções próprias do dolfin, uso de arquivo .xml do dolfin convertido a partir de outros formatos utilizando o convert-mesh, etc.)
+O programa é executado a partir da linha de comando utilizando o script \verb|run.py|, o qual se encontra na pasta-raiz \verb|Delfine|. O comando necessário para executar uma análise é apresentado a seguir, onde ``caseName'' deve ser substituído pelo nome do arquivo de dados considerado.
+\begin{listing}[H]
+\begin{bashcode}
+$ ./run.py 'caseName'
+\end{bashcode}
+\caption{Execução do programa a partir do terminal.}
+\label{lst:execucao}
+\end{listing} %$
+
+Uma vez solicitada a execução do programa, são necessários dois arquivos de entrada, um com os dados da análise e descrição do problema em si e outro com as informações da malha (existe uma exceção para este caso, a qual será discutida adiante). No diretório para o qual o programa foi baixado existe uma pasta chamada \verb|Delfine/CaseFiles|, dentro da qual existem alguns arquivos que podem ser usados como base para a criação de outros modelos. Descreveremos a seguir como estes dois arquivos devem ser gerados.
+
+\subsection{Arquivo de Dados}
+\label{sc:dados}
+As informações necessárias para a análise encontram-se neste arquivo subdivididas em três grupos:
+
+\emph{Geometry}: Neste grupo é informado para o programa qual a malha que será considerada. Além disso, são fornecidas neste grupo as condições de contorno que descrevem o problema. Um modelo para este grupo pode ser visto na listagem a seguir:
+\begin{listing}[H]
+\begin{xmlcode}
+<geometry>
+   <mesh dimension="2" order ="1" type="gmsh">
+       <filename>HomoAnisoBCUnStruct.msh</filename>
+   </mesh>
+   <boundary-conditions>
+       <well function="injection" id="301">1.0</well>
+       <well function="production" id="351">-1.0</well>
+   </boundary-conditions>  
+</geometry>
+\end{xmlcode}
+\caption{Grupo \emph{Geometry}.}
+\label{lst:arqmalhaxml}
+\end{listing} %$
+
+O tipo de malha é escolhido através do parâmetro \verb|type|, o qual pode ser definido como: \verb|gmsh|, caso a malha tenha sido gerada externamente por este programa, sendo que neste caso ela será automaticamente convertida para o formato \verb|*.xml| pelo script \emph{delfine-convert} considerando os indicadores de condição de contorno fornecidos; \verb|xml|, caso a malha tenha sido gerado por outro programa (\emph{Triangle}, \emph{Medit}, \emph{ExodusII}, etc.) e convertida manualmente pelo script \emph{delfine-convert}; ou \verb|dolfin-generated|, caso a malha seja criada utilizando o gerador interno do \emph{Dolfin}. Neste último caso, as opções de malha são definidas usando os seguintes parâmetros:
+\begin{listing}[H]
+\begin{xmlcode}
+<geometry>
+   <mesh dimension="2" type="dolfin-generated">
+      <dolfin-generated type="UnitSquare" nx="8" ny="8"/>
+   <subdomains quantity="1"/>
+   </mesh>
+.
+.
+</geometry>
+\end{xmlcode}
+\caption{Definição de malha a ser gerada pelo \emph{Dolfin}.}
+\label{lst:arqmalhaxml2}
+\end{listing} %$
+
+Apenas geometrias simples podem ser geradas com esta opção, sendo que as alternativas são as seguintes: \verb|UnitSquare| (para domínios bidimensionais com \verb|nx|$\times$\verb|ny| elementos), \verb|UnitInterval| (para domínios unidimensionais com \verb|nx| elementos), \verb|UnitCube| (para domínios tridimensionais com \verb|nx|$\times$\verb|ny|$\times$\verb|nz|) e \verb|UnitCircle| (para domínios bidimensionais com \verb|nr| elementos na direção radial) .
+
+Por fim, para cada poço existente no domínio deve ser escrita uma linha no subgrupo \verb|boundary-conditions| contendo o tipo de poço (injeção ou produção), o identificador dele (correspondente ao definido durante a geração da malha) e o valor do fluxo total prescrito. No momento estas condições ainda são bastante restritivas, por isso um dos objetivos para o futuro é adicionar modelos de poços mais gerais e realistas.
+
+\emph{Physical}: Neste grupo são descritas as propriedades das rochas, dos fluidos e de interação rocha-fluido. É importante ressaltar que alguns dos parâmetros existentes no arquivo de dados são referentes a funcionalidades ainda não implementadas. A viscosidade e densidade de fluidos, por exemplo, são normalmente consideradas dependentes da temperatura e pressão, respectivamente, mas nesse momento são ainda definidas com valores constantes, por isto se utilizou a opção \verb|model="none"| no arquivo de dados. O mesmo comentário vale para a porosidade da rocha. Um modelo para este grupo pode ser visto na listagem a seguir:
+\begin{listing}[H]
+\begin{xmlcode}
+<physical>
+   <fluid-properties>
+       <water use="no">
+           <viscosity model="yes">1.0</viscosity>
+       </water>
+       <oil use="yes">
+           <viscosity model="none">1.0</viscosity>
+       </oil>
+   </fluid-properties>
+   <rock-properties>
+       <rock-type id="1">
+           <porosity compressible="no">1.0</porosity>
+           <permeability type="per-domain">
+               <Kxx>0.50</Kxx>
+               <Kxy>0.0</Kxy>
+               <Kyy>0.50</Kyy>
+           </permeability>
+       </rock-type>
+   </rock-properties>
+   <rock-fluid-properties>
+       <relative-permeability model="corey">
+           <krw>
+               <krw_end>1.0</krw_end>
+               <Swc>0.0</Swc>
+               <nw>2.0</nw>
+           </krw>
+           <kro>
+               <Sor>0.0</Sor>
+               <no>2.0</no>
+           </kro>
+       </relative-permeability>
+   </rock-fluid-properties>
+</physical>
+\end{xmlcode}
+\caption{Grupo \emph{Physical}.}
+\label{lst:arqphysxml}
+\end{listing} %$
+
+Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \verb|rock-properties| com uma número de identificação correspondente ao de cada um dos subdomínios definidos no arquivo de malha. O tensor de permeabilidade pode ser expandido ou reduzido de acordo com o número de dimensões do problema. Para um caso tridimensional, por exemplo, bastaria adicionar linhas para os valores de \verb|Kxz| e \verb|Kzz|.
+
+\emph{Numerical}: Neste grupo são descritos os parâmetros de análise utilizados para a simulação numérica do problema.
+\begin{listing}[H]
+\begin{xmlcode}
+<numerical>
+   <pressure-solver type="cg">
+       <tolerance>1e-10</tolerance>
+       <max-number-steps>1000</max-number-steps>
+       <pre-conditioning type="amg">
+           <number-coarse-levels>5</number-coarse-levels>
+           <number-relax-iterations>3</number-relax-iterations>
+       </pre-conditioning>
+   </pressure-solver>
+   <saturation-solver>
+       <total-time-analysis>200</total-time-analysis>            
+       <courant>0.9</courant>
+       <limiter type="none"/>
+   </saturation-solver>
+</numerical>
+\end{xmlcode}
+\caption{Grupo \emph{Numerical}.}
+\label{lst:arqnuxml}
+\end{listing} %$
+
+\subsection{Arquivo de Malha}
+\label{sc:malha}
+
+Existe a opção de ter a malha gerada pelo próprio \emph{Dolfin}, ou então usar um gerador externo e converter a malha utilizando um \emph{script}. A malha é descrita através de uma arquivo do tipo \verb|*.xml|, o qual contém as informações referentes aos nós, elementos e \emph{flags} indicadores de domínio ou condição de contorno. A estrutura geral do arquivo é conforme o exemplo a seguir:
+\begin{listing}[H]
+\begin{xmlcode}
+<nodes>
+1 2 3
+<elements>
+4 5 6...
+\end{xmlcode}
+\caption{Arquivo \verb|*.xml| de malha.}
+\label{lst:geomxml}
+\end{listing} %$
+
+Para a geração de um arquivo deste tipo existem três alternativas:
+\begin{itemize}
+\item \emph{Gerador ``interno''}: O \emph{Dolfin} possui funções embutidas para a geração de malhas estruturadas em domínios simples. Para detalhes de como utilizar estas funções, consultar o manual dele em \url{MANUALDOLFIN}.
+\end{itemize}
 
 \section{Exemplo Detalhado}
 \label{sc:exemplo}
-Mostrar como rodar um exemplo simples utilizado na tese.
+Nesta seção, apresentaremos a construção detalhada de um exemplo utilizado neste trabalho de modo a consolidar todas as informações apresentadas nas seções anteriores deste manual. Os dados do problema que serão utilizados para a geração do arquivo de dados são apresentados no capítulo de resultados na seção \ref{sec:LABEL}.
 
+Este problema trata da solução do escoamento em meios porosos em um domínio heterogêneo representado por um quadrado unitário com uma região de baixa permeabilidade no seu interior, sendo portanto uma geometria bastante simples. Mesmo assim, iremos considerar o uso do \emph{Gmsh} para a geração desta malha devido à existência dos 2 subdomínios. Detalhes sobre o uso da interface do \emph{Gmsh} para se gerar interativamente um arquivo de malha podem ser encontrados na página citada na seção \ref{sc:instalacao}. A seguir temos um arquivo de geometria do tipo \verb|*.geo| para gerar a malha desejada. O arquivo de malha em si (\verb|*.msh|) pode então ser obtido através do seguinte comando:
+\begin{listing}[H]
+\begin{bashcode}
+$ gmsh file.geo
+\end{bashcode}
+\caption{Geração da malha usando o \emph{Gmsh} a partir de um arquivo de geometria.}
+\label{lst:geramalha}
+\end{listing} %$
+
+\begin{listing}[H]
+\begin{xmlcode} % Definir outro enviroment para este codigo (geocode, por exemplo).
+0 1 2
+1 2 3
+45 6 4...
+\end{xmlcode}
+\caption{Arquivo de geometria.}
+\label{lst:arqgeo}
+\end{listing} %$
+
+Agora temos que criar um arquivo de dados para o problema. Inicialmente, precisamos fornecer os dados relativos ao grupo \emph{Geometry}, conforme descrito na seção \ref{sc:dados}. Para este caso, definimos o tipo de malha como \verb|gmsh-generated|, a dimensão como $2$, e o nome do arquivo como \verb|heteraniso.msh|. As condição de contorno são os poços de injeção e produção, os quais são representados pelos seguintes códigos:
+\begin{itemize}
+\item Injeção: Código entre 1-100
+\item Produção: Código entre 101-200
+\end{itemize}
+
+Além disso, é preciso fornecer qual parâmetro de poço esta condição de contorno representa e qual o seu valor. Para isto, definimos os parâmetros \verb|type| e \verb|value|. Assim, este primeiro trecho do arquivo de dados deve ter a seguinte aparência:
+\begin{listing}[H]
+\begin{xmlcode}
+<Delfine>
+	<Geometry type='gmsh-generated'>...
+	...
+\end{xmlcode}
+\caption{Grupo \emph{Geometry}.}
+\label{lst:grupgeometry}
+\end{listing} %$
+
+Em seguida, é necessário definir os parâmetros dos fluidos e rochas considerados no grupo \emph{Physical}. Inicialmente, consideramos os fluidos, cujas propriedades são fornecidas através do trecho a seguir:
+\begin{listing}[H]
+\begin{xmlcode}
+<Fluid>
+	...
+\end{xmlcode}
+\caption{Propriedades dos fluidos.}
+\label{lst:physfluid}
+\end{listing} %$
+
+Onde \verb|mu| representa a viscosidade, \verb|rho|...
+
+Em seguida, são fornecidas as propriedades das rochas para cada um dos domínios (neste exemplo, são 2 regiões diferentes).  No caso de existirem outros domínios, basta adicionar quantas seções foram necessárias, já que a leitura de dados de entrada é suficientemente flexível para só considerar os dados de interesse, desde que o ID da rocha adicionada corresponda ao \emph{flag} dos elementos no arquivo de malha (ver seção \ref{sc:malha} para maiores detalhes). Os dados para este exemplo específico são mostrados a seguir:
+\begin{listing}[H]
+\begin{xmlcode}
+<Rock>
+	...
+\end{xmlcode}
+\caption{Propriedades das rochas.}
+\label{lst:physrock}
+\end{listing} %$
+
+O último bloco de informações no grupo \emph{Physical} é o de dados referentes às propriedades de interação rocha-fluido. Para cada tipo de fluido é necessário fornecer um bloco com os seus parâmetros, conforme pode ser observado do trech seguinte:
+\begin{listing}[H]
+\begin{xmlcode}
+<Rock-Fluido>
+	...
+\end{xmlcode}
+\caption{Propriedades de interação rocha-fluido.}
+\label{lst:physrockfluido}
+\end{listing} %$
+
+Por fim, os parâmetros para a simulação são fornecidos dentro do grupo \emph{Numerical}, o qual possui uma parte relativa à solução do problema elíptico e uma outra com dados para solução do problema hiperbólico.
+\begin{listing}[H]
+\begin{xmlcode}
+<Elliptic>
+	...
+\end{xmlcode}
+\caption{Parâmetros para solução do problema elíptico.}
+\label{lst:paramelip}
+\end{listing} %$
+
+\begin{listing}[H]
+\begin{xmlcode}
+<Hyperbolic>
+	...
+\end{xmlcode}
+\caption{Parâmetros para solução do problema hiperbólico.}
+\label{lst:paramhyper}
+\end{listing} %$
+
+Uma vez prontos os arquivos de malha e de dados (o qual nomearemos como \verb|ExampleCase.xml|), podemos executar o \emph{Delfine} a partir do terminal utilizando o seguinte comando:
+\begin{listing}[H]
+\begin{bashcode}
+$ ./run.py ExampleCase.xml
+\end{bashcode}
+\caption{Execução do caso gerado como exemplo.}
+\label{lst:execucaoexemplo}
+\end{listing} %$
+
+A partir deste momento, o programa irá executar todos os passos automaticamente, informando a respeito do passo de tempo da solução no qual se encontra. Ao final, os arquivos com os resultados dos campos de pressão, velocidade e saturação são escritos na pasta  \verb|Delfine/Results|. O formato dos arquivos é o \verb|*.vtk|, o qual pode ser aberto utilizando o \emph{Paraview} através da interface gráfica ou utilizando o seguinte comando: 
+\begin{listing}[H]
+\begin{bashcode}
+$ paraview Saturation0000.xml
+\end{bashcode}
+\caption{Visualização do arquivo de resultados.}
+\label{lst:visualizacao}
+\end{listing} %$
+
+\begin{Large}
+ATENÇÃO: MODIFICAR ARQUIVO DE SOLUÇÃO HIPERBOLICA "2D/3D"!! ATÈ AGORA SO FOI MODIFICADO O 1D!!!
+\end{Large}
 
