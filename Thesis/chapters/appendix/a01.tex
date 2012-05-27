@@ -9,10 +9,10 @@ O \emph{software} foi todo desenvolvido na distribuição \emph{Ubuntu 10.04} do s
 
 Para uso do \emph{Delfine} é necessário que alguns programas já estejam instalados no sistema. A lista a seguir indica quais são este pré-requisitos e onde eles podem ser obtidos. Obviamente, qualquer programa gerenciador de pacotes (\emph{apt-get}, \emph{rpm}, etc.) pode ser utilizado para agilizar o processo de instalação deles.
 \begin{itemize}
-\item \emph{FEniCS} (\url{www.fenicsproject.org}): Biblioteca para automação da solução de \ac{EDP}s. O \emph{Dolfin} é parte integrante dela.
+\item \emph{FEniCS} (\url{www.fenicsproject.org}): Biblioteca para automação da solução de \ac{EDP}s. O \emph{DOLFIN} é parte integrante dela.
 \item \emph{Python 2.x} (\url{www.python.org}): Linguagem de programação interpretada utilizada neste trabalho.
-\item \emph{Scipy} (\url{www.scipy.org}): Biblioteca para computação científica em \emph{Python}.
-\item \emph{PyAmg} (\url{www.code.google.com/p/pyamg}): Biblioteca de resolvedores \ac{AMG} com interface para \emph{Python}.
+\item \emph{SciPy} (\url{www.scipy.org}): Biblioteca para computação científica em \emph{Python}.
+\item \emph{PyAMG} (\url{www.code.google.com/p/pyamg}): Biblioteca de resolvedores \ac{AMG} com interface para \emph{Python}.
 \item \emph{RNV} (\url{www.davidashen.net/rnv.html}): Validador de arquivos \emph{XML}.
 \end{itemize}
 
@@ -67,7 +67,7 @@ As informações necessárias para a análise encontram-se neste arquivo subdividida
 \label{lst:arqmalhaxml}
 \end{listing} %$
 
-O tipo de malha é escolhido através do parâmetro \verb|type|, o qual pode ser definido como: \verb|gmsh|, caso a malha tenha sido gerada externamente por este programa, sendo que neste caso ela será automaticamente convertida para o formato \verb|*.xml| pelo script \emph{delfine-convert} considerando os indicadores de condição de contorno fornecidos; \verb|xml|, caso a malha tenha sido gerado por outro programa (\emph{Triangle}, \emph{Medit}, \emph{ExodusII}, etc.) e convertida manualmente pelo script \emph{delfine-convert}; ou \verb|dolfin-generated|, caso a malha seja criada utilizando o gerador interno do \emph{Dolfin}. Neste último caso, as opções de malha são definidas usando os seguintes parâmetros:
+O tipo de malha é escolhido através do parâmetro \verb|type|, o qual pode ser definido como: \verb|gmsh|, caso a malha tenha sido gerada externamente por este programa, sendo que neste caso ela será automaticamente convertida para o formato \verb|*.xml| pelo script \emph{delfine-convert} considerando os indicadores de condição de contorno fornecidos; \verb|xml|, caso a malha tenha sido gerado por outro programa (\emph{Triangle}, \emph{Medit}, \emph{ExodusII}, etc.) e convertida manualmente pelo script \emph{delfine-convert}; ou \verb|dolfin-generated|, caso a malha seja criada utilizando o gerador interno do \emph{DOLFIN}. Neste último caso, as opções de malha são definidas usando os seguintes parâmetros:
 \begin{listing}[H]
 \begin{xmlcode}
 <geometry>
@@ -79,7 +79,7 @@ O tipo de malha é escolhido através do parâmetro \verb|type|, o qual pode ser de
 .
 </geometry>
 \end{xmlcode}
-\caption{Definição de malha a ser gerada pelo \emph{Dolfin}.}
+\caption{Definição de malha a ser gerada pelo \emph{DOLFIN}.}
 \label{lst:arqmalhaxml2}
 \end{listing} %$
 
@@ -130,7 +130,7 @@ Por fim, para cada poço existente no domínio deve ser escrita uma linha no subgr
 
 Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \verb|rock-properties| com uma número de identificação correspondente ao de cada um dos subdomínios definidos no arquivo de malha. O tensor de permeabilidade pode ser expandido ou reduzido de acordo com o número de dimensões do problema. Para um caso tridimensional, por exemplo, bastaria adicionar linhas para os valores de \verb|Kxz| e \verb|Kzz|.
 
-\emph{Numerical}: Neste grupo são descritos os parâmetros de análise utilizados para a simulação numérica do problema.
+\emph{Numerical}: Neste grupo são descritos os parâmetros de análise utilizados para a simulação numérica do problema. A seguir é apresentado um exemplo com as principais opções.
 \begin{listing}[H]
 \begin{xmlcode}
 <numerical>
@@ -153,10 +153,13 @@ Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \
 \label{lst:arqnuxml}
 \end{listing} %$
 
+O primeiro subgrupo (\verb|pressure-solver|) pode receber as opções \verb|cg| (Método dos Gradientes Conjugados (CG)), \verb|gmres| (Método do Resíduo Mínimo Generalizado (GMRES)) ou \verb|none|, sendo que neste último caso o \ac{AMG} é utilizado isoladamente. Já o subgrupo \verb|pre-conditioning| pode ser do tipo \verb|amg| ou \verb|none|, sendo que neste caso deve obrigatoriamente ser escolhido algum tipo de resolver em \verb|pressure-solver|. Devido à disponibilidade de vários métodos iterativos dentro da biblioteca \emph{PyAMG}, espera-se em breve adicionar novas opções de resolvedores iterativos e diretos.
+
+Em relação ao tipo de limitador 
 \subsection{Arquivo de Malha}
 \label{sc:malha}
 
-Existe a opção de ter a malha gerada pelo próprio \emph{Dolfin}, ou então usar um gerador externo e converter a malha utilizando um \emph{script}. A malha é descrita através de uma arquivo do tipo \verb|*.xml|, o qual contém as informações referentes aos nós, elementos e \emph{flags} indicadores de domínio ou condição de contorno. A estrutura geral do arquivo é conforme o exemplo a seguir:
+Existe a opção de ter a malha gerada pelo próprio \emph{DOLFIN}, ou então usar um gerador externo e converter a malha utilizando um \emph{script}. A malha é descrita através de uma arquivo do tipo \verb|*.xml|, o qual contém as informações referentes aos nós, elementos e \emph{flags} indicadores de domínio ou condição de contorno. A estrutura geral do arquivo é conforme o exemplo a seguir:
 \begin{listing}[H]
 \begin{xmlcode}
 <nodes>
@@ -170,7 +173,7 @@ Existe a opção de ter a malha gerada pelo próprio \emph{Dolfin}, ou então usar u
 
 Para a geração de um arquivo deste tipo existem três alternativas:
 \begin{itemize}
-\item \emph{Gerador ``interno''}: O \emph{Dolfin} possui funções embutidas para a geração de malhas estruturadas em domínios simples. Para detalhes de como utilizar estas funções, consultar o manual dele em \url{MANUALDOLFIN}.
+\item \emph{Gerador ``interno''}: O \emph{DOLFIN} possui funções embutidas para a geração de malhas estruturadas em domínios simples. Para detalhes de como utilizar estas funções, consultar o manual dele em \url{MANUALDOLFIN}.
 \end{itemize}
 
 \section{Exemplo Detalhado}
