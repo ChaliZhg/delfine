@@ -7,7 +7,7 @@ Ao longo desta dissertação foi discutido todo o arcabouço matemático, numérico e
 \label{sc:instalacao}
 O \emph{software} foi todo desenvolvido na distribuição \emph{Ubuntu 10.04} do sistema operacional \emph{GNU/Linux}, logo a descrição do procedimento de instalação e uso do programa será focada neste ambiente. Em todo caso, os comandos e pacotes aqui descritos podem ser executados ou instalados com alterações mínimas em qualquer outra distribuição recente do \emph{GNU/Linux}.
 
-Para uso do \emph{Delfine} é necessário que alguns programas já estejam instalados no sistema. A lista a seguir indica quais são este pré-requisitos e onde eles podem ser obtidos. Obviamente, qualquer programa gerenciador de pacotes (\emph{apt-get}, \emph{rpm}, etc.) pode ser utilizado para agilizar o processo de instalação deles.
+Para uso do \emph{Delfine} é necessário que alguns programas já estejam instalados no sistema. A lista a seguir indica quais são estes pré-requisitos e onde eles podem ser obtidos. Obviamente, qualquer programa gerenciador de pacotes (\emph{apt-get}, \emph{rpm}, etc.) pode ser utilizado para agilizar o processo de instalação deles.
 \begin{itemize}
 \item \emph{FEniCS} (\url{www.fenicsproject.org}): Biblioteca para automação da solução de \ac{EDP}s. O \emph{DOLFIN} é parte integrante dela.
 \item \emph{Python 2.x} (\url{www.python.org}): Linguagem de programação interpretada utilizada neste trabalho.
@@ -83,7 +83,7 @@ O tipo de malha é escolhido através do parâmetro \verb|type|, o qual pode ser de
 \label{lst:arqmalhaxml2}
 \end{listing} %$
 
-Apenas geometrias simples podem ser geradas com esta opção, sendo que as alternativas são as seguintes: \verb|UnitSquare| (para domínios bidimensionais com \verb|nx|$\times$\verb|ny| elementos), \verb|UnitInterval| (para domínios unidimensionais com \verb|nx| elementos), \verb|UnitCube| (para domínios tridimensionais com \verb|nx|$\times$\verb|ny|$\times$\verb|nz|) e \verb|UnitCircle| (para domínios bidimensionais com \verb|nr| elementos na direção radial) .
+Apenas geometrias simples podem ser geradas com esta opção, sendo que as alternativas são as seguintes: \verb|UnitSquare| (para domínios bidimensionais com \verb|nx|$\times$\verb|ny| elementos), \verb|UnitInterval| (para domínios unidimensionais com \verb|nx| elementos), \verb|UnitCube| (para domínios tridimensionais com \verb|nx|$\times$\verb|ny|$\times$\verb|nz| elementos) e \verb|UnitCircle| (para domínios bidimensionais com \verb|nr| elementos na direção radial) .
 
 Por fim, para cada poço existente no domínio deve ser escrita uma linha no subgrupo \verb|boundary-conditions| contendo o tipo de poço (injeção ou produção), o identificador dele (correspondente ao definido durante a geração da malha) e o valor do fluxo total prescrito. No momento estas condições ainda são bastante restritivas, por isso um dos objetivos para o futuro é adicionar modelos de poços mais gerais e realistas.
 
@@ -130,7 +130,7 @@ Por fim, para cada poço existente no domínio deve ser escrita uma linha no subgr
 
 Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \verb|rock-properties| com uma número de identificação correspondente ao de cada um dos subdomínios definidos no arquivo de malha. O tensor de permeabilidade pode ser expandido ou reduzido de acordo com o número de dimensões do problema. Para um caso tridimensional, por exemplo, bastaria adicionar linhas para os valores de \verb|Kxz| e \verb|Kzz|.
 
-\emph{Numerical}: Neste grupo são descritos os parâmetros de análise utilizados para a simulação numérica do problema. A seguir é apresentado um exemplo com as principais opções.
+\emph{Numerical}: Neste grupo são descritos os parâmetros de análise utilizados para a simulação numérica do problema. A seguir é apresentado um exemplo com as principais opções:
 \begin{listing}[H]
 \begin{xmlcode}
 <numerical>
@@ -139,13 +139,12 @@ Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \
        <max-number-steps>1000</max-number-steps>
        <pre-conditioning type="amg">
            <number-coarse-levels>5</number-coarse-levels>
-           <number-relax-iterations>3</number-relax-iterations>
        </pre-conditioning>
    </pressure-solver>
    <saturation-solver>
        <total-time-analysis>200</total-time-analysis>            
        <courant>0.9</courant>
-       <limiter type="none"/>
+       <limiter type="SUPG+Wells"/>
    </saturation-solver>
 </numerical>
 \end{xmlcode}
@@ -155,32 +154,41 @@ Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \
 
 O primeiro subgrupo (\verb|pressure-solver|) pode receber as opções \verb|cg| (Método dos Gradientes Conjugados (CG)), \verb|gmres| (Método do Resíduo Mínimo Generalizado (GMRES)) ou \verb|none|, sendo que neste último caso o \ac{AMG} é utilizado isoladamente. Já o subgrupo \verb|pre-conditioning| pode ser do tipo \verb|amg| ou \verb|none|, sendo que neste caso deve obrigatoriamente ser escolhido algum tipo de resolver em \verb|pressure-solver|. Devido à disponibilidade de vários métodos iterativos dentro da biblioteca \emph{PyAMG}, espera-se em breve adicionar novas opções de resolvedores iterativos e diretos.
 
-Em relação ao tipo de limitador 
+As opções para o parâmetro \verb|limiter| são: \verb|SUPG| (ou seja, apenas o termo de estabilização), \verb|SUPG+Wells| (estabilização via \ac{SUPG} e adição de difusão artificial) e \verb|none| (\ac{MEF} de Galerkin aplicado diretamente para a equação hiperbólica). Em relação ao tipo de limitador para captura de choque, até o momento apenas o termo de difusão artificial isotrópica sugerido em \citep{Wells2008} está disponível, porém um dos trabalhos futuros (ver Seção \ref{sc:trabFuturos}) é exatamente a adição de difusão artificial anisotrópica conforme proposto por \cite{Codina1992}.
+
 \subsection{Arquivo de Malha}
 \label{sc:malha}
 
-Existe a opção de ter a malha gerada pelo próprio \emph{DOLFIN}, ou então usar um gerador externo e converter a malha utilizando um \emph{script}. A malha é descrita através de uma arquivo do tipo \verb|*.xml|, o qual contém as informações referentes aos nós, elementos e \emph{flags} indicadores de domínio ou condição de contorno. A estrutura geral do arquivo é conforme o exemplo a seguir:
+Existe a opção de ter a malha gerada pelo próprio \emph{DOLFIN} ou então usar um gerador externo e convertê-la utilizando um \emph{script}. No primeiro caso não é necessário fornecer um arquivo, já na segunda alternativa a malha é descrita através de uma arquivo do tipo \verb|*.xml|, o qual contém as informações referentes aos nós, elementos e \emph{flags} indicadores de domínio ou condição de contorno. A estrutura geral do arquivo é conforme o exemplo a seguir:
 \begin{listing}[H]
 \begin{xmlcode}
-<nodes>
-1 2 3
-<elements>
-4 5 6...
+<dolfin xmlns:dolfin="http://www.fenicsproject.org">
+  <mesh celltype="triangle" dim="2">
+    <vertices size="25">
+      <vertex index="0" x="0" y="0"/>
+      <vertex index="1" x="0" y="1"/>
+      .
+      .
+    </vertices>
+    <cells size="32">
+      <triangle index="0" v0="0" v1="4" v2="18"/>
+      <triangle index="1" v0="4" v1="17" v2="18"/>
+      .
+      .
+    </cells>
+  </mesh>
+</dolfin>
 \end{xmlcode}
-\caption{Arquivo \verb|*.xml| de malha.}
+\caption{Arquivo de malha.}
 \label{lst:geomxml}
 \end{listing} %$
 
-Para a geração de um arquivo deste tipo existem três alternativas:
-\begin{itemize}
-\item \emph{Gerador ``interno''}: O \emph{DOLFIN} possui funções embutidas para a geração de malhas estruturadas em domínios simples. Para detalhes de como utilizar estas funções, consultar o manual dele em \url{MANUALDOLFIN}.
-\end{itemize}
-
 \section{Exemplo Detalhado}
 \label{sc:exemplo}
-Nesta seção, apresentaremos a construção detalhada de um exemplo utilizado neste trabalho de modo a consolidar todas as informações apresentadas nas seções anteriores deste manual. Os dados do problema que serão utilizados para a geração do arquivo de dados são apresentados no capítulo de resultados na seção \ref{sec:LABEL}.
+Nesta seção, apresentaremos a construção detalhada de um exemplo utilizado neste trabalho de modo a consolidar todas as informações apresentadas nas seções anteriores deste manual. Os dados do problema que serão utilizados para a geração do arquivo de dados são apresentados no capítulo de resultados na Seção \ref{sc:quarterfivespothetero}.
 
-Este problema trata da solução do escoamento em meios porosos em um domínio heterogêneo representado por um quadrado unitário com uma região de baixa permeabilidade no seu interior, sendo portanto uma geometria bastante simples. Mesmo assim, iremos considerar o uso do \emph{Gmsh} para a geração desta malha devido à existência dos 2 subdomínios. Detalhes sobre o uso da interface do \emph{Gmsh} para se gerar interativamente um arquivo de malha podem ser encontrados na página citada na seção \ref{sc:instalacao}. A seguir temos um arquivo de geometria do tipo \verb|*.geo| para gerar a malha desejada. O arquivo de malha em si (\verb|*.msh|) pode então ser obtido através do seguinte comando:
+Este problema trata da solução do escoamento em meios porosos em um domínio heterogêneo representado por um quadrado unitário com uma região de baixa permeabilidade no seu interior, sendo portanto uma geometria bastante simples. Mesmo assim, iremos considerar o uso do \emph{Gmsh} para a geração desta malha devido à existência dos 2 subdomínios. Detalhes sobre o uso da interface do \emph{Gmsh} para se gerar interativamente um arquivo de malha podem ser encontrados na página citada na Seção \ref{sc:instalacao}. O arquivo de malha em si (\verb|*.msh|) pode ser obtido através do seguinte comando:
+
 \begin{listing}[H]
 \begin{bashcode}
 $ gmsh file.geo
@@ -189,17 +197,44 @@ $ gmsh file.geo
 \label{lst:geramalha}
 \end{listing} %$
 
+Sendo que o arquivo do tipo \verb|*.geo| para gerar a geometria desejada é descrito na listagem a seguir: 
+
 \begin{listing}[H]
-\begin{xmlcode} % Definir outro enviroment para este codigo (geocode, por exemplo).
-0 1 2
-1 2 3
-45 6 4...
-\end{xmlcode}
+\begin{bashcode}
+Point(1) = {0, 0, 0, 0.05};
+Point(2) = {0, 1, 0, 0.05};
+Point(3) = {1, 0, 0, 0.05};
+Point(4) = {1, 1, 0, 0.05};
+Point(5) = {0.25, 0.25, 0, 0.05};
+Point(6) = {0.25, 0.75, 0, 0.05};
+Point(7) = {0.75, 0.25, 0, 0.05};
+Point(8) = {0.75, 0.75, 0, 0.05};
+Line(1) = {1, 3};
+Line(2) = {3, 4};
+Line(3) = {4, 2};
+Line(4) = {2, 1};
+Line(5) = {5, 7};
+Line(6) = {7, 8};
+Line(7) = {8, 6};
+Line(8) = {6, 5};
+
+Line Loop(352) = {7, 8, 5, 6};
+Plane Surface(352) = {352};
+
+Line Loop(353) = {3, 4, 1, 2, -6, -5, -8, -7};
+Plane Surface(353) = {353};
+
+Physical Surface(352) = {352};
+Physical Surface(353) = {353};
+
+Physical Point(301) = {1};
+Physical Point(351) = {4};
+\end{bashcode}
 \caption{Arquivo de geometria.}
 \label{lst:arqgeo}
 \end{listing} %$
 
-Agora temos que criar um arquivo de dados para o problema. Inicialmente, precisamos fornecer os dados relativos ao grupo \emph{Geometry}, conforme descrito na seção \ref{sc:dados}. Para este caso, definimos o tipo de malha como \verb|gmsh-generated|, a dimensão como $2$, e o nome do arquivo como \verb|heteraniso.msh|. As condição de contorno são os poços de injeção e produção, os quais são representados pelos seguintes códigos:
+Agora temos que criar um arquivo de dados para o problema. Inicialmente, precisamos fornecer os dados relativos ao grupo \emph{Geometry}, conforme descrito na Seção \ref{sc:dados}. Para este caso, definimos o tipo de malha como \verb|gmsh-generated|, a dimensão como $2$, e o nome do arquivo como \verb|heteraniso.msh|. As condição de contorno são os poços de injeção e produção, os quais são representados pelos seguintes códigos:
 \begin{itemize}
 \item Injeção: Código entre 1-100
 \item Produção: Código entre 101-200
@@ -228,7 +263,7 @@ Em seguida, é necessário definir os parâmetros dos fluidos e rochas considerados
 
 Onde \verb|mu| representa a viscosidade, \verb|rho|...
 
-Em seguida, são fornecidas as propriedades das rochas para cada um dos domínios (neste exemplo, são 2 regiões diferentes).  No caso de existirem outros domínios, basta adicionar quantas seções foram necessárias, já que a leitura de dados de entrada é suficientemente flexível para só considerar os dados de interesse, desde que o ID da rocha adicionada corresponda ao \emph{flag} dos elementos no arquivo de malha (ver seção \ref{sc:malha} para maiores detalhes). Os dados para este exemplo específico são mostrados a seguir:
+Em seguida, são fornecidas as propriedades das rochas para cada um dos domínios (neste exemplo, são 2 regiões diferentes).  No caso de existirem outros domínios, basta adicionar quantas seções foram necessárias, já que a leitura de dados de entrada é suficientemente flexível para só considerar os dados de interesse, desde que o ID da rocha adicionada corresponda ao \emph{flag} dos elementos no arquivo de malha (ver Seção \ref{sc:malha} para maiores detalhes). Os dados para este exemplo específico são mostrados a seguir:
 \begin{listing}[H]
 \begin{xmlcode}
 <Rock>
