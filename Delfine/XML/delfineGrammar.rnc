@@ -136,7 +136,7 @@ courant-element = element courant {
                                    xsd:decimal {minExclusive = "0.0"}
                                   }
 limiter-element = element limiter {
-                                   attribute type {"SUPG" | "none"}
+                                   attribute type {"SUPG" | "SUPG+Wells" | "none"}
                                   }
 # End - 4th-level elements
 # 5th-level elements
