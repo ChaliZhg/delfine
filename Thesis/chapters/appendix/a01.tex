@@ -55,11 +55,11 @@ As informações necessárias para a análise encontram-se neste arquivo subdividida
 \begin{xmlcode}
 <geometry>
    <mesh dimension="2" order ="1" type="gmsh">
-       <filename>HomoAnisoBCUnStruct.msh</filename>
+       <filename>malha.msh</filename>
    </mesh>
    <boundary-conditions>
-       <well function="injection" id="301">1.0</well>
-       <well function="production" id="351">-1.0</well>
+       <well function="injection" id="1">1.0</well>
+       <well function="production" id="2">-1.0</well>
    </boundary-conditions>  
 </geometry>
 \end{xmlcode}
@@ -103,9 +103,9 @@ Por fim, para cada poço existente no domínio deve ser escrita uma linha no subgr
        <rock-type id="1">
            <porosity compressible="no">1.0</porosity>
            <permeability type="per-domain">
-               <Kxx>0.50</Kxx>
+               <Kxx>1</Kxx>
                <Kxy>0.0</Kxy>
-               <Kyy>0.50</Kyy>
+               <Kyy>1</Kyy>
            </permeability>
        </rock-type>
    </rock-properties>
@@ -134,7 +134,7 @@ Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \
 \begin{listing}[H]
 \begin{xmlcode}
 <numerical>
-   <pressure-solver type="cg">
+   <pressure-solver formulation="galerkin" type="cg">
        <tolerance>1e-10</tolerance>
        <max-number-steps>1000</max-number-steps>
        <pre-conditioning type="amg">
@@ -144,7 +144,7 @@ Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \
    <saturation-solver>
        <total-time-analysis>200</total-time-analysis>            
        <courant>0.9</courant>
-       <limiter type="SUPG+Wells"/>
+       <limiter type="none"/>
    </saturation-solver>
 </numerical>
 \end{xmlcode}
@@ -152,9 +152,9 @@ Em relação às propriedades das rochas, deve ser adicionado um subgrupo do tipo \
 \label{lst:arqnuxml}
 \end{listing} %$
 
-O primeiro subgrupo (\verb|pressure-solver|) pode receber as opções \verb|cg| (Método dos Gradientes Conjugados (CG)), \verb|gmres| (Método do Resíduo Mínimo Generalizado (GMRES)) ou \verb|none|, sendo que neste último caso o \ac{AMG} é utilizado isoladamente. Já o subgrupo \verb|pre-conditioning| pode ser do tipo \verb|amg| ou \verb|none|, sendo que neste caso deve obrigatoriamente ser escolhido algum tipo de resolver em \verb|pressure-solver|. Devido à disponibilidade de vários métodos iterativos dentro da biblioteca \emph{PyAMG}, espera-se em breve adicionar novas opções de resolvedores iterativos e diretos.
+O primeiro subgrupo (\verb|pressure-solver|) pode receber as formulações \verb|galerkin| ou \verb|mixedfem| (ver Cap. \ref{ch:form_num} para detalhes sobre as características de cada uma) e os tipos \verb|cg| (Método dos Gradientes Conjugados (CG)), \verb|gmres| (Método do Resíduo Mínimo Generalizado (GMRES)) ou \verb|none|, sendo que neste último caso o \ac{AMG} é utilizado isoladamente. Já o subgrupo \verb|pre-conditioning| pode ser do tipo \verb|amg| ou \verb|none|, sendo que neste caso deve obrigatoriamente ser escolhido algum tipo de resolvedor em \verb|pressure-solver|. Devido à disponibilidade de vários métodos iterativos dentro da biblioteca \emph{PyAMG}, espera-se em breve adicionar novas opções de resolvedores iterativos e diretos.
 
-As opções para o parâmetro \verb|limiter| são: \verb|SUPG| (ou seja, apenas o termo de estabilização), \verb|SUPG+Wells| (estabilização via \ac{SUPG} e adição de difusão artificial) e \verb|none| (\ac{MEF} de Galerkin aplicado diretamente para a equação hiperbólica). Em relação ao tipo de limitador para captura de choque, até o momento apenas o termo de difusão artificial isotrópica sugerido em \citep{Wells2008} está disponível, porém um dos trabalhos futuros (ver Seção \ref{sc:trabFuturos}) é exatamente a adição de difusão artificial anisotrópica conforme proposto por \cite{Codina1992}.
+As opções para o parâmetro \verb|limiter| são: \verb|SUPG| (ou seja, apenas o termo de estabilização), \verb|SUPG+Wells| (estabilização via \ac{SUPG} e adição de difusão artificial) e \verb|none| (\ac{MEF} de Galerkin aplicado diretamente para a equação hiperbólica). Em relação ao tipo de limitador para captura de choque, até o momento apenas o termo de difusão artificial isotrópica sugerido por \cite{Wells2008} está disponível, porém um dos trabalhos futuros (ver Seção \ref{sc:trabFuturos}) é exatamente a adição de difusão artificial anisotrópica conforme proposto por \cite{Codina1992}.
 
 \subsection{Arquivo de Malha}
 \label{sc:malha}
@@ -187,7 +187,9 @@ Existe a opção de ter a malha gerada pelo próprio \emph{DOLFIN} ou então usar um
 \label{sc:exemplo}
 Nesta seção, apresentaremos a construção detalhada de um exemplo utilizado neste trabalho de modo a consolidar todas as informações apresentadas nas seções anteriores deste manual. Os dados do problema que serão utilizados para a geração do arquivo de dados são apresentados no capítulo de resultados na Seção \ref{sc:quarterfivespothetero}.
 
-Este problema trata da solução do escoamento em meios porosos em um domínio heterogêneo representado por um quadrado unitário com uma região de baixa permeabilidade no seu interior, sendo portanto uma geometria bastante simples. Mesmo assim, iremos considerar o uso do \emph{Gmsh} para a geração desta malha devido à existência dos 2 subdomínios. Detalhes sobre o uso da interface do \emph{Gmsh} para se gerar interativamente um arquivo de malha podem ser encontrados na página citada na Seção \ref{sc:instalacao}. O arquivo de malha em si (\verb|*.msh|) pode ser obtido através do seguinte comando:
+Este problema trata da solução do escoamento em meios porosos em um domínio heterogêneo representado por um quadrado unitário com uma região de baixa permeabilidade no seu interior, sendo portanto uma geometria bastante simples. Mesmo assim, iremos considerar o uso do \emph{Gmsh} para a geração desta malha devido à existência dos 2 subdomínios. Detalhes sobre o uso da interface gráfica do \emph{Gmsh} para se gerar interativamente a geometria podem ser encontrados na página do programa citada na Seção \ref{sc:instalacao}. Uma vez criada a geometria na interface, o \emph{Gmsh} salva as informações em um arquivo do tipo \verb|*.geo|, o qual é utilizado para gerar a malha em si.
+
+O arquivo de malha (\verb|*.msh|) pode ser obtido executando o seguinte comando em um terminal:
 
 \begin{listing}[H]
 \begin{bashcode}
@@ -197,7 +199,7 @@ $ gmsh file.geo
 \label{lst:geramalha}
 \end{listing} %$
 
-Sendo que o arquivo do tipo \verb|*.geo| para gerar a geometria desejada é descrito na listagem a seguir: 
+Além das informações geométricas (coordenadas dos pontos, linhas que formam os contornos, etc.), são fornecidos no arquivo de geometria os identificadores (\emph{flags}) de subdomínio e de condições de contorno (p.ex., poços), os quais são indicados pelos comandos \verb|Physical Surface| e \verb|Physical Point|, respectivamente. O arquivo do tipo \verb|*.geo| usado para gerar a geometria desejada para este exemplo é descrito na listagem a seguir: 
 
 \begin{listing}[H]
 \begin{bashcode}
@@ -234,72 +236,69 @@ Physical Point(351) = {4};
 \label{lst:arqgeo}
 \end{listing} %$
 
-Agora temos que criar um arquivo de dados para o problema. Inicialmente, precisamos fornecer os dados relativos ao grupo \emph{Geometry}, conforme descrito na Seção \ref{sc:dados}. Para este caso, definimos o tipo de malha como \verb|gmsh-generated|, a dimensão como $2$, e o nome do arquivo como \verb|heteraniso.msh|. As condição de contorno são os poços de injeção e produção, os quais são representados pelos seguintes códigos:
-\begin{itemize}
-\item Injeção: Código entre 1-100
-\item Produção: Código entre 101-200
-\end{itemize}
-
-Além disso, é preciso fornecer qual parâmetro de poço esta condição de contorno representa e qual o seu valor. Para isto, definimos os parâmetros \verb|type| e \verb|value|. Assim, este primeiro trecho do arquivo de dados deve ter a seguinte aparência:
+Em seguida, é criado um arquivo de dados para o problema. Inicialmente, precisamos fornecer os dados relativos ao grupo \emph{Geometry}, conforme descrito na Seção \ref{sc:dados}. Para este caso, definimos o tipo de malha como \verb|gmsh-generated|, a dimensão como $2$, e o nome do arquivo como \verb|exemplo_heterogeneo.msh|. As condições de contorno são os poços de injeção e produção, os quais recebem os identificadores definidos no arquivo de geometria ($301$ para injeção e $351$ para produção). Para isto, definimos os parâmetros \verb|function| e \verb|id|. Assim, este primeiro trecho do arquivo de dados deve ter a seguinte aparência:
 \begin{listing}[H]
 \begin{xmlcode}
-<Delfine>
-	<Geometry type='gmsh-generated'>...
-	...
+<geometry>
+   <mesh dimension="2" order ="1" type="gmsh">
+       <filename>exemplo_heterogeneo.msh</filename>
+   </mesh>
+   <boundary-conditions>
+       <well function="injection" id="301">0.25</well>
+       <well function="production" id="351">-0.25</well>
+   </boundary-conditions>  
+</geometry>
 \end{xmlcode}
-\caption{Grupo \emph{Geometry}.}
-\label{lst:grupgeometry}
+\caption{Grupo \emph{Geometry} para exemplo detalhado.}
+\label{lst:grupgeometryex}
 \end{listing} %$
 
-Em seguida, é necessário definir os parâmetros dos fluidos e rochas considerados no grupo \emph{Physical}. Inicialmente, consideramos os fluidos, cujas propriedades são fornecidas através do trecho a seguir:
+Em seguida, é necessário definir os parâmetros dos fluidos e rochas considerados no grupo \emph{Physical}. Os valores para as propriedades dos fluidos e de interação rocha-fluidos são informados do mesmo modo que na Listagem \ref{lst:arqphysxml}. Já as propriedades das rochas devem ser informadas utilizando dois blocos do tipo \verb|rock-properties|, um para cada domínio (regiões de alta e de baixa permeabilidade). No caso de existirem outros domínios, basta adicionar quantas seções foram necessárias, já que a leitura de dados de entrada é suficientemente flexível para só considerar os dados de interesse, desde que o ID da rocha adicionada corresponda ao \emph{flag} dos elementos no arquivo de malha (comando \verb|Physical Surface| no arquivo de geometria). Os dados para este exemplo específico são mostrados a seguir:
 \begin{listing}[H]
 \begin{xmlcode}
-<Fluid>
-	...
-\end{xmlcode}
-\caption{Propriedades dos fluidos.}
-\label{lst:physfluid}
-\end{listing} %$
-
-Onde \verb|mu| representa a viscosidade, \verb|rho|...
-
-Em seguida, são fornecidas as propriedades das rochas para cada um dos domínios (neste exemplo, são 2 regiões diferentes).  No caso de existirem outros domínios, basta adicionar quantas seções foram necessárias, já que a leitura de dados de entrada é suficientemente flexível para só considerar os dados de interesse, desde que o ID da rocha adicionada corresponda ao \emph{flag} dos elementos no arquivo de malha (ver Seção \ref{sc:malha} para maiores detalhes). Os dados para este exemplo específico são mostrados a seguir:
-\begin{listing}[H]
-\begin{xmlcode}
-<Rock>
-	...
+<rock-properties>
+       <rock-type id="352">
+           <porosity compressible="no">1.0</porosity>
+           <permeability type="per-domain">
+               <Kxx>0.0001</Kxx>
+               <Kxy>0.0</Kxy>
+               <Kyy>0.0001</Kyy>
+           </permeability>
+       </rock-type>
+       <rock-type id="353">
+           <porosity compressible="no">1.0</porosity>
+           <permeability type="per-domain">
+               <Kxx>1</Kxx>
+               <Kxy>0.0</Kxy>
+               <Kyy>1</Kyy>
+           </permeability>
+       </rock-type>
+</rock-properties>
 \end{xmlcode}
 \caption{Propriedades das rochas.}
-\label{lst:physrock}
+\label{lst:physrockex}
 \end{listing} %$
 
-O último bloco de informações no grupo \emph{Physical} é o de dados referentes às propriedades de interação rocha-fluido. Para cada tipo de fluido é necessário fornecer um bloco com os seus parâmetros, conforme pode ser observado do trech seguinte:
+Por fim, os parâmetros numéricos para a simulação são fornecidos dentro do grupo \emph{Numerical}. Para a solução do problema elíptico utilizaremos a formulação do \acf{MEFM} devido à sua característica de calcular simultaneamente os campos de pressão e de velocidade (ver Cap. \ref{ch:form_num} para detalhes). Já para a solução do problema hiperbólico, foi utilizada a estabilização da solução via \acf{SUPG} e um termo de difusão artificial isotrópica para redução das oscilações espúrias conforme descrito em \citep{Wells2008}. O trecho a seguir mostra os dados utilizados para este exemplo:
 \begin{listing}[H]
 \begin{xmlcode}
-<Rock-Fluido>
-	...
+<numerical>
+   <pressure-solver formulation="mixedfem" type="gmres">
+       <tolerance>1e-10</tolerance>
+       <max-number-steps>1000</max-number-steps>
+       <pre-conditioning type="none">
+           <number-coarse-levels>5</number-coarse-levels>
+       </pre-conditioning>
+   </pressure-solver>
+   <saturation-solver>
+       <total-time-analysis>200</total-time-analysis>            
+       <courant>0.9</courant>
+       <limiter type="SUPG+Wells"/>
+   </saturation-solver>
+</numerical>
 \end{xmlcode}
-\caption{Propriedades de interação rocha-fluido.}
-\label{lst:physrockfluido}
-\end{listing} %$
-
-Por fim, os parâmetros para a simulação são fornecidos dentro do grupo \emph{Numerical}, o qual possui uma parte relativa à solução do problema elíptico e uma outra com dados para solução do problema hiperbólico.
-\begin{listing}[H]
-\begin{xmlcode}
-<Elliptic>
-	...
-\end{xmlcode}
-\caption{Parâmetros para solução do problema elíptico.}
-\label{lst:paramelip}
-\end{listing} %$
-
-\begin{listing}[H]
-\begin{xmlcode}
-<Hyperbolic>
-	...
-\end{xmlcode}
-\caption{Parâmetros para solução do problema hiperbólico.}
-\label{lst:paramhyper}
+\caption{Grupo \emph{Numerical} para exemplo detalhado.}
+\label{lst:arqnumxmlex}
 \end{listing} %$
 
 Uma vez prontos os arquivos de malha e de dados (o qual nomearemos como \verb|ExampleCase.xml|), podemos executar o \emph{Delfine} a partir do terminal utilizando o seguinte comando:
@@ -311,16 +310,4 @@ $ ./run.py ExampleCase.xml
 \label{lst:execucaoexemplo}
 \end{listing} %$
 
-A partir deste momento, o programa irá executar todos os passos automaticamente, informando a respeito do passo de tempo da solução no qual se encontra. Ao final, os arquivos com os resultados dos campos de pressão, velocidade e saturação são escritos na pasta  \verb|Delfine/Results|. O formato dos arquivos é o \verb|*.vtk|, o qual pode ser aberto utilizando o \emph{Paraview} através da interface gráfica ou utilizando o seguinte comando: 
-\begin{listing}[H]
-\begin{bashcode}
-$ paraview Saturation0000.xml
-\end{bashcode}
-\caption{Visualização do arquivo de resultados.}
-\label{lst:visualizacao}
-\end{listing} %$
-
-\begin{Large}
-ATENÇÃO: MODIFICAR ARQUIVO DE SOLUÇÃO HIPERBOLICA "2D/3D"!! ATÈ AGORA SO FOI MODIFICADO O 1D!!!
-\end{Large}
-
+A partir deste momento, o programa irá executar todos os passos automaticamente, informando a respeito do passo de tempo da solução no qual se encontra. Ao final, os arquivos com os resultados dos campos de pressão, velocidade e saturação são escritos na pasta  \verb|Delfine/Results|. O formato dos arquivos é o \verb|*.vtk|, o qual pode ser aberto utilizando programas como o \emph{Paraview} ou o \emph{VisIt}.
