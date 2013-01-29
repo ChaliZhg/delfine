@@ -1,0 +1,115 @@
+%Paper for submission to ABCMs Journal
+%Using the ENCIT template just for reference, still have to adapt to ABCM format(where is the Latex template for it?)
+%Authors: Bruno G. B. Luna
+%         Paulo R. M. Lyra
+%         Ramiro B. Willmersdorf
+%Date (Start): 02/12/2012
+\documentclass[10pt,fleqn,a4paper]{article}
+\usepackage{encit2012}
+\usepackage{amsmath}
+\usepackage[latin1]{inputenc}
+\usepackage{calc,excludeonly,graphicx}
+\usepackage[onehalfspacing]{setspace}
+%\usepackage[color,notcite,notref]{showkeys}
+\definecolor{DarkBlue}{rgb}{0,0,0.7} 
+\usepackage[pdftex,colorlinks=true, linkcolor=DarkBlue, citecolor=DarkBlue]{hyperref}
+\usepackage{threeparttable}
+
+
+\begin{document}
+\hspace{-8.5mm}
+\begin{tabular}{||p{\textwidth}}
+\begin{center}
+\vspace{-4mm}
+\title{Automated Modelling of Flow in Porous Media via the Finite Element Method  }
+\end{center}
+\authors{Bruno G. B. Luna, bruno\_bl@yahoo.com.br} \\
+\authors{Paulo R. M. Lyra, prmlyra@padmec.org} \\
+\authors{Ramiro B. Willmersdorf, ramiro@willmersdorf.net} \\
+\institution{Federal University of Pernambuco (UFPE), Departament of Mechanical Engineering, Cidade Universit\'aria s/n, Recife, PE, Brazil, www.ufpe.br} \\
+\\
+\abstract{
+The simulation of multiphase flows in porous media impose many challenges due to a series of factors as the high anisotropic and heterogeneous media handled in this type of analysis, the coupled elliptic-hyperbolic mathematical nature of the associated Partial Differential Equations (PDEs), the programming of the solution method, among others. This work presents the implementation of a software created using the FEniCs tool for automated low-level code generation and PyAMG for the fully automatic creation of consistent multilevel matrix structures used in Algebraic Multigrid Methods (AMG) to be applied to the numerical solution of porous media flows using the Finite Element Method (FEM). The methods described here are general enough to handle with three-dimensional, heterogeneous and anisotropic problems. Examples are shown and results discussed for two-dimensional problems in homogenous and heterogeneous domains with iso- and anisotropic permeability tensors.}\\
+\\
+\keywords{\textbf{Keywords:} Multigrid, Oil Reservoir, Porous Media Flow}\\
+\end{tabular}
+
+\section{NOMENCLATURE}
+
+\newcommand\DD{\mathrm{D}}
+\newcommand\dd{\mathrm{d}}
+\newcommand\vvec{\boldsymbol{v}}
+
+\noindent
+\begin{minipage}[b]{\linewidth}
+\parbox[b][70mm][t]{0.45\linewidth}{
+\begin{supertabular}{l l}
+$\mathcal{A}$ & area \\
+$c_p$ & constant pressure specific heat \\
+$h_h$ & convective heat transfer coefficient \\
+$h_m$ & convective mass transfer coefficient \\
+$i$ & specific enthalpy \\
+$\boldsymbol{j}$ & mass flux \\
+$\dot{m}$ & mass flow rate \\
+$t$ & time \\
+$T$ & temperature \\
+$Y$ & dry basis vapor concentration \\
+\multicolumn{2}{l}{\textbf{Greek Symbols}} \\
+$\rho$ & specific mass or concentration \\
+$\epsilon$ & total porosity \\
+$\tau$ & period \\
+\end{supertabular}
+}
+\hfill
+\parbox[b][70mm][t]{0.45\linewidth}{
+\begin{supertabular}{l l}
+\multicolumn{2}{l}{\textbf{Subscripts}} \\
+$e$ & effective or apparent \\
+$in$ & inlet \\
+$\max$ & maximum \\
+$\min$ & minimum \\
+$op$ & operation \\
+$out$ & outlet \\
+$s$ & solid phase \\
+$v$ & water vapor \\
+\multicolumn{2}{l}{\bf{Superscripts}} \\
+$\ast$ & dimensionless quantity \\
+$\sim$ & dry basis \\
+\end{supertabular}
+}
+\end{minipage} \\ \mbox{}
+
+\section{INTRODUCTION}
+
+
+\section{MATHEMATICAL FORMULATION}
+
+
+\subsection{Pressure Equation}
+
+
+\subsection{Saturation Equation}
+
+
+\subsection{Boundary and Initial Conditions}
+
+\section{NUMERICAL FORMULATION}
+
+\section{IMPLEMENTATION}
+
+\section{RESULTS}
+
+\section{CONCLUSIONS}
+
+\section{ACKNOWLEDGEMENTS}
+
+The authors thank the Funda\c{c}\~ao de Amparo \`a Ci\^encia do Estado de Pernambuco (FACEPE) and the Conselho Nacional de Desenvolvimento Cient\'ifico e Tecnol\'ogico (CNPq) for the financial support during part of the development of this work.
+
+\section{REFERENCES}
+
+The list of references must be introduced as a new section, located at the end of the paper. The first line of each reference 
+
+\bibliographystyle{encit2012}
+\bibliography{bibfile}
+
+\end{document}

@@ -1,0 +1,130 @@
+% LaTeX template for the proceedings of the ENCIT 2012
+% November, 18-22, 2012. Rio de Janeiro, RJ, Brazil
+\usepackage{ccaption}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{colortbl}
+\usepackage{fancyvrb}
+\usepackage{wrapfig}
+\usepackage{supertabular}
+\usepackage[version=3]{mhchem}
+\usepackage{calc}
+\usepackage[round,authoryear]{natbib}
+
+%Default Fonts
+\usepackage{times}
+%\usepackage{helvet}
+%\renewcommand{\rmdefault}{ptm}
+%\fontfamily{arial}
+
+%Margins
+\newlength{\bottommargin}
+\voffset = -1in
+\setlength{\bottommargin}{25mm}
+\setlength{\topmargin}{13mm}
+\setlength{\headheight}{7mm}
+\setlength{\headsep}{10mm}
+\setlength{\textheight}{\paperheight-\topmargin-\headheight-\headsep-\bottommargin}
+\setlength{\footskip}{20mm}
+%
+\newlength{\rightsidemargin}
+\hoffset = -1in 
+\setlength{\oddsidemargin}{20mm}
+\setlength{\evensidemargin}{\oddsidemargin}
+\setlength{\rightsidemargin}{20mm}
+\setlength{\textwidth}{\paperwidth -\oddsidemargin -\rightsidemargin}
+
+
+% Header
+\renewcommand{\headrulewidth}{0pt}%No Header Line
+\setlength{\headwidth}{\textwidth}
+
+%other lengths
+\setlength{\parindent}{5mm}
+\setlength{\parskip}{0pt}
+\setlength{\mathindent}{5mm}
+
+%Black line border
+\arrayrulecolor{black}
+\doublerulesep 1.4pt
+\doublerulesepcolor{black}
+
+%Header
+\pagestyle{fancy}
+\chead{}
+%BrunoLuna: Lines below commented, as they are specific for the ENCIT Congress
+\lhead{\footnotesize{\textsf{   }}}
+\rhead{\footnotesize{\textsf{   }}}
+%\lhead{\footnotesize{\textsf{Proceedings of the ENCIT 2012 \\ Copyright \copyright {} 2012 by ABCM}}}
+%\rhead{\footnotesize{\textsf{14th Brazilian Congress of Thermal Sciences and Engineering \\ November 18-22, 2012, Rio de %Janeiro, RJ, Brazil}}}
+\cfoot{}
+
+%Commands
+\def\authors{\bfseries}
+\def\institution{\small}
+\def\email{\small}
+\def\title{\Large \bfseries \centering}
+\def\abstract{\itshape}
+\def\keywords{\itshape}
+
+%Sections
+\makeatletter
+\def\section{\@startsection{section}{1}
+          {\z@}{10pt minus 0pt}{10pt minus 0pt}{\bfseries}}
+\def\subsection{\@startsection{subsection}{2}
+          {\z@}{10pt minus 0pt}{10pt minus 0pt}{\bfseries}}
+\def\subsubsection{\@startsection{subsubsection}{3}
+          {\z@}{10pt minus 0pt}{10pt minus 0pt}{\itshape}}
+\def\thesection{\arabic{section}.\hskip -1ex}	
+\def\thesubsection {\thesection\hskip 1.1ex \arabic{subsection}\hskip -1ex}
+\def\thesubsubsection {\thesubsection\hskip 1.1ex .\arabic{subsubsection}\hskip -1ex}
+\makeatother
+
+%Tables and Figures - Space and Captions
+\abovecaptionskip 0pt
+\belowcaptionskip 0pt
+
+\makeatletter
+\newcommand{\@ldtable}{}
+\let\@ldtable\table
+\renewcommand{\table}{%
+\setlength{\abovecaptionskip}{\belowcaptionskip}%
+\setlength{\belowcaptionskip}{10pt}%
+\@ldtable}
+\makeatother
+\captiondelim{. }
+\captionstyle{\centering\centerlastline}
+
+%Bibliography
+\renewcommand\refname{}
+\makeatletter
+\renewcommand\@biblabel[1]{}
+\newcommand*\clinbiblabel[1]{\hspace\labelsep
+                             \normalfont #1}
+\renewenvironment{thebibliography}[1]
+     {\section*{\refname
+        \@mkboth{\MakeUppercase\refname}{\MakeUppercase\refname}}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+	    \vspace{-21pt}
+	    \leftmargin 5mm
+	    \labelwidth\z@
+	    \labelsep\z@
+	    \itemsep\z@
+	    \parsep\z@
+	    \itemindent-\leftmargin	
+	    \let\makelabel\clinbiblabel
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+        \renewcommand\newblock{\hskip .11em \@plus.33em \@minus.07em}%
+      \sloppy\clubpenalty4000\widowpenalty4000%
+      \sfcode`\.=\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `thebibliography' environment}}%
+      \endlist}
+\makeatother
+
